@@ -14,8 +14,8 @@ end alu;
 
 architecture a_alu of alu is
 
-    constant ALU_UNUSED    : std_logic_vector(2 downto 0) := "000";
-    constant ALU_AND     : std_logic_vector(2 downto 0) := "001";
+    constant ALU_UNUSED : std_logic_vector(2 downto 0) := "000";
+    constant ALU_AND    : std_logic_vector(2 downto 0) := "001";
     constant ALU_OR     : std_logic_vector(2 downto 0) := "010";
     constant ALU_XOR    : std_logic_vector(2 downto 0) := "011";
     constant ALU_ADD    : std_logic_vector(2 downto 0) := "100";
