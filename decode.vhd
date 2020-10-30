@@ -43,7 +43,7 @@ begin
 		rs1			<= i_instruction(19 downto 15);
 		rs2			<= i_instruction(24 downto 20);
 
-		o_alu_mode <= ALU_UNUSED
+		o_alu_mode <= ALU_UNUSED;
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
 		o_rd_addr <= "00000";
