@@ -286,6 +286,62 @@ https://fpgasoftware.intel.com/eula.
 		(rectangle (rect 16 16 336 128))
 	)
 )
+(symbol
+	(rect 1352 752 1600 896)
+	(text "memory" (rect 5 0 73 19)(font "Arial" ))
+	(text "inst3" (rect 8 128 50 149)(font "Intel Clear" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "i_clock" (rect 0 0 57 19)(font "Arial" ))
+		(text "i_clock" (rect 21 27 78 46)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "i_reset" (rect 0 0 57 19)(font "Arial" ))
+		(text "i_reset" (rect 21 43 78 62)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "i_read_write" (rect 0 0 102 19)(font "Arial" ))
+		(text "i_read_write" (rect 21 59 123 78)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "i_address[31..0]" (rect 0 0 133 19)(font "Arial" ))
+		(text "i_address[31..0]" (rect 21 75 154 94)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 3))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "i_write_data[31..0]" (rect 0 0 153 19)(font "Arial" ))
+		(text "i_write_data[31..0]" (rect 21 91 174 110)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 248 32)
+		(output)
+		(text "o_read_data[31..0]" (rect 0 0 156 19)(font "Arial" ))
+		(text "o_read_data[31..0]" (rect 95 27 251 46)(font "Arial" ))
+		(line (pt 248 32)(pt 232 32)(line_width 3))
+	)
+	(parameter
+		"size_in_words"
+		"1024"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 232 128))
+	)
+	(annotation_block (parameter)(rect 1600 696 1906 746))
+)
 (connector
 	(pt 816 568)
 	(pt 800 568)
