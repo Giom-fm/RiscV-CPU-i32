@@ -10,32 +10,37 @@ entity decode is
 			o_rs2_addr		: out std_logic_vector(4 downto 0);
 			o_rd_addr		: out std_logic_vector(4 downto 0);
 			o_reg_mux		: out std_logic;
-			o_reg_immediate	: out std_logic_vector(31 downto 0)
-			
+			o_reg_immediate	: out std_logic_vector(31 downto 0);
+			o_offset_mux	: out std_logic;
+			o_offset		: out std_logic_vector(31 downto 0)
 		);
 		
 end decode;
 
 architecture a_decode of decode is
 
-	constant REG_MUX_IMM	 : std_logic := '0';
-	constant REG_MUX_ALU : std_logic := '1';
+	constant REG_MUX_IMM	: std_logic := '0';
+	constant REG_MUX_ALU 	: std_logic := '1';
+
+	constant REG_MUX_REG	: std_logic := '0';
+	constant REG_MUX_OFFSET : std_logic := '1';
 
 	constant ALU_UNUSED : std_logic_vector(2 downto 0) := "000";
     constant ALU_AND    : std_logic_vector(2 downto 0) := "001";
     constant ALU_OR     : std_logic_vector(2 downto 0) := "010";
     constant ALU_XOR    : std_logic_vector(2 downto 0) := "011";
     constant ALU_ADD    : std_logic_vector(2 downto 0) := "100";
-    constant ALU_SUB    : std_logic_vector(2 downto 0) := "101";
-
+	constant ALU_SUB    : std_logic_vector(2 downto 0) := "101";
+	
 	signal opcode		: std_logic_vector(4 downto 0);
 	signal funct3		: std_logic_vector(2 downto 0);
 	signal funct7		: std_logic_vector(4 downto 0);
 	
-	signal imm_u	: std_logic_vector(19 downto 0);
-	signal rd		: std_logic_vector(4 downto 0);
-	signal rs1		: std_logic_vector(4 downto 0);
-	signal rs2		: std_logic_vector(4 downto 0);
+	signal offset_i		: std_logic_vector(11 downto 0);
+	signal imm_u		: std_logic_vector(19 downto 0);
+	signal rd			: std_logic_vector(4 downto 0);
+	signal rs1			: std_logic_vector(4 downto 0);
+	signal rs2			: std_logic_vector(4 downto 0);
 
 begin
 
@@ -46,25 +51,35 @@ begin
 		funct7 		<= i_instruction(31 downto 27);
 		rd 			<= i_instruction(11 downto 7);
 		imm_u		<= i_instruction(31 downto 12);
+		offset_i	<= i_instruction(31 downto 20);
 		rs1			<= i_instruction(19 downto 15);
 		rs2			<= i_instruction(24 downto 20);
 
-
+		o_reg_mux <= REG_MUX_ALU;
+		o_offset_mux <= REG_MUX_REG;
 		o_alu_mode <= ALU_UNUSED;
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
 		o_rd_addr <= "00000";
 		o_reg_immediate <= (others => '0');
 		
-
-
-		-- U-Format Opcodes
-		
+		-- U-Format Opcodes ----------------------------------------------------
+		-- lui
 		if opcode = "01101" then
 			o_reg_mux <= REG_MUX_IMM;
 			o_rd_addr <= rd;
-			o_reg_immediate <= "000000000000"& imm_u ;
-		
+			o_reg_immediate <= "000000000000" & imm_u;
+
+
+		-- I-Format Opcodes ----------------------------------------------------
+		-- lb
+		elsif opcode = "00000" and funct3 = "000" then
+			o_offset_mux <= REG_MUX_OFFSET;
+			o_reg_mux <= REG_MUX_ALU;
+			o_offset <= "00000000000000000000" & offset_i;
+			o_alu_mode <= ALU_ADD;
+			
+
 		-- R-Format Opcodes ----------------------------------------------------
 		-- add 
 		elsif opcode = "01100" and funct3 = "000" and funct7 = "00000" then

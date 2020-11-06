@@ -15,7 +15,7 @@ end bus_mux;
 architecture a_bus_mux of bus_mux is
 
 begin
-    process(i_sw) begin
+    process(i_sw, i_data_0, i_data_1) begin
         o_data_r <= i_data_0;
 
         if i_sw = '1' then

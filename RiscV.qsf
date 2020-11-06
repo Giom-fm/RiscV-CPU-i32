@@ -64,6 +64,7 @@ set_location_assignment PIN_R7 -to uart_rx
 set_location_assignment PIN_T7 -to uart_tx
 set_location_assignment PIN_M2 -to clk
 set_location_assignment PIN_N6 -to rst
+set_global_assignment -name VHDL_FILE sign_extender.vhd
 set_global_assignment -name VHDL_FILE bus_mux.vhd
 set_global_assignment -name VHDL_FILE memory.vhd
 set_global_assignment -name VHDL_FILE registers.vhd
