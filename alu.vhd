@@ -5,10 +5,11 @@ use IEEE.numeric_std.all;
 
 entity alu is 
 		port(
+				i_alu_mode  : in std_logic_vector(2 downto 0);
             i_left      : in std_logic_vector(31 downto 0);
             i_right     : in std_logic_vector(31 downto 0);
-            o_result    : out std_logic_vector(31 downto 0);
-            i_alu_mode  : in std_logic_vector(2 downto 0)
+            o_result    : out std_logic_vector(31 downto 0)
+            
         );
 end alu;
 

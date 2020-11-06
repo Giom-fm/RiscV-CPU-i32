@@ -2,24 +2,7 @@
 	"partitions" : [
 		{
 			"name" : "Top",
-			"pins" : [
-				{
-					"name" : "uart_tx",
-					"strict" : false
-				},
-				{
-					"name" : "clk",
-					"strict" : false
-				},
-				{
-					"name" : "rst",
-					"strict" : false
-				},
-				{
-					"name" : "uart_rx",
-					"strict" : false
-				}
-			]
+			"pins" : []
 		}
 	]
 }

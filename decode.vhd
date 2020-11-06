@@ -4,16 +4,22 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity decode is 
 		port(
-			i_instruction			: in std_logic_vector(31 downto 0);
-			o_alu_mode				: out std_logic_vector(2 downto 0);
+			i_instruction	: in std_logic_vector(31 downto 0);
+			o_alu_mode		: out std_logic_vector(2 downto 0);
 			o_rs1_addr		: out std_logic_vector(4 downto 0);
 			o_rs2_addr		: out std_logic_vector(4 downto 0);
-			o_rd_addr		: out std_logic_vector(4 downto 0)
+			o_rd_addr		: out std_logic_vector(4 downto 0);
+			o_reg_mux		: out std_logic;
+			o_reg_immediate	: out std_logic_vector(31 downto 0)
+			
 		);
 		
 end decode;
 
 architecture a_decode of decode is
+
+	constant REG_IMM	 : std_logic := '0';
+	constant REG_MUX_ALU : std_logic := '1';
 
 	constant ALU_UNUSED : std_logic_vector(2 downto 0) := "000";
     constant ALU_AND    : std_logic_vector(2 downto 0) := "001";
@@ -22,11 +28,11 @@ architecture a_decode of decode is
     constant ALU_ADD    : std_logic_vector(2 downto 0) := "100";
     constant ALU_SUB    : std_logic_vector(2 downto 0) := "101";
 
-	signal opcode_0		: std_logic_vector(4 downto 0);
-	signal opcode_1		: std_logic_vector(2 downto 0);
-	signal opcode_2		: std_logic_vector(4 downto 0);
+	signal opcode		: std_logic_vector(4 downto 0);
+	signal funct3		: std_logic_vector(2 downto 0);
+	signal funct7		: std_logic_vector(4 downto 0);
 	
-	signal immediate	: std_logic_vector(20 downto 0);
+	signal imm_u	: std_logic_vector(19 downto 0);
 	signal rd		: std_logic_vector(4 downto 0);
 	signal rs1		: std_logic_vector(4 downto 0);
 	signal rs2		: std_logic_vector(4 downto 0);
@@ -35,58 +41,76 @@ begin
 
 	decode_instruction: process(i_instruction) begin
 		
-		opcode_0 	<= i_instruction(6 downto 2);
-		opcode_1 	<= i_instruction(14 downto 12);
-		opcode_2 	<= i_instruction(31 downto 27);
+		opcode 		<= i_instruction(6 downto 2);
+		funct3	 	<= i_instruction(14 downto 12);
+		funct7 		<= i_instruction(31 downto 27);
 		rd 			<= i_instruction(11 downto 7);
-		immediate	<= i_instruction(31 downto 12);
+		imm_u		<= i_instruction(31 downto 12);
 		rs1			<= i_instruction(19 downto 15);
 		rs2			<= i_instruction(24 downto 20);
+
 
 		o_alu_mode <= ALU_UNUSED;
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
 		o_rd_addr <= "00000";
+		o_reg_immediate <= (others => '0');
 		
+
+
+		-- U-Format Opcodes
+		
+		if opcode = "01101" then
+			o_reg_mux <= REG_IMM;
+			o_rd_addr <= rd;
+			o_reg_immediate <= "000000000000"& imm_u ;
+		
+		-- R-Format Opcodes ----------------------------------------------------
 		-- add 
-		if opcode_0 = "01100" and opcode_1 = "000" and opcode_2 = "00000" then
+		elsif opcode = "01100" and funct3 = "000" and funct7 = "00000" then
+			o_reg_mux <= REG_MUX_ALU;
 			o_alu_mode <= ALU_ADD;
 			o_rd_addr <= rd;
 
 		-- sub
-		elsif  opcode_0 = "01100" and opcode_1 = "000" and opcode_2 = "01000" then
+		elsif  opcode = "01100" and funct3 = "000" and funct7 = "01000" then
+			o_reg_mux <= REG_MUX_ALU;
 			o_alu_mode <= ALU_SUB;
 			o_rd_addr <= rd;
 
 		-- sll
-		elsif  opcode_0 = "01100" and opcode_1 = "001" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "001" and funct7 = "00000" then
 
 		-- slt
-		elsif  opcode_0 = "01100" and opcode_1 = "010" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "010" and funct7 = "00000" then
 
 		-- sltu
-		elsif  opcode_0 = "01100" and opcode_1 = "011" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "011" and funct7 = "00000" then
 
 		-- xor
-		elsif  opcode_0 = "01100" and opcode_1 = "100" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "100" and funct7 = "00000" then
+			o_reg_mux <= REG_MUX_ALU;
 			o_alu_mode <= ALU_XOR;
 			o_rd_addr <= rd;
 
 		-- sra
-		elsif  opcode_0 = "01100" and opcode_1 = "101" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "101" and funct7 = "00000" then
 
 		-- srl
-		elsif  opcode_0 = "01100" and opcode_1 = "101" and opcode_2 = "01000" then
+		elsif  opcode = "01100" and funct3 = "101" and funct7 = "01000" then
 
 		-- or
-		elsif  opcode_0 = "01100" and opcode_1 = "110" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "110" and funct7 = "00000" then
+			o_reg_mux <= REG_MUX_ALU;
 			o_alu_mode <= ALU_OR;
 			o_rd_addr <= rd;
 
 		-- and
-		elsif  opcode_0 = "01100" and opcode_1 = "111" and opcode_2 = "00000" then
+		elsif  opcode = "01100" and funct3 = "111" and funct7 = "00000" then
+			o_reg_mux <= REG_MUX_ALU;
 			o_alu_mode <= ALU_AND;
 			o_rd_addr <= rd;
+			
 		end if;
 
 	end process;
