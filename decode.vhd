@@ -18,7 +18,7 @@ end decode;
 
 architecture a_decode of decode is
 
-	constant REG_IMM	 : std_logic := '0';
+	constant REG_MUX_IMM	 : std_logic := '0';
 	constant REG_MUX_ALU : std_logic := '1';
 
 	constant ALU_UNUSED : std_logic_vector(2 downto 0) := "000";
@@ -61,7 +61,7 @@ begin
 		-- U-Format Opcodes
 		
 		if opcode = "01101" then
-			o_reg_mux <= REG_IMM;
+			o_reg_mux <= REG_MUX_IMM;
 			o_rd_addr <= rd;
 			o_reg_immediate <= "000000000000"& imm_u ;
 		
