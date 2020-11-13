@@ -12,7 +12,8 @@ entity decode is
 			o_reg_mux		: out std_logic;
 			o_reg_immediate	: out std_logic_vector(31 downto 0);
 			o_offset_mux	: out std_logic;
-			o_offset		: out std_logic_vector(31 downto 0)
+			o_offset		: out std_logic_vector(31 downto 0);
+			o_sign_extender_mode : out std_logic_vector(2 downto 0)
 		);
 		
 end decode;
@@ -31,6 +32,13 @@ architecture a_decode of decode is
     constant ALU_XOR    : std_logic_vector(2 downto 0) := "011";
     constant ALU_ADD    : std_logic_vector(2 downto 0) := "100";
 	constant ALU_SUB    : std_logic_vector(2 downto 0) := "101";
+
+
+	constant SIGN_EXTENDER_32 	: std_logic_vector(2 downto 0) := "000";
+	constant SIGN_EXTENDER_U_8  : std_logic_vector(2 downto 0) := "001";
+    constant SIGN_EXTENDER_U_16 : std_logic_vector(2 downto 0) := "010";
+    constant SIGN_EXTENDER_S_8  : std_logic_vector(2 downto 0) := "100";
+    constant SIGN_EXTENDER_S_16 : std_logic_vector(2 downto 0) := "101";
 	
 	signal opcode		: std_logic_vector(4 downto 0);
 	signal funct3		: std_logic_vector(2 downto 0);
@@ -55,6 +63,8 @@ begin
 		rs1			<= i_instruction(19 downto 15);
 		rs2			<= i_instruction(24 downto 20);
 
+
+		-- Default case
 		o_reg_mux <= REG_MUX_ALU;
 		o_offset_mux <= REG_MUX_REG;
 		o_alu_mode <= ALU_UNUSED;
@@ -62,6 +72,8 @@ begin
 		o_rs2_addr <= rs2;
 		o_rd_addr <= "00000";
 		o_reg_immediate <= (others => '0');
+		o_sign_extender_mode <= SIGN_EXTENDER_32;
+		
 		
 		-- U-Format Opcodes ----------------------------------------------------
 		-- lui
@@ -76,10 +88,50 @@ begin
 		elsif opcode = "00000" and funct3 = "000" then
 			o_offset_mux <= REG_MUX_OFFSET;
 			o_reg_mux <= REG_MUX_ALU;
+			o_sign_extender_mode <= SIGN_EXTENDER_S_8;
+			o_offset <= "00000000000000000000" & offset_i;
+			o_alu_mode <= ALU_ADD;
+
+		-- lbu
+		elsif opcode = "00000" and funct3 = "100" then
+			o_offset_mux <= REG_MUX_OFFSET;
+			o_reg_mux <= REG_MUX_ALU;
+			o_sign_extender_mode <= SIGN_EXTENDER_U_8;
+			o_offset <= "00000000000000000000" & offset_i;
+			o_alu_mode <= ALU_ADD;
+
+		-- lh
+		elsif opcode = "00000" and funct3 = "001" then
+			o_offset_mux <= REG_MUX_OFFSET;
+			o_reg_mux <= REG_MUX_ALU;
+			o_sign_extender_mode <= SIGN_EXTENDER_S_16;
 			o_offset <= "00000000000000000000" & offset_i;
 			o_alu_mode <= ALU_ADD;
 			
-
+		-- lhu
+		elsif opcode = "00000" and funct3 = "101" then
+			o_offset_mux <= REG_MUX_OFFSET;
+			o_reg_mux <= REG_MUX_ALU;
+			o_sign_extender_mode <= SIGN_EXTENDER_U_16;
+			o_offset <= "00000000000000000000" & offset_i;
+			o_alu_mode <= ALU_ADD;
+		
+		-- lw
+		elsif opcode = "00000" and funct3 = "010" then
+			o_offset_mux <= REG_MUX_OFFSET;
+			o_reg_mux <= REG_MUX_ALU;
+			o_sign_extender_mode <= SIGN_EXTENDER_32;
+			o_offset <= "00000000000000000000" & offset_i;
+			o_alu_mode <= ALU_ADD;
+			
+		-- lwu
+		elsif opcode = "00000" and funct3 = "110" then
+			o_offset_mux <= REG_MUX_OFFSET;
+			o_reg_mux <= REG_MUX_ALU;
+			o_sign_extender_mode <= SIGN_EXTENDER_32;
+			o_offset <= "00000000000000000000" & offset_i;
+			o_alu_mode <= ALU_ADD;
+			
 		-- R-Format Opcodes ----------------------------------------------------
 		-- add 
 		elsif opcode = "01100" and funct3 = "000" and funct7 = "00000" then
