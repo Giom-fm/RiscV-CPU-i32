@@ -38,7 +38,7 @@ https://fpgasoftware.intel.com/eula.
 	(annotation_block (location)(rect 1120 504 1200 536))
 )
 (symbol
-	(rect 1304 512 1656 656)
+	(rect 1320 512 1672 656)
 	(text "registers" (rect 5 0 76 19)(font "Arial" ))
 	(text "inst1" (rect 8 128 50 149)(font "Intel Clear" ))
 	(port
@@ -331,7 +331,7 @@ https://fpgasoftware.intel.com/eula.
 	)
 )
 (symbol
-	(rect -72 528 216 736)
+	(rect -80 528 208 736)
 	(text "decode" (rect 5 0 66 19)(font "Arial" ))
 	(text "inst4" (rect 8 192 48 211)(font "Arial" ))
 	(port
@@ -345,72 +345,104 @@ https://fpgasoftware.intel.com/eula.
 		(pt 288 32)
 		(output)
 		(text "o_alu_mode[2..0]" (rect 0 0 145 19)(font "Arial" ))
-		(text "o_alu_mode[2..0]" (rect 145 27 267 46)(font "Arial" ))
+		(text "o_alu_mode[2..0]" (rect 145 27 290 46)(font "Arial" ))
 		(line (pt 288 32)(pt 272 32)(line_width 3))
 	)
 	(port
 		(pt 288 48)
 		(output)
 		(text "o_rs1_addr[4..0]" (rect 0 0 136 19)(font "Arial" ))
-		(text "o_rs1_addr[4..0]" (rect 152 43 267 62)(font "Arial" ))
+		(text "o_rs1_addr[4..0]" (rect 152 43 288 62)(font "Arial" ))
 		(line (pt 288 48)(pt 272 48)(line_width 3))
 	)
 	(port
 		(pt 288 64)
 		(output)
 		(text "o_rs2_addr[4..0]" (rect 0 0 136 19)(font "Arial" ))
-		(text "o_rs2_addr[4..0]" (rect 152 59 267 78)(font "Arial" ))
+		(text "o_rs2_addr[4..0]" (rect 152 59 288 78)(font "Arial" ))
 		(line (pt 288 64)(pt 272 64)(line_width 3))
 	)
 	(port
 		(pt 288 80)
 		(output)
 		(text "o_rd_addr[4..0]" (rect 0 0 127 19)(font "Arial" ))
-		(text "o_rd_addr[4..0]" (rect 160 75 267 94)(font "Arial" ))
+		(text "o_rd_addr[4..0]" (rect 160 75 287 94)(font "Arial" ))
 		(line (pt 288 80)(pt 272 80)(line_width 3))
 	)
 	(port
 		(pt 288 96)
 		(output)
 		(text "o_reg_mux" (rect 0 0 94 19)(font "Arial" ))
-		(text "o_reg_mux" (rect 188 91 267 110)(font "Arial" ))
+		(text "o_reg_mux" (rect 188 91 282 110)(font "Arial" ))
 		(line (pt 288 96)(pt 272 96))
 	)
 	(port
 		(pt 288 112)
 		(output)
 		(text "o_reg_immediate[31..0]" (rect 0 0 197 19)(font "Arial" ))
-		(text "o_reg_immediate[31..0]" (rect 101 107 267 126)(font "Arial" ))
+		(text "o_reg_immediate[31..0]" (rect 101 107 298 126)(font "Arial" ))
 		(line (pt 288 112)(pt 272 112)(line_width 3))
 	)
 	(port
 		(pt 288 128)
 		(output)
 		(text "o_offset_mux" (rect 0 0 112 19)(font "Arial" ))
-		(text "o_offset_mux" (rect 173 123 267 142)(font "Arial" ))
+		(text "o_offset_mux" (rect 173 123 285 142)(font "Arial" ))
 		(line (pt 288 128)(pt 272 128))
 	)
 	(port
 		(pt 288 144)
 		(output)
 		(text "o_offset[31..0]" (rect 0 0 119 19)(font "Arial" ))
-		(text "o_offset[31..0]" (rect 167 139 267 158)(font "Arial" ))
+		(text "o_offset[31..0]" (rect 167 139 286 158)(font "Arial" ))
 		(line (pt 288 144)(pt 272 144)(line_width 3))
 	)
 	(port
 		(pt 288 160)
 		(output)
 		(text "o_sign_extender_mode[2..0]" (rect 0 0 237 19)(font "Arial" ))
-		(text "o_sign_extender_mode[2..0]" (rect 67 155 267 174)(font "Arial" ))
+		(text "o_sign_extender_mode[2..0]" (rect 67 155 304 174)(font "Arial" ))
 		(line (pt 288 160)(pt 272 160)(line_width 3))
 	)
 	(drawing
 		(rectangle (rect 16 16 272 192))
 	)
 )
-(connector
-	(pt 1288 544)
-	(pt 1304 544)
+(symbol
+	(rect -312 880 -88 992)
+	(text "store_coding" (rect 5 0 112 19)(font "Arial" ))
+	(text "inst2" (rect 8 96 50 117)(font "Intel Clear" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "i_mode[1..0]" (rect 0 0 103 19)(font "Arial" ))
+		(text "i_mode[1..0]" (rect 21 27 124 46)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "i_data_old[31..0]" (rect 0 0 138 19)(font "Arial" ))
+		(text "i_data_old[31..0]" (rect 21 43 159 62)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "i_data_new[31..0]" (rect 0 0 147 19)(font "Arial" ))
+		(text "i_data_new[31..0]" (rect 21 59 168 78)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64)(line_width 3))
+	)
+	(port
+		(pt 224 32)
+		(output)
+		(text "o_data[31..0]" (rect 0 0 109 19)(font "Arial" ))
+		(text "o_data[31..0]" (rect 111 27 220 46)(font "Arial" ))
+		(line (pt 224 32)(pt 208 32)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 208 96))
+	)
 )
 (connector
 	(pt 768 472)
@@ -420,16 +452,6 @@ https://fpgasoftware.intel.com/eula.
 (connector
 	(pt 1664 472)
 	(pt 1664 528)
-	(bus)
-)
-(connector
-	(pt 1656 560)
-	(pt 1672 560)
-	(bus)
-)
-(connector
-	(pt 1672 560)
-	(pt 1672 608)
 	(bus)
 )
 (connector
@@ -472,11 +494,6 @@ https://fpgasoftware.intel.com/eula.
 	(bus)
 )
 (connector
-	(pt 1656 544)
-	(pt 2000 544)
-	(bus)
-)
-(connector
 	(pt 688 920)
 	(pt 1696 920)
 )
@@ -492,26 +509,6 @@ https://fpgasoftware.intel.com/eula.
 (connector
 	(pt 1680 904)
 	(pt 752 904)
-	(bus)
-)
-(connector
-	(pt 1272 624)
-	(pt 1272 784)
-	(bus)
-)
-(connector
-	(pt 1304 624)
-	(pt 1272 624)
-	(bus)
-)
-(connector
-	(pt 1056 800)
-	(pt 1040 800)
-	(bus)
-)
-(connector
-	(pt 1056 816)
-	(pt 1048 816)
 	(bus)
 )
 (connector
@@ -544,11 +541,6 @@ https://fpgasoftware.intel.com/eula.
 	(bus)
 )
 (connector
-	(pt 1040 800)
-	(pt 1040 712)
-	(bus)
-)
-(connector
 	(pt 1040 712)
 	(pt -64 712)
 	(bus)
@@ -561,11 +553,6 @@ https://fpgasoftware.intel.com/eula.
 (connector
 	(pt -24 976)
 	(pt 2248 976)
-	(bus)
-)
-(connector
-	(pt 240 848)
-	(pt 432 848)
 	(bus)
 )
 (connector
@@ -584,13 +571,33 @@ https://fpgasoftware.intel.com/eula.
 	(bus)
 )
 (connector
-	(pt 768 472)
-	(pt 768 560)
+	(pt 368 832)
+	(pt 432 832)
 	(bus)
 )
 (connector
-	(pt 1056 784)
-	(pt 1056 624)
+	(pt 1672 608)
+	(pt 1672 992)
+	(bus)
+)
+(connector
+	(pt 1672 544)
+	(pt 2000 544)
+	(bus)
+)
+(connector
+	(pt 1672 560)
+	(pt 1672 608)
+	(bus)
+)
+(connector
+	(pt 1288 544)
+	(pt 1320 544)
+)
+(connector
+	(pt 768 472)
+	(pt 768 560)
+	(bus)
 )
 (connector
 	(pt 752 904)
@@ -603,6 +610,11 @@ https://fpgasoftware.intel.com/eula.
 	(bus)
 )
 (connector
+	(pt 368 832)
+	(pt 368 688)
+	(bus)
+)
+(connector
 	(pt 688 656)
 	(pt 688 816)
 )
@@ -611,57 +623,128 @@ https://fpgasoftware.intel.com/eula.
 	(pt 688 920)
 )
 (connector
-	(pt 216 560)
+	(pt 208 560)
 	(pt 768 560)
 	(bus)
 )
 (connector
-	(pt 216 576)
-	(pt 1304 576)
+	(pt 208 576)
+	(pt 1320 576)
 	(bus)
 )
 (connector
-	(pt 216 592)
-	(pt 1304 592)
+	(pt 208 592)
+	(pt 1320 592)
 	(bus)
 )
 (connector
-	(pt 216 608)
-	(pt 1304 608)
+	(pt 208 608)
+	(pt 1320 608)
 	(bus)
 )
 (connector
-	(pt 216 624)
-	(pt 1056 624)
-)
-(connector
-	(pt 216 640)
+	(pt 208 640)
 	(pt 704 640)
 	(bus)
 )
 (connector
-	(pt 216 656)
+	(pt 208 656)
 	(pt 688 656)
 )
 (connector
-	(pt 216 672)
+	(pt 208 672)
 	(pt 752 672)
 	(bus)
 )
 (connector
-	(pt 216 688)
+	(pt 208 688)
 	(pt 368 688)
 	(bus)
 )
 (connector
-	(pt 368 688)
-	(pt 368 832)
+	(pt 1040 712)
+	(pt 1040 800)
 	(bus)
 )
 (connector
-	(pt 368 832)
-	(pt 432 832)
+	(pt 1272 624)
+	(pt 1272 784)
+	(bus)
+)
+(connector
+	(pt 1320 624)
+	(pt 1272 624)
+	(bus)
+)
+(connector
+	(pt 1040 800)
+	(pt 1056 800)
+	(bus)
+)
+(connector
+	(pt 1048 816)
+	(pt 1056 816)
+	(bus)
+)
+(connector
+	(pt 1056 624)
+	(pt 1056 784)
+)
+(connector
+	(pt 208 624)
+	(pt 1056 624)
+)
+(connector
+	(pt -368 992)
+	(pt -368 944)
+	(bus)
+)
+(connector
+	(pt -368 992)
+	(pt 1672 992)
+	(bus)
+)
+(connector
+	(pt -368 944)
+	(pt -312 944)
+	(bus)
+)
+(connector
+	(pt -88 912)
+	(pt -8 912)
+	(bus)
+)
+(connector
+	(pt 304 848)
+	(pt 304 1032)
+	(bus)
+)
+(connector
+	(pt 304 1032)
+	(pt -400 1032)
+	(bus)
+)
+(connector
+	(pt 240 848)
+	(pt 304 848)
+	(bus)
+)
+(connector
+	(pt 304 848)
+	(pt 432 848)
+	(bus)
+)
+(connector
+	(pt -400 1032)
+	(pt -400 928)
+	(bus)
+)
+(connector
+	(pt -400 928)
+	(pt -312 928)
 	(bus)
 )
 (junction (pt 688 816))
 (junction (pt -24 976))
+(junction (pt 1672 608))
+(junction (pt 304 848))

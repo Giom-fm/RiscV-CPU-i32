@@ -1,11 +1,12 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
+use work.types.all;
 
 
 entity sign_extender is
     port(                   
-        i_mode : in std_logic_vector(2 downto 0);
+        i_mode : in T_SIGN_EXTENDER_MODE;
         i_data : in std_logic_vector(31 downto 0);
         o_data : out std_logic_vector(31 downto 0)
     );
@@ -13,13 +14,6 @@ end sign_extender;
 
 
 architecture a_sign_extender of sign_extender is
-
-    constant SIGN_EXTENDER_32 	: std_logic_vector(2 downto 0) := "000";
-	constant SIGN_EXTENDER_U_8  : std_logic_vector(2 downto 0) := "001";
-    constant SIGN_EXTENDER_U_16 : std_logic_vector(2 downto 0) := "010";
-    constant SIGN_EXTENDER_S_8  : std_logic_vector(2 downto 0) := "100";
-    constant SIGN_EXTENDER_S_16 : std_logic_vector(2 downto 0) := "101";
-
     begin
         process (i_mode) begin
             case i_mode is
