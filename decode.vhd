@@ -3,17 +3,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.types.all;
 
 entity decode is 
-
-
 		port(
 			i_instruction	: in std_logic_vector(31 downto 0);
 			o_alu_mode		: out T_ALU_MODE;
+			o_mux_control	: out T_WRITE_REG_MUX;
 			o_rs1_addr		: out std_logic_vector(4 downto 0);
 			o_rs2_addr		: out std_logic_vector(4 downto 0);
 			o_rd_addr		: out std_logic_vector(4 downto 0);
-			o_reg_mux		: out std_logic;
 			o_reg_immediate	: out std_logic_vector(31 downto 0);
-			o_offset_mux	: out std_logic;
 			o_offset		: out std_logic_vector(31 downto 0);
 			o_sign_extender_mode : out T_SIGN_EXTENDER_MODE;
 			o_mem_dir		: out std_logic;
@@ -67,8 +64,7 @@ begin
 
 
 		-- Default case
-		o_reg_mux <= REG_MUX_ALU;
-		o_offset_mux <= REG_MUX_REG;
+		o_mux_control <= WRITE_REG_ZERO;
 		o_alu_mode <= ALU_UNUSED;
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
@@ -85,7 +81,7 @@ begin
 		-- lui
 		if opcode = "01101" then
 
-			o_reg_mux <= REG_MUX_IMM;
+			o_mux_control <= WRITE_REG_IMM;
 			o_rd_addr <= rd;
 			o_reg_immediate <= "000000000000" & imm_u;
 
@@ -94,8 +90,7 @@ begin
 		-- Loads
 		elsif opcode = "00000"  then
 		
-			o_offset_mux <= REG_MUX_OFFSET;
-			o_reg_mux <= REG_MUX_ALU;
+			o_mux_control <= WRITE_REG_MEM;
 			o_offset <= "00000000000000000000" & offset_i;
 			o_alu_mode <= ALU_ADD;
 
@@ -125,8 +120,7 @@ begin
 		
 		elsif opcode = "01000" then
 
-			o_offset_mux <= REG_MUX_OFFSET;
-			o_reg_mux <= REG_MUX_ALU;
+			o_mux_control <= WRITE_REG_ZERO;
 			o_mem_dir <= MEM_DIR_WRITE;
 			o_offset <= "00000000000000000000" & offset_s;
 			o_alu_mode <= ALU_ADD;
@@ -148,7 +142,7 @@ begin
 		-- R-Format Opcodes ----------------------------------------------------
 		-- add 
 		elsif opcode = "01100" then
-			o_reg_mux <= REG_MUX_ALU;
+			o_mux_control <= WRITE_REG_ALU;
 			o_rd_addr <= rd;
 
 			case r_funct is 

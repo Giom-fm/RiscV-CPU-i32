@@ -25,9 +25,16 @@ package types is
 	constant SIGN_EXTENDER_32 : T_SIGN_EXTENDER_MODE := "111";
 	
 	subtype T_STORE_MODE is std_logic_vector(1 downto 0);
-	constant STORE_B : T_STORE_MODE:= "00";
-	constant STORE_H : T_STORE_MODE:= "01";
-	constant STORE_W : T_STORE_MODE:= "10";
-	
+	constant STORE_B : T_STORE_MODE := "00";
+	constant STORE_H : T_STORE_MODE := "01";
+	constant STORE_W : T_STORE_MODE := "10";
 
+	subtype T_WRITE_REG_MUX is std_logic_vector(1 downto 0);
+	constant WRITE_REG_ZERO : T_STORE_MODE := "00";
+	constant WRITE_REG_ALU 	: T_STORE_MODE := "01";
+	constant WRITE_REG_IMM 	: T_STORE_MODE := "10";
+	constant WRITE_REG_MEM 	: T_STORE_MODE := "11";
+
+	constant ZERO_W : std_logic_vector(31 downto 0) := (others => '0');
+	
 end package;
