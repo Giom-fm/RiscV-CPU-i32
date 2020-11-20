@@ -34,7 +34,5 @@ package types is
 	constant WRITE_REG_ALU 	: T_STORE_MODE := "01";
 	constant WRITE_REG_IMM 	: T_STORE_MODE := "10";
 	constant WRITE_REG_MEM 	: T_STORE_MODE := "11";
-
-	constant ZERO_W : std_logic_vector(31 downto 0) := (others => '0');
 	
 end package;

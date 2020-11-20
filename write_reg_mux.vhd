@@ -22,7 +22,7 @@ begin
             when WRITE_REG_ALU => o_data <= i_alu;
             when WRITE_REG_IMM => o_data <= i_imm;
             when WRITE_REG_MEM => o_data <= i_mem;
-            when others => o_data <= ZERO_W;
+            when others => o_data <= (others => '0');
         end case;
     end process;
 end architecture;
