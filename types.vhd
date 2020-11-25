@@ -17,6 +17,7 @@ package types is
 	constant ALU_AND 	: T_ALU_MODE := "1011";
 
 
+
 	subtype T_SIGN_EXTENDER_MODE is std_logic_vector(2 downto 0);
 	constant SIGN_EXTENDER_S_8  : T_SIGN_EXTENDER_MODE:= "000";
     constant SIGN_EXTENDER_S_16 : T_SIGN_EXTENDER_MODE := "001";
@@ -29,10 +30,27 @@ package types is
 	constant STORE_H : T_STORE_MODE := "01";
 	constant STORE_W : T_STORE_MODE := "10";
 
-	subtype T_WRITE_REG_MUX is std_logic_vector(1 downto 0);
-	constant WRITE_REG_ZERO : T_STORE_MODE := "00";
-	constant WRITE_REG_ALU 	: T_STORE_MODE := "01";
-	constant WRITE_REG_IMM 	: T_STORE_MODE := "10";
-	constant WRITE_REG_MEM 	: T_STORE_MODE := "11";
+	subtype T_WRITE_REG_MUX is std_logic_vector(2 downto 0);
+	constant WRITE_REG_ZERO 	: T_WRITE_REG_MUX := "000";
+	constant WRITE_REG_ALU 		: T_WRITE_REG_MUX := "001";
+	constant WRITE_REG_IMM 		: T_WRITE_REG_MUX := "010";
+	constant WRITE_REG_MEM 		: T_WRITE_REG_MUX := "011";
+	constant WRITE_REG_NEXT_PC 	: T_WRITE_REG_MUX := "100";
+	constant WRITE_REG_ZERO_PC 	: T_WRITE_REG_MUX := "101";
+	
+	
+
+	subtype T_PC_SRC is std_logic;
+	constant PC_SRC_ADD : T_PC_SRC := '0';
+	constant PC_SRC_ALU : T_PC_SRC := '1';
+	constant PC_ADD : integer := 1;
+
+	subtype T_COMP_MODE is std_logic_vector(2 downto 0);
+	constant COMP_EQUAL 			: T_COMP_MODE := "000";
+	constant COMP_NOT_EQUAL 		: T_COMP_MODE := "001";
+	constant COMP_LESS_THEN 		: T_COMP_MODE := "010";
+	constant COMP_GREATER_EQUAL 	: T_COMP_MODE := "011";
+	constant COMP_LESS_THEN_U 		: T_COMP_MODE := "100";
+	constant COMP_GREATER_EQUAL_U 	: T_COMP_MODE := "101";
 	
 end package;

@@ -34,6 +34,7 @@ architecture a_decode of decode is
 	signal opcode		: std_logic_vector(4 downto 0);
 	signal u_funct		: std_logic_vector(2 downto 0);
 	signal s_funct		: std_logic_vector(2 downto 0);
+	signal j_funct		: std_logic_vector(2 downto 0);
 	signal r_funct		: std_logic_vector(9 downto 0);
 	
 	signal offset_i		: std_logic_vector(11 downto 0);
@@ -54,6 +55,8 @@ begin
 		-- funct3
 		u_funct   	<= i_instruction(14 downto 12);
 		s_funct   	<= i_instruction(14 downto 12);
+		j_funct		<= i_instruction(14 downto 12);
+		
 
 		rd 			<= i_instruction(11 downto 7);
 		imm_u		<= i_instruction(31 downto 12);
@@ -166,6 +169,26 @@ begin
 					o_alu_mode <= ALU_OR;
 				when "0000000111" => 
 					o_alu_mode <= ALU_AND;
+				when others => NULL;
+			end case;
+
+
+
+		-- J-Format Opcodes ----------------------------------------------------
+		elsif opcode = "11000" then
+			case j_funct is
+				-- beq
+				when "000" => NULL;	
+				-- bne
+				when "001" => NULL;	
+				-- blt
+				when "100" => NULL;	
+				-- bge
+				when "101" => NULL;
+				-- bltu
+				when "110" => NULL;				
+				-- bgeu
+				when "111" => NULL;	
 				when others => NULL;
 			end case;
 		end if;
