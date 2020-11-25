@@ -64,11 +64,12 @@ set_location_assignment PIN_R7 -to uart_rx
 set_location_assignment PIN_T7 -to uart_tx
 set_location_assignment PIN_M2 -to clk
 set_location_assignment PIN_N6 -to rst
+set_global_assignment -name VHDL_FILE mux_alu_right.vhd
+set_global_assignment -name VHDL_FILE mux_register.vhd
+set_global_assignment -name VHDL_FILE mux_alu_left.vhd
 set_global_assignment -name VHDL_FILE comparator.vhd
 set_global_assignment -name VHDL_FILE pc.vhd
 set_global_assignment -name VHDL_FILE utils.vhd
-set_global_assignment -name VHDL_FILE alu_mux.vhd
-set_global_assignment -name VHDL_FILE write_reg_mux.vhd
 set_global_assignment -name VHDL_FILE store_coding.vhd
 set_global_assignment -name VHDL_FILE types.vhd
 set_global_assignment -name VHDL_FILE sign_extender.vhd

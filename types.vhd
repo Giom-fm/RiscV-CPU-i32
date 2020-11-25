@@ -30,13 +30,13 @@ package types is
 	constant STORE_H : T_STORE_MODE := "01";
 	constant STORE_W : T_STORE_MODE := "10";
 
-	subtype T_WRITE_REG_MUX is std_logic_vector(2 downto 0);
-	constant WRITE_REG_ZERO 	: T_WRITE_REG_MUX := "000";
-	constant WRITE_REG_ALU 		: T_WRITE_REG_MUX := "001";
-	constant WRITE_REG_IMM 		: T_WRITE_REG_MUX := "010";
-	constant WRITE_REG_MEM 		: T_WRITE_REG_MUX := "011";
-	constant WRITE_REG_NEXT_PC 	: T_WRITE_REG_MUX := "100";
-	constant WRITE_REG_ZERO_PC 	: T_WRITE_REG_MUX := "101";
+	subtype T_MUX_CONTROL is std_logic_vector(2 downto 0);
+	constant MUX_CONTROL_STORE 	: T_MUX_CONTROL := "000";
+	constant MUX_CONTROL_ALU 		: T_MUX_CONTROL := "001";
+	constant MUX_CONTROL_IMM 		: T_MUX_CONTROL := "010";
+	constant MUX_CONTROL_LOAD 		: T_MUX_CONTROL := "011";
+	constant MUX_CONTROL_BRANCH		: T_MUX_CONTROL := "100";
+	constant MUX_CONTROL_JUMP		: T_MUX_CONTROL := "101";
 	
 	
 

@@ -6,7 +6,7 @@ entity decode is
 		port(
 			i_instruction	: in std_logic_vector(31 downto 0);
 			o_alu_mode		: out T_ALU_MODE;
-			o_mux_control	: out T_WRITE_REG_MUX;
+			o_mux_control	: out T_MUX_CONTROL;
 			o_rs1_addr		: out std_logic_vector(4 downto 0);
 			o_rs2_addr		: out std_logic_vector(4 downto 0);
 			o_rd_addr		: out std_logic_vector(4 downto 0);
@@ -67,7 +67,7 @@ begin
 
 
 		-- Default case
-		o_mux_control <= WRITE_REG_ZERO;
+		o_mux_control <= MUX_CONTROL_STORE;
 		o_alu_mode <= ALU_UNUSED;
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
@@ -84,7 +84,7 @@ begin
 		-- lui
 		if opcode = "01101" then
 
-			o_mux_control <= WRITE_REG_IMM;
+			o_mux_control <= MUX_CONTROL_IMM;
 			o_rd_addr <= rd;
 			o_reg_immediate <= "000000000000" & imm_u;
 
@@ -93,7 +93,7 @@ begin
 		-- Loads
 		elsif opcode = "00000"  then
 		
-			o_mux_control <= WRITE_REG_MEM;
+			o_mux_control <= MUX_CONTROL_LOAD;
 			o_offset <= "00000000000000000000" & offset_i;
 			o_alu_mode <= ALU_ADD;
 
@@ -123,7 +123,7 @@ begin
 		
 		elsif opcode = "01000" then
 
-			o_mux_control <= WRITE_REG_ZERO;
+			o_mux_control <= MUX_CONTROL_STORE;
 			o_mem_dir <= MEM_DIR_WRITE;
 			o_offset <= "00000000000000000000" & offset_s;
 			o_alu_mode <= ALU_ADD;
@@ -145,7 +145,7 @@ begin
 		-- R-Format Opcodes ----------------------------------------------------
 		-- add 
 		elsif opcode = "01100" then
-			o_mux_control <= WRITE_REG_ALU;
+			o_mux_control <= MUX_CONTROL_ALU;
 			o_rd_addr <= rd;
 
 			case r_funct is 

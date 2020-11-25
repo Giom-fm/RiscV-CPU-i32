@@ -41,8 +41,8 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 288 48)
 		(output)
-		(text "o_mux_control[1..0]" (rect 0 0 79 12)(font "Arial" ))
-		(text "o_mux_control[1..0]" (rect 188 43 267 55)(font "Arial" ))
+		(text "o_mux_control[2..0]" (rect 0 0 80 12)(font "Arial" ))
+		(text "o_mux_control[2..0]" (rect 187 43 267 55)(font "Arial" ))
 		(line (pt 288 48)(pt 272 48)(line_width 3))
 	)
 	(port
