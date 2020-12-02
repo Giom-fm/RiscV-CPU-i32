@@ -164,7 +164,7 @@ begin
         assert result = "00000000000000000000000000000000";
         wait for C_DELAY;
 
-        alu_mode <= ALU_SRA;
+        alu_mode <= ALU_SRL;
         left    <= "10000000000000000000000000000000";
         right   <= "00000000000000000000000000000001";
         wait for C_DELAY;
@@ -185,26 +185,26 @@ begin
         assert result = "00000000000000000000000000000001";
         wait for C_DELAY;
 
-        -- SRA TODO!
+        -- SRA 
         alu_mode <= ALU_SRA;
         left    <= "00000000000000000000000000000010";
         right   <= "00000000000000000000000000000001";
         wait for C_DELAY;
-        assert result = "00000000000000000000000000000001" report "SRA 1";
+        assert result = "00000000000000000000000000000001";
         wait for C_DELAY;
 
         alu_mode <= ALU_SRA;
         left    <= "00000000000000000000000000000001";
         right   <= "00000000000000000000000000000001";
         wait for C_DELAY;
-        assert result = "10000000000000000000000000000000" report "SRA 2";
+        assert result = "10000000000000000000000000000000";
         wait for C_DELAY;
 
         alu_mode <= ALU_SRA;
         left    <= "10000000000000000000000000000000";
         right   <= "00000000000000000000000000000001";
         wait for C_DELAY;
-        assert result = "01000000000000000000000000000000" report "SRA 3";
+        assert result = "01000000000000000000000000000000";
         wait for C_DELAY;
 
         -- OR
