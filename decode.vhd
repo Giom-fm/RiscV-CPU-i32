@@ -13,23 +13,13 @@ entity decode is
 			o_reg_immediate	: out std_logic_vector(31 downto 0);
 			o_offset		: out std_logic_vector(31 downto 0);
 			o_sign_extender_mode : out T_SIGN_EXTENDER_MODE;
-			o_mem_dir		: out std_logic;
+			o_mem_dir		: out T_MEM_DIR;
 			o_store_mode	: out T_STORE_MODE
 		);
 		
 end decode;
 
 architecture a_decode of decode is
-
-	constant REG_MUX_IMM	: std_logic := '0';
-	constant REG_MUX_ALU 	: std_logic := '1';
-
-	constant REG_MUX_REG	: std_logic := '0';
-	constant REG_MUX_OFFSET : std_logic := '1';
-
-	constant MEM_DIR_READ	: std_logic := '0';
-	constant MEM_DIR_WRITE 	: std_logic := '1';
-
 
 	signal opcode		: std_logic_vector(4 downto 0);
 	signal u_funct		: std_logic_vector(2 downto 0);
@@ -77,6 +67,7 @@ begin
 		o_sign_extender_mode <= SIGN_EXTENDER_32;
 		o_mem_dir <= MEM_DIR_READ;
 		o_store_mode <= STORE_W;
+		o_offset <= (others => '0');
 
 		
 		

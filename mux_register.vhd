@@ -18,7 +18,7 @@ end mux_register;
 architecture a_mux_register of mux_register is
 
 begin
-    process(i_mode, i_imm, i_alu, i_mem) begin
+    process(i_mode, i_imm, i_alu, i_mem, i_pc) begin
         case i_mode is
             when MUX_CONTROL_ALU => o_data <= i_alu;
             when MUX_CONTROL_IMM => o_data <= i_imm;

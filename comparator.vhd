@@ -25,6 +25,8 @@ begin
 		variable left_s  : signed(31 downto 0) := signed(i_left);
 		variable right_s : signed(31 downto 0) := signed(i_right);
 		begin
+		
+		  o_pc_mode <= PC_SRC_ADD;
 
         case i_comparator_mode is
 			when COMP_EQUAL =>
@@ -51,7 +53,7 @@ begin
 				if left_u >= right_u then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
-			when others => o_pc_mode <= PC_SRC_ADD;
+			when others => null;
         end case;	
 	end process;	
 end a_comparator;

@@ -38,7 +38,6 @@ package types is
 	constant MUX_CONTROL_BRANCH		: T_MUX_CONTROL := "100";
 	constant MUX_CONTROL_JUMP		: T_MUX_CONTROL := "101";
 	
-	
 
 	subtype T_PC_SRC is std_logic;
 	constant PC_SRC_ADD : T_PC_SRC := '0';
@@ -53,4 +52,9 @@ package types is
 	constant COMP_LESS_THEN_U 		: T_COMP_MODE := "100";
 	constant COMP_GREATER_EQUAL_U 	: T_COMP_MODE := "101";
 	
+
+	subtype T_MEM_DIR is std_logic;
+	constant MEM_DIR_READ	: T_MEM_DIR := '0'; 
+	constant MEM_DIR_WRITE	: T_MEM_DIR := '1';
+	 
 end package;

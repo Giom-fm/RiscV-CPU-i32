@@ -1,0 +1,51 @@
+vsim work.test_alu
+# vsim work.test_alu 
+# Start time: 10:21:12 on Dec 02,2020
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.types
+# Loading work.utils(body)
+# Loading work.test_alu(a_test_alu)
+# Loading work.alu(a_alu)
+add wave -position insertpoint sim:/test_alu/*
+run
+# ** Error: SRA 2
+#    Time: 470 ps  Iteration: 0  Instance: /test_alu
+# ** Error: SRA 3
+#    Time: 490 ps  Iteration: 0  Instance: /test_alu
+quit -sim
+# End time: 10:23:24 on Dec 02,2020, Elapsed time: 0:02:12
+# Errors: 2, Warnings: 1
+vcom -work work -2002 -explicit C:/Users/Julian/Desktop/RiscV-CPU-i32/test_alu.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:23:36 on Dec 02,2020
+# vcom -reportprogress 300 -work work -2002 -explicit C:/Users/Julian/Desktop/RiscV-CPU-i32/test_alu.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Loading package types
+# -- Loading package utils
+# -- Compiling entity test_alu
+# -- Compiling architecture a_test_alu of test_alu
+# -- Loading entity alu
+# End time: 10:23:36 on Dec 02,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vsim work.test_alu
+# vsim work.test_alu 
+# Start time: 10:23:40 on Dec 02,2020
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.types
+# Loading work.utils(body)
+# Loading work.test_alu(a_test_alu)
+# Loading work.alu(a_alu)
+add wave -position insertpoint sim:/test_alu/alu_test/*
+run
+quit -sim
+# End time: 10:24:36 on Dec 02,2020, Elapsed time: 0:00:56
+# Errors: 0, Warnings: 1

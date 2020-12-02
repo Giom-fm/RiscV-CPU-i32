@@ -16,7 +16,7 @@ end sign_extender;
 
 architecture a_sign_extender of sign_extender is
     begin
-        process (i_mode) begin
+        process (i_mode, i_data) begin
             case i_mode is
                 when SIGN_EXTENDER_U_8  => o_data <= fill_w_zeros(i_data(7 downto 0));
                 when SIGN_EXTENDER_U_16 => o_data <= fill_w_zeros(i_data(15 downto 0));

@@ -1,0 +1,657 @@
+m255
+K4
+z2
+!s11e vcom 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/intelFPGA_lite/20.1
+Ealu
+Z0 w1606641861
+Z1 DPx4 work 5 utils 0 22 lYQO8]=J77PTI]c1SO1LI3
+Z2 DPx4 work 5 types 0 22 @bLa<2PhdfTaS1GFFO[5j2
+Z3 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z5 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 65
+Z6 dC:/Users/Julian/Desktop/RiscV-CPU-i32
+Z7 8C:/Users/Julian/Desktop/RiscV-CPU-i32/alu.vhd
+Z8 FC:/Users/Julian/Desktop/RiscV-CPU-i32/alu.vhd
+l0
+L8 1
+VE_DM;lMaZWZ8;33F=@42a1
+!s100 EY@2k<VQ@YV>d>XIU=BmW3
+Z9 OV;C;2020.1;71
+32
+Z10 !s110 1606726183
+!i10b 1
+Z11 !s108 1606726183.000000
+Z12 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/alu.vhd|
+Z13 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/alu.vhd|
+!i113 1
+Z14 o-work work -2002 -explicit
+Z15 tExplicit 1 CvgOpt 0
+Aa_alu
+R1
+R2
+R3
+R4
+R5
+Z16 DEx4 work 3 alu 0 22 E_DM;lMaZWZ8;33F=@42a1
+!i122 65
+l21
+L20 18
+VPIPoCXzBM:OOmH_?X9>5F1
+!s100 =cJlP9a2Pm3Uh^O=cOZF<1
+R9
+32
+R10
+!i10b 1
+R11
+R12
+R13
+!i113 1
+R14
+R15
+Ecomparator
+R0
+R2
+R3
+R4
+R5
+!i122 66
+R6
+Z17 8C:/Users/Julian/Desktop/RiscV-CPU-i32/comparator.vhd
+Z18 FC:/Users/Julian/Desktop/RiscV-CPU-i32/comparator.vhd
+l0
+L7 1
+VZ<T_fiHBVk8gjZhaB;0g>1
+!s100 c@gTHam^D?`5]n[IHf`B=0
+R9
+32
+Z19 !s110 1606726184
+!i10b 1
+R11
+Z20 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/comparator.vhd|
+Z21 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/comparator.vhd|
+!i113 1
+R14
+R15
+Aa_comparator
+R2
+R3
+R4
+R5
+DEx4 work 10 comparator 0 22 Z<T_fiHBVk8gjZhaB;0g>1
+!i122 66
+l21
+L19 39
+V5gPoJG2`@E=J45_n:_X[H1
+!s100 18fiNZcLZ`TRl?cJN4XGT3
+R9
+32
+R19
+!i10b 1
+R11
+R20
+R21
+!i113 1
+R14
+R15
+Edecode
+R0
+R2
+R4
+R5
+!i122 67
+R6
+Z22 8C:/Users/Julian/Desktop/RiscV-CPU-i32/decode.vhd
+Z23 FC:/Users/Julian/Desktop/RiscV-CPU-i32/decode.vhd
+l0
+L5 1
+Vi9Z2REP=jXUE[Sk1fk<7_1
+!s100 Eccn=0HLOOTSl3oCz8]6?2
+R9
+32
+R19
+!i10b 1
+Z24 !s108 1606726184.000000
+Z25 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/decode.vhd|
+Z26 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/decode.vhd|
+!i113 1
+R14
+R15
+Aa_decode
+R2
+R4
+R5
+DEx4 work 6 decode 0 22 i9Z2REP=jXUE[Sk1fk<7_1
+!i122 67
+l48
+L22 177
+V;bQYhmXJ4_JE?F^<DH5OH2
+!s100 aabPV@6S[ChK2EAM_Km<`2
+R9
+32
+R19
+!i10b 1
+R24
+R25
+R26
+!i113 1
+R14
+R15
+Ememory
+R0
+R3
+R4
+R5
+!i122 68
+R6
+Z27 8C:/Users/Julian/Desktop/RiscV-CPU-i32/memory.vhd
+Z28 FC:/Users/Julian/Desktop/RiscV-CPU-i32/memory.vhd
+l0
+L6 1
+VEZ>QP0Fb33b5kf3<MIMzA1
+!s100 IAj>ZdTP;j8iUc?]MHzK;0
+R9
+32
+R19
+!i10b 1
+R24
+Z29 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/memory.vhd|
+Z30 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/memory.vhd|
+!i113 1
+R14
+R15
+Aa_memory
+R3
+R4
+R5
+DEx4 work 6 memory 0 22 EZ>QP0Fb33b5kf3<MIMzA1
+!i122 68
+l31
+L26 19
+V8;OOH8:SW0FMQSiYQ0?Mm3
+!s100 XDYn:OLhd;zYLNfhb?B7N1
+R9
+32
+R19
+!i10b 1
+R24
+R29
+R30
+!i113 1
+R14
+R15
+Emux_alu_left
+R0
+R2
+R4
+R5
+!i122 69
+R6
+Z31 8C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_left.vhd
+Z32 FC:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_left.vhd
+l0
+L5 1
+V@bdYGd3]zBONkEF]=z??d3
+!s100 dWCUBJeEllbdT]kn4F=Ym0
+R9
+32
+R19
+!i10b 1
+R24
+Z33 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_left.vhd|
+Z34 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_left.vhd|
+!i113 1
+R14
+R15
+Aa_mux_alu_left
+R2
+R4
+R5
+DEx4 work 12 mux_alu_left 0 22 @bdYGd3]zBONkEF]=z??d3
+!i122 69
+l17
+L15 10
+VV;d8g[NHbQ>ZO;:[WTT0>2
+!s100 <haE;87oBo1<Hhb`LW8XS3
+R9
+32
+R19
+!i10b 1
+R24
+R33
+R34
+!i113 1
+R14
+R15
+Emux_alu_right
+R0
+R2
+R4
+R5
+!i122 70
+R6
+Z35 8C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_right.vhd
+Z36 FC:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_right.vhd
+l0
+L6 1
+VmM4]SIo]DOiz861UM[^L80
+!s100 <EhQeU^]IdTIPNRKCl@h=0
+R9
+32
+R19
+!i10b 1
+R24
+Z37 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_right.vhd|
+Z38 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_alu_right.vhd|
+!i113 1
+R14
+R15
+Aa_mux_alu_right
+R2
+R4
+R5
+DEx4 work 13 mux_alu_right 0 22 mM4]SIo]DOiz861UM[^L80
+!i122 70
+l18
+L16 10
+V1CaE=gc`2>=UlRJCIFH7`2
+!s100 ;]o[H@h[^[@Oj^86ZMm_B3
+R9
+32
+R19
+!i10b 1
+R24
+R37
+R38
+!i113 1
+R14
+R15
+Emux_register
+R0
+R2
+R4
+R5
+!i122 71
+R6
+Z39 8C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_register.vhd
+Z40 FC:/Users/Julian/Desktop/RiscV-CPU-i32/mux_register.vhd
+l0
+L6 1
+V3GfA4hST0>LlN8VDCnP6H0
+!s100 m@eaTM43RMHIHOY4RF=]50
+R9
+32
+Z41 !s110 1606726185
+!i10b 1
+R24
+Z42 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_register.vhd|
+Z43 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/mux_register.vhd|
+!i113 1
+R14
+R15
+Aa_mux_register
+R2
+R4
+R5
+DEx4 work 12 mux_register 0 22 3GfA4hST0>LlN8VDCnP6H0
+!i122 71
+l20
+L18 13
+VP[Y1a;i>SI3no;PmRW`WH0
+!s100 n8Bcz0`79PZ6?d5BHC;a40
+R9
+32
+R41
+!i10b 1
+R24
+R42
+R43
+!i113 1
+R14
+R15
+Epc
+R0
+R1
+R2
+R3
+R4
+R5
+!i122 72
+R6
+Z44 8C:/Users/Julian/Desktop/RiscV-CPU-i32/pc.vhd
+Z45 FC:/Users/Julian/Desktop/RiscV-CPU-i32/pc.vhd
+l0
+L7 1
+V@aBHbIeLMc5Tn3VbW00TR3
+!s100 WFUT5blX12MjK?<nng0P=1
+R9
+32
+R41
+!i10b 1
+Z46 !s108 1606726185.000000
+Z47 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/pc.vhd|
+Z48 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/pc.vhd|
+!i113 1
+R14
+R15
+Aa_pc
+R1
+R2
+R3
+R4
+R5
+DEx4 work 2 pc 0 22 @aBHbIeLMc5Tn3VbW00TR3
+!i122 72
+l24
+L20 20
+VGV>@YUaMLU8NWG91HK^;f0
+!s100 L@EWj[OP<M9F4L6NgUTH>1
+R9
+32
+R41
+!i10b 1
+R46
+R47
+R48
+!i113 1
+R14
+R15
+Eregisters
+R0
+R3
+R4
+R5
+!i122 73
+R6
+Z49 8C:/Users/Julian/Desktop/RiscV-CPU-i32/registers.vhd
+Z50 FC:/Users/Julian/Desktop/RiscV-CPU-i32/registers.vhd
+l0
+L6 1
+V5o2?4Bd;2QNL9agjl;8P=1
+!s100 @AcHeF]a_HbHZ9LUEE=Am2
+R9
+32
+R41
+!i10b 1
+R46
+Z51 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/registers.vhd|
+Z52 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/registers.vhd|
+!i113 1
+R14
+R15
+Aa_registers
+R3
+R4
+R5
+DEx4 work 9 registers 0 22 5o2?4Bd;2QNL9agjl;8P=1
+!i122 73
+l27
+L22 19
+V@Tb>BG<h]6oK0b@bCB>Se0
+!s100 [CimARLC::J^WUFGk1Ifh1
+R9
+32
+R41
+!i10b 1
+R46
+R51
+R52
+!i113 1
+R14
+R15
+Esign_extender
+R0
+R1
+R2
+R3
+R4
+R5
+!i122 74
+R6
+Z53 8C:/Users/Julian/Desktop/RiscV-CPU-i32/sign_extender.vhd
+Z54 FC:/Users/Julian/Desktop/RiscV-CPU-i32/sign_extender.vhd
+l0
+L8 1
+VU<`6MCMDl@UPldbRWeWf23
+!s100 9IM`^zmLd4LW>^_@mL;Bo0
+R9
+32
+R41
+!i10b 1
+R46
+Z55 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/sign_extender.vhd|
+Z56 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/sign_extender.vhd|
+!i113 1
+R14
+R15
+Aa_sign_extender
+R1
+R2
+R3
+R4
+R5
+DEx4 work 13 sign_extender 0 22 U<`6MCMDl@UPldbRWeWf23
+!i122 74
+l18
+L17 23
+VDdkgMJQgS2W0o<SUzf4Tl2
+!s100 ekS==o5aQkJEP@::dHTn`2
+R9
+32
+R41
+!i10b 1
+R46
+R55
+R56
+!i113 1
+R14
+R15
+Estore_coding
+R0
+R2
+R3
+R4
+R5
+!i122 75
+R6
+Z57 8C:/Users/Julian/Desktop/RiscV-CPU-i32/store_coding.vhd
+Z58 FC:/Users/Julian/Desktop/RiscV-CPU-i32/store_coding.vhd
+l0
+L7 1
+Viz=LbTYaR_fajS2IT4kB>0
+!s100 <57>eW64`0h8;l?`KPoeT1
+R9
+32
+R41
+!i10b 1
+R46
+Z59 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/store_coding.vhd|
+Z60 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/store_coding.vhd|
+!i113 1
+R14
+R15
+Aa_store_coding
+R2
+R3
+R4
+R5
+DEx4 work 12 store_coding 0 22 iz=LbTYaR_fajS2IT4kB>0
+!i122 75
+l18
+L17 12
+Vzd2Wf0hhg<]`_dQEZa<Gb1
+!s100 X5b0zYIeQ<hl9Aag38h=d3
+R9
+32
+R41
+!i10b 1
+R46
+R59
+R60
+!i113 1
+R14
+R15
+Etest_alu
+Z61 w1606900950
+R1
+R2
+R3
+R4
+R5
+!i122 86
+R6
+Z62 8C:/Users/Julian/Desktop/RiscV-CPU-i32/test_alu.vhd
+Z63 FC:/Users/Julian/Desktop/RiscV-CPU-i32/test_alu.vhd
+l0
+L8 1
+Vnn`QVbU2l:b_`2<5MPYcX3
+!s100 @6CeogVhFoj?fH4K;VE:<0
+R9
+32
+Z64 !s110 1606901016
+!i10b 1
+Z65 !s108 1606901016.000000
+Z66 !s90 -reportprogress|300|-work|work|-2002|-explicit|C:/Users/Julian/Desktop/RiscV-CPU-i32/test_alu.vhd|
+Z67 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/test_alu.vhd|
+!i113 1
+R14
+R15
+Aa_test_alu
+R16
+R1
+R2
+R3
+R4
+R5
+Z68 DEx4 work 8 test_alu 0 22 nn`QVbU2l:b_`2<5MPYcX3
+!i122 86
+l18
+Z69 L11 222
+V`d<Kd<kLI2J`n^?UHHGBz2
+!s100 2PSXKDz0@E7N5RhELG[8X2
+R9
+32
+R64
+!i10b 1
+R65
+R66
+R67
+!i113 1
+R14
+R15
+Ptypes
+R4
+R5
+!i122 77
+R0
+R6
+8C:/Users/Julian/Desktop/RiscV-CPU-i32/types.vhd
+FC:/Users/Julian/Desktop/RiscV-CPU-i32/types.vhd
+l0
+L4 1
+V@bLa<2PhdfTaS1GFFO[5j2
+!s100 M1BPZMQi33?PblADNZI9F0
+R9
+32
+Z70 !s110 1606726186
+!i10b 1
+Z71 !s108 1606726186.000000
+!s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/types.vhd|
+!s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/types.vhd|
+!i113 1
+R14
+R15
+Euart
+R0
+R4
+R5
+!i122 78
+R6
+Z72 8C:/Users/Julian/Desktop/RiscV-CPU-i32/UART.vhd
+Z73 FC:/Users/Julian/Desktop/RiscV-CPU-i32/UART.vhd
+l0
+L26 1
+VfX>:LUH1>WYGE4h4KhPhV1
+!s100 ;QSOIRn5:J^d]U849Wzje2
+R9
+32
+R70
+!i10b 1
+R71
+Z74 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/UART.vhd|
+Z75 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/UART.vhd|
+!i113 1
+R14
+R15
+Alogic
+R4
+R5
+DEx4 work 4 uart 0 22 fX>:LUH1>WYGE4h4KhPhV1
+!i122 78
+l59
+L47 149
+VX9oZ@>HO4jPe7Ej469<B`0
+!s100 R[`Ql_6I9YkR05LH1kQz31
+R9
+32
+R70
+!i10b 1
+R71
+R74
+R75
+!i113 1
+R14
+R15
+Putils
+R2
+R3
+R4
+R5
+!i122 79
+R0
+R6
+Z76 8C:/Users/Julian/Desktop/RiscV-CPU-i32/utils.vhd
+Z77 FC:/Users/Julian/Desktop/RiscV-CPU-i32/utils.vhd
+l0
+L6 1
+VlYQO8]=J77PTI]c1SO1LI3
+!s100 K3DhmOIK5<ZW_kU?kSPQ83
+R9
+32
+b1
+R70
+!i10b 1
+R71
+Z78 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Julian/Desktop/RiscV-CPU-i32/utils.vhd|
+Z79 !s107 C:/Users/Julian/Desktop/RiscV-CPU-i32/utils.vhd|
+!i113 1
+R14
+R15
+Bbody
+R1
+R2
+R3
+R4
+R5
+!i122 79
+l0
+L18 1
+Vk2DRG:HM9jc1Ed5UCIKB>0
+!s100 B_Y=Q5[UeQU[GRCKR>7=B2
+R9
+32
+R70
+!i10b 1
+R71
+R78
+R79
+!i113 1
+R14
+R15
