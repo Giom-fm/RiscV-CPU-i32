@@ -185,7 +185,8 @@ begin
         assert result = "00000000000000000000000000000001";
         wait for C_DELAY;
 
-        -- SRA 
+        -- SRA
+        -- Shift no Sign by one to the right
         alu_mode <= ALU_SRA;
         left    <= "00000000000000000000000000000010";
         right   <= "00000000000000000000000000000001";
@@ -197,14 +198,14 @@ begin
         left    <= "00000000000000000000000000000001";
         right   <= "00000000000000000000000000000001";
         wait for C_DELAY;
-        assert result = "10000000000000000000000000000000";
+        assert result = "00000000000000000000000000000000";
         wait for C_DELAY;
-
+        
         alu_mode <= ALU_SRA;
         left    <= "10000000000000000000000000000000";
         right   <= "00000000000000000000000000000001";
         wait for C_DELAY;
-        assert result = "01000000000000000000000000000000";
+        assert result = "11000000000000000000000000000000";
         wait for C_DELAY;
 
         -- OR
