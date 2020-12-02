@@ -488,9 +488,9 @@ https://fpgasoftware.intel.com/eula.
 	)
 )
 (symbol
-	(rect 760 448 1048 656)
+	(rect 760 448 1048 688)
 	(text "decode" (rect 5 0 66 19)(font "Arial" ))
-	(text "inst" (rect 8 192 38 211)(font "Arial" ))
+	(text "inst" (rect 8 224 38 243)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -568,8 +568,15 @@ https://fpgasoftware.intel.com/eula.
 		(text "o_store_mode[1..0]" (rect 131 171 267 190)(font "Arial" ))
 		(line (pt 288 176)(pt 272 176)(line_width 3))
 	)
+	(port
+		(pt 288 192)
+		(output)
+		(text "o_comp_mode[2..0]" (rect 0 0 165 19)(font "Arial" ))
+		(text "o_comp_mode[2..0]" (rect 128 187 267 206)(font "Arial" ))
+		(line (pt 288 192)(pt 272 192)(line_width 3))
+	)
 	(drawing
-		(rectangle (rect 16 16 272 192))
+		(rectangle (rect 16 16 272 224))
 	)
 )
 (connector
@@ -1116,6 +1123,31 @@ https://fpgasoftware.intel.com/eula.
 (connector
 	(pt 1368 496)
 	(pt 1368 456)
+	(bus)
+)
+(connector
+	(pt 472 984)
+	(pt 456 984)
+	(bus)
+)
+(connector
+	(pt 456 688)
+	(pt 1056 688)
+	(bus)
+)
+(connector
+	(pt 456 688)
+	(pt 456 984)
+	(bus)
+)
+(connector
+	(pt 1056 688)
+	(pt 1056 640)
+	(bus)
+)
+(connector
+	(pt 1056 640)
+	(pt 1048 640)
 	(bus)
 )
 (junction (pt 1592 704))

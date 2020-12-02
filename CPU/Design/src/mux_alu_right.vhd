@@ -18,7 +18,7 @@ architecture a_mux_alu_right of mux_alu_right is
 begin
     process(i_mode, i_rs2, i_offset) begin
         case i_mode is
-            when MUX_CONTROL_LOAD | MUX_CONTROL_STORE => o_data <= i_offset;
+            when MUX_CONTROL_LOAD | MUX_CONTROL_STORE | MUX_CONTROL_BRANCH | MUX_CONTROL_JUMP_REL | MUX_CONTROL_JUMP_ABS => o_data <= i_offset;
             when others => o_data <= i_rs2;
         end case;
     end process;

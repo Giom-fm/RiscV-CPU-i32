@@ -23,7 +23,9 @@ begin
             when MUX_CONTROL_ALU => o_data <= i_alu;
             when MUX_CONTROL_IMM => o_data <= i_imm;
             when MUX_CONTROL_LOAD => o_data <= i_mem;
-            when MUX_CONTROL_JUMP => o_data <= i_pc;
+            when MUX_CONTROL_BRANCH => o_data <= (others => '0');
+            when MUX_CONTROL_JUMP_REL => o_data <= i_pc;
+            when MUX_CONTROL_JUMP_ABS => o_data <= i_pc;
             when others => o_data <= (others => '0');
         end case;
     end process;

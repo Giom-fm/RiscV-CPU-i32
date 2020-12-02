@@ -18,6 +18,8 @@ begin
     process(i_mode, i_rs1, i_pc) begin
         case i_mode is
             when MUX_CONTROL_BRANCH => o_data <= i_pc;
+            when MUX_CONTROL_JUMP_REL => o_data <= i_pc;
+            when MUX_CONTROL_JUMP_ABS => o_data <= i_rs1;
             when others => o_data <= i_rs1;
         end case;
     end process;

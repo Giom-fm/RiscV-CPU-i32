@@ -9,15 +9,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Compiling entity sign_extender
 -- Compiling architecture a_sign_extender of sign_extender
 
-} {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/mux_alu_right.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/mux_alu_right.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package types
--- Compiling entity mux_alu_right
--- Compiling architecture a_mux_alu_right of mux_alu_right
-
 } {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/registers.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/registers.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
 -- Loading package STANDARD
@@ -36,47 +27,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package types
 -- Compiling entity memory
 -- Compiling architecture a_memory of memory
-
-} {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/decode.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/decode.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package types
--- Compiling entity decode
--- Compiling architecture a_decode of decode
-
-} {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/mux_alu_left.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/mux_alu_left.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package types
--- Compiling entity mux_alu_left
--- Compiling architecture a_mux_alu_left of mux_alu_left
-
-} {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/mux_register.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/mux_register.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package types
--- Compiling entity mux_register
--- Compiling architecture a_mux_register of mux_register
-
-} {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/comparator.vhd {2 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/comparator.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Loading package types
--- Compiling entity comparator
--- Compiling architecture a_comparator of comparator
-** Warning: /home/giom/repos/RiscV-i32/CPU/Design/src/comparator.vhd(23): (vcom-1013) Initial value of "left_u" depends on value of signal "i_left".
-** Warning: /home/giom/repos/RiscV-i32/CPU/Design/src/comparator.vhd(24): (vcom-1013) Initial value of "right_u" depends on value of signal "i_right".
-** Warning: /home/giom/repos/RiscV-i32/CPU/Design/src/comparator.vhd(25): (vcom-1013) Initial value of "left_s" depends on value of signal "i_left".
-** Warning: /home/giom/repos/RiscV-i32/CPU/Design/src/comparator.vhd(26): (vcom-1013) Initial value of "right_s" depends on value of signal "i_right".
 
 } {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/store_coding.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/store_coding.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
@@ -117,12 +67,5 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package std_logic_1164
 -- Compiling entity uart
 -- Compiling architecture logic of uart
-
-} {} {}} /home/giom/repos/RiscV-i32/CPU/Design/src/types.vhd {1 {vcom -work work -2002 -explicit -stats=none /home/giom/repos/RiscV-i32/CPU/Design/src/types.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Compiling package types
 
 } {} {}}
