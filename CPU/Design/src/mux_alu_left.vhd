@@ -17,10 +17,14 @@ architecture a_mux_alu_left of mux_alu_left is
 begin
     process(i_mode, i_rs1, i_pc) begin
         case i_mode is
+            when MUX_CONTROL_LOAD => o_data <= i_rs1;
+            when MUX_CONTROL_STORE => o_data <= i_rs1;
+            when MUX_CONTROL_ALU_REG => o_data <= i_rs1;
+            when MUX_CONTROL_ALU_IMM => o_data <= i_rs1;
+            when MUX_CONTROL_ALU_PC => o_data <= i_pc;
             when MUX_CONTROL_BRANCH => o_data <= i_pc;
             when MUX_CONTROL_JUMP_REL => o_data <= i_pc;
             when MUX_CONTROL_JUMP_ABS => o_data <= i_rs1;
-            when others => o_data <= i_rs1;
         end case;
     end process;
 end architecture;

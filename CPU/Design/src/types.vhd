@@ -18,12 +18,16 @@ package types is
 	constant ALU_OR 	: T_ALU_MODE := "1100";
 	constant ALU_AND 	: T_ALU_MODE := "1101";
 
-	subtype T_SIGN_EXTENDER_MODE is std_logic_vector(2 downto 0);
-	constant SIGN_EXTENDER_S_8  : T_SIGN_EXTENDER_MODE:= "000";
-    constant SIGN_EXTENDER_S_16 : T_SIGN_EXTENDER_MODE := "001";
-	constant SIGN_EXTENDER_U_8  : T_SIGN_EXTENDER_MODE := "100";
-    constant SIGN_EXTENDER_U_16 : T_SIGN_EXTENDER_MODE := "101";
-	constant SIGN_EXTENDER_32 : T_SIGN_EXTENDER_MODE := "111";
+	subtype T_SEXT_MEM_MODE is std_logic_vector(2 downto 0);
+	constant SEXT_MEM_S_8  : T_SEXT_MEM_MODE:= "000";
+    constant SEXT_MEM_S_16 : T_SEXT_MEM_MODE := "001";
+	constant SEXT_MEM_U_8  : T_SEXT_MEM_MODE := "100";
+    constant SEXT_MEM_U_16 : T_SEXT_MEM_MODE := "101";
+	constant SEXT_MEM_32 : T_SEXT_MEM_MODE := "111";
+
+	subtype T_SEXT_OFFSET_IMM_MODE is std_logic;
+	constant SEXT_OFFSET_IMM_12 : T_SEXT_OFFSET_IMM_MODE := '0';
+	constant SEXT_OFFSET_IMM_20 : T_SEXT_OFFSET_IMM_MODE := '1';
 	
 	subtype T_STORE_MODE is std_logic_vector(1 downto 0);
 	constant STORE_B : T_STORE_MODE := "00";
@@ -32,12 +36,13 @@ package types is
 
 	subtype T_MUX_CONTROL is std_logic_vector(2 downto 0);
 	constant MUX_CONTROL_STORE 		: T_MUX_CONTROL := "000";
-	constant MUX_CONTROL_ALU 		: T_MUX_CONTROL := "001";
-	constant MUX_CONTROL_IMM 		: T_MUX_CONTROL := "010";
-	constant MUX_CONTROL_LOAD 		: T_MUX_CONTROL := "011";
-	constant MUX_CONTROL_BRANCH		: T_MUX_CONTROL := "100";
-	constant MUX_CONTROL_JUMP_REL	: T_MUX_CONTROL := "101";
-	constant MUX_CONTROL_JUMP_ABS	: T_MUX_CONTROL := "110";
+	constant MUX_CONTROL_ALU_REG 	: T_MUX_CONTROL := "001";
+	constant MUX_CONTROL_ALU_IMM 	: T_MUX_CONTROL := "010";
+	constant MUX_CONTROL_ALU_PC 	: T_MUX_CONTROL := "011";
+	constant MUX_CONTROL_LOAD 		: T_MUX_CONTROL := "100";
+	constant MUX_CONTROL_BRANCH		: T_MUX_CONTROL := "101";
+	constant MUX_CONTROL_JUMP_REL	: T_MUX_CONTROL := "110";
+	constant MUX_CONTROL_JUMP_ABS	: T_MUX_CONTROL := "111";
 	
 	subtype T_PC_SRC is std_logic;
 	constant PC_SRC_ADD : T_PC_SRC := '0';

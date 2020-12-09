@@ -5,38 +5,37 @@ use work.utils.all;
 
 entity decode is 
 		port(
-			i_instruction	: in std_logic_vector(31 downto 0);
-			o_alu_mode		: out T_ALU_MODE;
-			o_mux_control	: out T_MUX_CONTROL;
-			o_rs1_addr		: out std_logic_vector(4 downto 0);
-			o_rs2_addr		: out std_logic_vector(4 downto 0);
-			o_rd_addr		: out std_logic_vector(4 downto 0);
-			o_reg_immediate	: out std_logic_vector(31 downto 0);
-			o_offset		: out std_logic_vector(31 downto 0);
-			o_sign_extender_mode : out T_SIGN_EXTENDER_MODE;
-			o_mem_dir		: out T_MEM_DIR;
-			o_store_mode	: out T_STORE_MODE;
-			o_comp_mode		: out T_COMP_MODE
+			i_instruction			: in std_logic_vector(31 downto 0);
+			o_alu_mode				: out T_ALU_MODE;
+			o_mux_control			: out T_MUX_CONTROL;
+			o_rs1_addr				: out std_logic_vector(4 downto 0);
+			o_rs2_addr				: out std_logic_vector(4 downto 0);
+			o_rd_addr				: out std_logic_vector(4 downto 0);
+			o_offset_imm			: out std_logic_vector(31 downto 0);
+			o_sext_mem_mode 		: out T_SEXT_MEM_MODE;
+			o_sext_offset_imm_mode 	: out T_SEXT_OFFSET_IMM_MODE;
+			o_mem_dir				: out T_MEM_DIR;
+			o_store_mode			: out T_STORE_MODE;
+			o_comp_mode				: out T_COMP_MODE
 		);
 		
 end decode;
 
 architecture a_decode of decode is
 
-	signal opcode		: std_logic_vector(4 downto 0);
-	signal u_funct		: std_logic_vector(2 downto 0);
-	signal s_funct		: std_logic_vector(2 downto 0);
-	signal j_funct		: std_logic_vector(2 downto 0);
-	signal r_funct		: std_logic_vector(9 downto 0);
-	
-	signal offset_i		: std_logic_vector(11 downto 0);
-	signal offset_s		: std_logic_vector(11 downto 0);
-	signal offset_j		: std_logic_vector(11 downto 0);
+	signal opcode			: std_logic_vector(4 downto 0);
+	signal u_funct			: std_logic_vector(2 downto 0);
+	signal s_funct			: std_logic_vector(2 downto 0);
+	signal j_funct			: std_logic_vector(2 downto 0);
+	signal r_funct			: std_logic_vector(9 downto 0);
+	signal offset_i			: std_logic_vector(11 downto 0);
+	signal offset_s			: std_logic_vector(11 downto 0);
+	signal offset_j			: std_logic_vector(11 downto 0);
 	signal offset_j_imm		: std_logic_vector(19 downto 0);
-	signal imm_u		: std_logic_vector(19 downto 0);
-	signal rd			: std_logic_vector(4 downto 0);
-	signal rs1			: std_logic_vector(4 downto 0);
-	signal rs2			: std_logic_vector(4 downto 0);
+	signal imm_u			: std_logic_vector(19 downto 0);
+	signal rd				: std_logic_vector(4 downto 0);
+	signal rs1				: std_logic_vector(4 downto 0);
+	signal rs2				: std_logic_vector(4 downto 0);
 	
 
 begin
@@ -77,11 +76,10 @@ begin
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
 		o_rd_addr <= "00000";
-		o_reg_immediate <= (others => '0');
-		o_sign_extender_mode <= SIGN_EXTENDER_32;
+		o_sext_mem_mode <= SEXT_MEM_32;
 		o_mem_dir <= MEM_DIR_READ;
 		o_store_mode <= STORE_W;
-		o_offset <= (others => '0');
+		o_offset_imm <= (others => '0');
 		o_comp_mode <= COMP_ALWAYS_ADD;
 
 		
@@ -90,38 +88,41 @@ begin
 		-- lui
 		if opcode = "01101" then
 
-			o_mux_control <= MUX_CONTROL_IMM;
+			o_mux_control <= MUX_CONTROL_ALU_REG;
 			o_rd_addr <= rd;
-			o_reg_immediate <= fill_w_zeros(imm_u);
+			o_rs1_addr <= (others => '0');
+			o_offset_imm <= fill_w_zeros(imm_u);
 
+		-- auipc
+		elsif opcode = "01101" then
 
 		-- I-Format Opcodes ----------------------------------------------------
 		-- Loads
 		elsif opcode = "00000"  then
 		
 			o_mux_control <= MUX_CONTROL_LOAD;
-			o_offset <= fill_w_zeros(offset_i);
+			o_offset_imm <= fill_w_zeros(offset_i);
 			o_alu_mode <= ALU_ADD;
 
 			case u_funct is
 				-- lb
 				when "000" =>
-					o_sign_extender_mode <= SIGN_EXTENDER_S_8;
+					o_sext_mem_mode <= SEXT_MEM_S_8;
 				-- lbu
 				when "100" =>
-					o_sign_extender_mode <= SIGN_EXTENDER_U_8;
+					o_sext_mem_mode <= SEXT_MEM_U_8;
 				-- lh
 				when "001" =>
-					o_sign_extender_mode <= SIGN_EXTENDER_S_16;
+					o_sext_mem_mode <= SEXT_MEM_S_16;
 				-- lhu
 				when "101" =>
-					o_sign_extender_mode <= SIGN_EXTENDER_U_16;
+					o_sext_mem_mode <= SEXT_MEM_U_16;
 				-- lw
 				when "010" =>
-					o_sign_extender_mode <= SIGN_EXTENDER_32;
+					o_sext_mem_mode <= SEXT_MEM_32;
 				-- lwu
 				when "110" =>
-					o_sign_extender_mode <= SIGN_EXTENDER_32;
+					o_sext_mem_mode <= SEXT_MEM_32;
 				when others => NULL;
 			end case;
 
@@ -131,7 +132,7 @@ begin
 
 			o_mux_control <= MUX_CONTROL_STORE;
 			o_mem_dir <= MEM_DIR_WRITE;
-			o_offset <= fill_w_zeros(offset_s);
+			o_offset_imm <= fill_w_zeros(offset_s);
 			o_alu_mode <= ALU_ADD;
 
 			case s_funct is
@@ -150,7 +151,7 @@ begin
 		-- R-Format Opcodes ----------------------------------------------------
 		-- add 
 		elsif opcode = "01100" then
-			o_mux_control <= MUX_CONTROL_ALU;
+			o_mux_control <= MUX_CONTROL_ALU_REG;
 			o_rd_addr <= rd;
 
 			case r_funct is 
@@ -180,7 +181,7 @@ begin
 		-- J-Format Opcodes ----------------------------------------------------
 		elsif opcode = "11000" then
 
-			o_offset <= fill_w_zeros(offset_j);
+			o_offset_imm <= fill_w_zeros(offset_j);
 			o_alu_mode <= ALU_ADD_S;
 			o_mux_control <= MUX_CONTROL_BRANCH;
 
@@ -209,7 +210,7 @@ begin
 		-- JAL
 		elsif opcode = "11011" then
 
-			o_offset <= fill_w_zeros(offset_j_imm);
+			o_offset_imm <= fill_w_zeros(offset_j_imm);
 			o_comp_mode <= COMP_ALWAYS_ALU;
 			o_rd_addr <= rd;
 			o_mux_control <= MUX_CONTROL_JUMP_REL;
@@ -218,7 +219,7 @@ begin
 		-- JALR
 		elsif opcode = "11001" then
 
-			o_offset <= fill_w_zeros(offset_i);
+			o_offset_imm <= fill_w_zeros(offset_i);
 			o_comp_mode <= COMP_ALWAYS_ALU;
 			o_rd_addr <= rd;
 			o_alu_mode <= ALU_ADD_S_E;

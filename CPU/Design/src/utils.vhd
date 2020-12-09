@@ -13,6 +13,9 @@ package utils is
 
     function bool_to_word(bool: boolean)
         return std_logic_vector;
+
+    function sext(msb: integer; data: std_logic_vector)
+        return std_logic_vector;
 end package utils;
    
 package body utils is
@@ -37,4 +40,14 @@ package body utils is
             return fill_w_zeros("0");
         end if;
     end;
+
+    function sext(msb: integer; data: std_logic_vector) return std_logic_vector is
+    begin
+        if data(msb) = '0' then
+            return fill_w_zeros(data(msb downto 0));
+        else
+            return fill_w_ones(data(msb downto 0));
+        end if;
+    end;
+
  end package body utils;
