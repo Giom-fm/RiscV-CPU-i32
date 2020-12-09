@@ -8,7 +8,8 @@ entity decode is
 		port(
 			i_instruction			: in std_logic_vector(31 downto 0);
 			o_alu_mode				: out T_ALU_MODE;
-			o_mux_control			: out T_MUX_CONTROL;
+			o_mux_alu				: out T_MUX_ALU;
+			o_mux_reg				: out T_MUX_REG;
 			o_rs1_addr				: out std_logic_vector(4 downto 0);
 			o_rs2_addr				: out std_logic_vector(4 downto 0);
 			o_rd_addr				: out std_logic_vector(4 downto 0);
@@ -23,7 +24,7 @@ end decode;
 
 architecture a_decode of decode is
 
-	signal opcode			: std_logic_vector(4 downto 0);
+	signal opcode			: std_logic_vector(6 downto 0);
 	signal funct_7			: std_logic_vector(6 downto 0);
 	signal funct_3			: std_logic_vector(2 downto 0);
 	signal rd				: std_logic_vector(4 downto 0);
@@ -40,7 +41,7 @@ begin
 
 	decode_instruction: process(i_instruction) begin
 		
-		opcode 		<= i_instruction(6 downto 2);
+		opcode 		<= i_instruction(6 downto 0);
 
 		rd 			<= i_instruction(11 downto 7);
 		rs1			<= i_instruction(19 downto 15);
@@ -55,7 +56,9 @@ begin
 		immediate_J <= extend_signed(i_instruction(19 downto 12) & i_instruction(20) & i_instruction(30 downto 21) & '0', immediate_J'length);  
 
 		-- Default case
-		o_mux_control <= MUX_CONTROL_STORE;
+		o_mux_alu <= MUX_ALU_RS1_RS2;
+		o_mux_reg <= MUX_REG_ZERO;
+
 		o_alu_mode <= ALU_UNUSED;
 		o_rs1_addr <= rs1;
 		o_rs2_addr <= rs2;
@@ -70,24 +73,38 @@ begin
 		
 		-- U-Format Opcodes ----------------------------------------------------
 		-- lui
-		if opcode = "01101" then
+		if opcode = "0110111" then
 
+			o_immediate <= immediate_U;
 			-- NOP
-			--o_alu_mode <= ALU_ADD;
-			--o_rs1_addr <= (others => '0');
+			o_alu_mode <= ALU_ADD;
+			o_rs1_addr <= (others => '0');
 
-			--o_mux_control <= MUX_CONTROL_ALU_IMM;
-			--o_rd_addr <= rd;
-			--o_immediate <= imm_u(7 downto 0) & (others => '0');
+			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_reg <= MUX_REG_ALU;
 
+			o_rd_addr <= rd;
+			
 		-- auipc
-		elsif opcode = "01101" then
+		elsif opcode = "0110111" then
 
+			o_immediate <= immediate_U;
+			o_alu_mode <= ALU_ADD;
+
+			o_mux_alu <= MUX_ALU_PC_IMM;
+			o_mux_reg <= MUX_REG_ALU;
+
+			o_rd_addr <= rd;
+
+		
+		
 		-- I-Format Opcodes ----------------------------------------------------
 		-- Loads
-		elsif opcode = "00000"  then
-		
-			o_mux_control <= MUX_CONTROL_LOAD;
+		elsif opcode = "0000011"  then
+
+			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_reg <= MUX_REG_MEM;
+
 			o_immediate <= immediate_I;
 			o_mem_dir <= MEM_DIR_READ;
 			o_alu_mode <= ALU_ADD;
@@ -112,18 +129,51 @@ begin
 			end case;
 
 		-- JALR
-		elsif opcode = "11001" then
+		elsif opcode = "1100111" then
 			o_immediate <= immediate_I;
 			o_comp_mode <= COMP_ALWAYS_ALU;
 			o_rd_addr <= rd;
 			o_alu_mode <= ALU_ADD_S_E;
-			o_mux_control <= MUX_CONTROL_JUMP_ABS;
 
+			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_reg <= MUX_REG_PC;
+
+		-- Arithmetic Immediate
+		elsif opcode = "0010011" then
+			o_immediate <= immediate_I;
+			o_rd_addr <= rd;
+			
+			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_reg <= MUX_REG_ALU;
+
+			case funct_3 is 
+				-- Addi
+				when "000" => 
+					o_alu_mode <= ALU_ADD;
+				-- SLTI
+				when "010" => 
+					o_alu_mode <= ALU_SLT;
+				-- SLTIU
+				when "011" => 
+					o_alu_mode <= ALU_SLTU;
+				-- XORI
+				when "100" => 
+					o_alu_mode <= ALU_XOR;
+				-- ORI
+				when "110" => 
+					o_alu_mode <= ALU_OR;
+				-- ANDI
+				when "111" => 
+					o_alu_mode <= ALU_AND;
+				when others => NULL;
+			end case;
 		-- S-Format Opcodes ----------------------------------------------------
 		-- Store
-		elsif opcode = "01000" then
+		elsif opcode = "0100011" then
 
-			o_mux_control <= MUX_CONTROL_STORE;
+			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_reg <= MUX_REG_ZERO;
+
 			o_mem_dir <= MEM_DIR_WRITE;
 			o_immediate <= immediate_S;
 			o_alu_mode <= ALU_ADD;
@@ -142,9 +192,12 @@ begin
 			end case;
 
 		-- R-Format Opcodes ----------------------------------------------------
-		-- add 
-		elsif opcode = "01100" then
-			o_mux_control <= MUX_CONTROL_ALU_REG;
+		-- Arithmetic 
+		elsif opcode = "0110011" then
+
+			o_mux_alu <= MUX_ALU_RS1_RS2;
+			o_mux_reg <= MUX_REG_ALU;
+
 			o_rd_addr <= rd;
 
 			case funct_7 & funct_3 is 
@@ -172,11 +225,13 @@ begin
 			end case;
 
 		-- B-Format Opcodes ----------------------------------------------------
-		elsif opcode = "11000" then
+		elsif opcode = "1100011" then
 
 			o_immediate <= immediate_B;
 			o_alu_mode <= ALU_ADD;
-			o_mux_control <= MUX_CONTROL_BRANCH;
+
+			o_mux_alu <= MUX_ALU_RS1_RS2;
+			o_mux_reg <= MUX_REG_ZERO;
 
 			case funct_3 is
 				-- beq
@@ -202,13 +257,16 @@ begin
 
 		-- J-Format Opcodes ----------------------------------------------------
 		-- JAL
-		elsif opcode = "11011" then
+		elsif opcode = "1101111" then
 
 			o_immediate <= immediate_J;
 			o_comp_mode <= COMP_ALWAYS_ALU;
+
+			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_reg <= MUX_REG_PC;
+
 			o_rd_addr <= rd;
-			o_mux_control <= MUX_CONTROL_JUMP_REL;
-			o_alu_mode <= ALU_ADD_S;
+			o_alu_mode <= ALU_ADD;
 		end if;
 	end process;
 	

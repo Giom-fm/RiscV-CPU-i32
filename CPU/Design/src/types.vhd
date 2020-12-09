@@ -34,16 +34,18 @@ package types is
 	constant STORE_H : T_STORE_MODE := "01";
 	constant STORE_W : T_STORE_MODE := "10";
 
-	subtype T_MUX_CONTROL is std_logic_vector(2 downto 0);
-	constant MUX_CONTROL_STORE 		: T_MUX_CONTROL := "000";
-	constant MUX_CONTROL_ALU_REG 	: T_MUX_CONTROL := "001";
-	constant MUX_CONTROL_ALU_IMM 	: T_MUX_CONTROL := "010";
-	constant MUX_CONTROL_ALU_PC 	: T_MUX_CONTROL := "011";
-	constant MUX_CONTROL_LOAD 		: T_MUX_CONTROL := "100";
-	constant MUX_CONTROL_BRANCH		: T_MUX_CONTROL := "101";
-	constant MUX_CONTROL_JUMP_REL	: T_MUX_CONTROL := "110";
-	constant MUX_CONTROL_JUMP_ABS	: T_MUX_CONTROL := "111";
-	
+	subtype T_MUX_ALU is std_logic_vector(1 downto 0);
+	constant MUX_ALU_RS1_RS2	: T_MUX_ALU := "00";
+	constant MUX_ALU_RS1_IMM	: T_MUX_ALU := "01";
+	constant MUX_ALU_PC_IMM		: T_MUX_ALU := "10";
+	constant MUX_ALU_PC_RS2		: T_MUX_ALU := "11";
+
+	subtype T_MUX_REG is std_logic_vector(1 downto 0);
+	constant MUX_REG_ZERO		: T_MUX_REG := "00";
+	constant MUX_REG_ALU		: T_MUX_REG := "01";
+	constant MUX_REG_MEM		: T_MUX_REG := "10";
+	constant MUX_REG_PC			: T_MUX_REG := "11";
+
 	subtype T_PC_SRC is std_logic;
 	constant PC_SRC_ADD : T_PC_SRC := '0';
 	constant PC_SRC_ALU : T_PC_SRC := '1';
