@@ -5,49 +5,35 @@ use work.types.all;
 
 package utils is
 
-    function fill_w_zeros(vector: std_logic_vector)
+    function extend(data: std_logic_vector; length: integer)
         return std_logic_vector;
 
-    function fill_w_ones(vector: std_logic_vector)
+    function extend_signed(data: std_logic_vector; length: integer)
         return std_logic_vector;
 
     function bool_to_word(bool: boolean)
         return std_logic_vector;
 
-    function sext(msb: integer; data: std_logic_vector)
-        return std_logic_vector;
 end package utils;
    
 package body utils is
 
-    function fill_w_zeros(vector: std_logic_vector) return std_logic_vector is
-        variable zeros : std_logic_vector(31 downto vector'length) := (others => '0');
+    function extend(data: std_logic_vector; length: integer) return std_logic_vector is
     begin
-        return zeros & vector;
+        return std_logic_vector(resize(unsigned(data), length));
     end;
 
-    function fill_w_ones(vector: std_logic_vector) return std_logic_vector is
-        variable ones : std_logic_vector(31 downto vector'length) := (others => '1');
+    function extend_signed(data: std_logic_vector; length: integer) return std_logic_vector is
     begin
-        return ones & vector;
+        return std_logic_vector(resize(signed(data), length));
     end;
 
     function bool_to_word(bool: boolean) return std_logic_vector is
     begin
         if(bool) then
-            return fill_w_zeros("1");
+            return extend("1", 32);
         else 
-            return fill_w_zeros("0");
+            return extend("0", 32);
         end if;
     end;
-
-    function sext(msb: integer; data: std_logic_vector) return std_logic_vector is
-    begin
-        if data(msb) = '0' then
-            return fill_w_zeros(data(msb downto 0));
-        else
-            return fill_w_ones(data(msb downto 0));
-        end if;
-    end;
-
  end package body utils;
