@@ -133,7 +133,7 @@ begin
 			o_immediate <= immediate_I;
 			o_comp_mode <= COMP_ALWAYS_ALU;
 			o_rd_addr <= rd;
-			o_alu_mode <= ALU_ADD_S_E;
+			o_alu_mode <= ALU_ADD_EVEN;
 
 			o_mux_alu <= MUX_ALU_RS1_IMM;
 			o_mux_reg <= MUX_REG_PC;

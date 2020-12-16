@@ -22,8 +22,7 @@ begin
     calculation : process(i_alu_mode, i_left, i_right) begin
         case i_alu_mode is
             when ALU_ADD  => o_result <= std_logic_vector(unsigned(i_left) + unsigned(i_right));
-            when ALU_ADD_S  => o_result <= std_logic_vector(signed(i_left) + signed(i_right));
-            when ALU_ADD_S_E  => o_result <= std_logic_vector(signed(i_left) + signed(i_right))(31 downto 1) & "0";
+            when ALU_ADD_EVEN  => o_result <= std_logic_vector(unsigned(i_left) + unsigned(i_right))(31 downto 1) & "0";
             when ALU_SUB  => o_result <= std_logic_vector(unsigned(i_left) - unsigned(i_right));
             when ALU_SLL  => o_result <= std_logic_vector(shift_left(unsigned(i_left), to_integer(unsigned(i_right(4 downto 0)))));
             when ALU_SLT  => o_result <= bool_to_word(signed(i_left) < signed(i_right));
