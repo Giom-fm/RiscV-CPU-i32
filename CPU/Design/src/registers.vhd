@@ -14,7 +14,10 @@ entity registers is
         o_read_register_2_data            : out std_logic_vector(31 downto 0);
 
         i_write_register_address        : in  std_logic_vector(4 downto 0);
-        i_write_register_data           : in  std_logic_vector(31 downto 0)
+        i_write_register_data           : in  std_logic_vector(31 downto 0);
+
+        --
+        o_debug                         : out std_logic_vector(7 downto 0)
     );
 end registers;
 
@@ -27,6 +30,7 @@ architecture a_registers of registers is
     begin
         o_read_register_1_data <= register_table(to_integer(unsigned(i_read_register_1_address)));
         o_read_register_2_data <= register_table(to_integer(unsigned(i_read_register_2_address)));
+        o_debug <= register_table(31)(7 downto 0);
 
         process (i_clock, i_reset) begin
 					if i_reset = '1' then 
