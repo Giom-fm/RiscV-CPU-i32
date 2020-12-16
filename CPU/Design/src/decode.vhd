@@ -30,6 +30,7 @@ architecture a_decode of decode is
 	signal rd				: std_logic_vector(4 downto 0);
 	signal rs1				: std_logic_vector(4 downto 0);
 	signal rs2				: std_logic_vector(4 downto 0);
+	signal shamt			: std_logic_vector(31 downto 0);
 
 	signal immediate_I		: std_logic_vector(31 downto 0);
 	signal immediate_S		: std_logic_vector(31 downto 0);
@@ -49,6 +50,7 @@ begin
 		funct_3   	<= i_instruction(14 downto 12);
 		funct_7 	<= i_instruction(31 downto 25);
 
+		shamt		<= extend(i_instruction(24 downto 20), shamt'length);
 		immediate_I <= extend_signed(i_instruction(31 downto 20), immediate_I'length);
 		immediate_S <= extend_signed(i_instruction(30 downto 25) & i_instruction(11 downto 7), immediate_S'length);
 		immediate_B <= extend_signed(i_instruction(7) & i_instruction(30 downto 25) & i_instruction(11 downto 8) & '0', immediate_B'length);
@@ -165,6 +167,22 @@ begin
 				-- ANDI
 				when "111" => 
 					o_alu_mode <= ALU_AND;
+				-- SLLI
+				when "001" =>
+					o_alu_mode <= ALU_SLL;
+					o_immediate <= shamt;
+				-- SRLI & SRAI
+				when "101" => 
+					o_immediate <= shamt;
+					case funct_7 is
+						-- SRLI
+						when "0000000" =>
+							o_alu_mode <= ALU_SRL;
+						-- SRAI
+						when "0100000" =>
+							o_alu_mode <= ALU_SRA;
+						when others => NULL;
+					end case;
 				when others => NULL;
 			end case;
 		-- S-Format Opcodes ----------------------------------------------------
@@ -194,10 +212,7 @@ begin
 		-- R-Format Opcodes ----------------------------------------------------
 		-- Arithmetic 
 		elsif opcode = "0110011" then
-
-			o_mux_alu <= MUX_ALU_RS1_RS2;
 			o_mux_reg <= MUX_REG_ALU;
-
 			o_rd_addr <= rd;
 
 			case funct_7 & funct_3 is 
