@@ -12,7 +12,6 @@ entity comparator is
             -- RS2
             i_right     : in std_logic_vector(31 downto 0);
             o_pc_mode    : out T_PC_SRC
-            
         );
 end comparator;
 
