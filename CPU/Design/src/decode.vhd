@@ -40,7 +40,7 @@ architecture a_decode of decode is
 	
 begin
 
-	decode_instruction: process(i_instruction) begin
+	decode_instruction: process(i_instruction, opcode, funct_7, funct_3, rd, rs1, rs2, shamt, immediate_I, immediate_S, immediate_B, immediate_U, immediate_J) begin
 		
 		opcode 		<= i_instruction(6 downto 0);
 

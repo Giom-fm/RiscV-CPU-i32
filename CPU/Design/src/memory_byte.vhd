@@ -5,10 +5,10 @@ USE ieee.std_logic_1164.all;
 LIBRARY altera_mf;
 USE altera_mf.altera_mf_components.all;
 
-ENTITY byte_memory IS
+ENTITY memory_byte IS
 	GENERIC(
 		size_in_bytes   : integer   := 16384;
-		init_filename	: string := ""
+		init_filename	: string := "./src/memory.mif"
 	);   
 	PORT
 	(
@@ -22,10 +22,10 @@ ENTITY byte_memory IS
 		res_data		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
 		res_inst		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
 	);
-END byte_memory;
+END memory_byte;
 
 
-ARCHITECTURE a_byte_memory OF byte_memory IS
+ARCHITECTURE a_memory_byte OF memory_byte IS
 
 BEGIN
 
@@ -37,7 +37,7 @@ BEGIN
 		clock_enable_output_a => "BYPASS",
 		clock_enable_output_b => "BYPASS",
 		indata_reg_b => "CLOCK0",
-		init_file => "./src/memory.mif",
+		init_file => init_filename,
 		intended_device_family => "Cyclone 10 LP",
 		lpm_type => "altsyncram",
 		numwords_a => size_in_bytes,
@@ -72,4 +72,4 @@ BEGIN
 		q_b => res_inst
 	);
 
-END a_byte_memory;
+END a_memory_byte;

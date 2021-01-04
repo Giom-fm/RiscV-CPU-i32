@@ -18,38 +18,33 @@ end comparator;
 architecture a_comparator of comparator is
 	
 begin
-	compare : process(i_comparator_mode, i_left, i_right)
-		variable left_u  : unsigned(31 downto 0) := unsigned(i_left);
-		variable right_u : unsigned(31 downto 0) := unsigned(i_right);
-		variable left_s  : signed(31 downto 0) := signed(i_left);
-		variable right_s : signed(31 downto 0) := signed(i_right);
-		begin
+	compare : process(i_comparator_mode, i_left, i_right) begin
 		
-		  o_pc_mode <= PC_SRC_ADD;
+		o_pc_mode <= PC_SRC_ADD;
 
         case i_comparator_mode is
 			when COMP_EQUAL =>
-				if left_u = right_u then
+				if unsigned(i_left) = unsigned(i_right) then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
 			when COMP_NOT_EQUAL =>
-				if left_u /= right_u then
+				if unsigned(i_left) /= unsigned(i_right) then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
 			when COMP_LESS_THEN	=>
-				if left_s < right_s then
+				if signed(i_left) < signed(i_right) then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
 			when COMP_GREATER_EQUAL =>	      
-				if left_s >= right_s then
+				if signed(i_left) >= signed(i_right) then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
 			when COMP_LESS_THEN_U =>	      
-				if left_u < right_u then
+				if unsigned(i_left) < unsigned(i_right) then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
 			when COMP_GREATER_EQUAL_U =>
-				if left_u >= right_u then
+				if unsigned(i_left) >= unsigned(i_right) then
 					o_pc_mode <= PC_SRC_ALU;
 				end if;
 			when others => null;
