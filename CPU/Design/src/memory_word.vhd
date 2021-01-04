@@ -14,9 +14,11 @@ entity memory_word is
     );   
     port(
         i_clock           : in	std_logic;
+        
         i_inst_address    : in std_logic_vector(31 downto 0);
-        i_data_address    : in  std_logic_vector(31 downto 0);
+
         i_read_write      : in  T_MEM_DIR;       
+        i_data_address    : in  std_logic_vector(31 downto 0);
         i_write_data      : in std_logic_vector(31 downto 0);
 
         o_inst_data       : out std_logic_vector(31 downto 0);

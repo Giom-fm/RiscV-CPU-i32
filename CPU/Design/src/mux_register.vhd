@@ -6,9 +6,9 @@ use work.types.ALL;
 entity mux_register is 
 		port(
         i_mode  : in T_MUX_REG;
-        i_alu   : in std_logic_vector(31 downto 0);
         i_mem   : in std_logic_vector(31 downto 0);
         i_pc   : in std_logic_vector(31 downto 0);
+        i_alu   : in std_logic_vector(31 downto 0);
 		o_data  : out std_logic_vector(31 downto 0)
 		);
 		

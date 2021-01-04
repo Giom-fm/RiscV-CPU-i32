@@ -7,17 +7,18 @@ use work.utils.all;
 entity decode is 
 		port(
 			i_instruction			: in std_logic_vector(31 downto 0);
+			o_comp_mode				: out T_COMP_MODE;
 			o_alu_mode				: out T_ALU_MODE;
 			o_mux_alu				: out T_MUX_ALU;
-			o_mux_reg				: out T_MUX_REG;
+			o_immediate				: out std_logic_vector(31 downto 0);
 			o_rs1_addr				: out std_logic_vector(4 downto 0);
 			o_rs2_addr				: out std_logic_vector(4 downto 0);
 			o_rd_addr				: out std_logic_vector(4 downto 0);
-			o_immediate				: out std_logic_vector(31 downto 0);
+			o_mux_reg				: out T_MUX_REG;
 			o_sext_mem_mode 		: out T_SEXT_MEM_MODE;
 			o_mem_dir				: out T_MEM_DIR;
 			o_store_mode			: out T_STORE_MODE;
-			o_comp_mode				: out T_COMP_MODE
+			o_pc_mode				: out T_PC_MODE
 		);
 		
 end decode;
@@ -69,7 +70,8 @@ begin
 		o_mem_dir <= MEM_DIR_READ;
 		o_store_mode <= STORE_W;
 		o_immediate <= (others => '0');
-		o_comp_mode <= COMP_ALWAYS_ADD;
+		o_comp_mode <= COMP_EQUAL;
+		o_pc_mode <= PC_SRC_ADD;
 
 		
 		
@@ -133,7 +135,7 @@ begin
 		-- JALR
 		elsif opcode = "1100111" then
 			o_immediate <= immediate_I;
-			o_comp_mode <= COMP_ALWAYS_ALU;
+			o_pc_mode <= PC_SRC_ALU;
 			o_rd_addr <= rd;
 			o_alu_mode <= ALU_ADD_EVEN;
 
@@ -244,6 +246,7 @@ begin
 
 			o_immediate <= immediate_B;
 			o_alu_mode <= ALU_ADD;
+			o_pc_mode <= PC_SRC_COMP_ALU;
 
 			o_mux_alu <= MUX_ALU_RS1_RS2;
 			o_mux_reg <= MUX_REG_ZERO;
@@ -275,7 +278,7 @@ begin
 		elsif opcode = "1101111" then
 
 			o_immediate <= immediate_J;
-			o_comp_mode <= COMP_ALWAYS_ALU;
+			o_pc_mode <= PC_SRC_ALU;
 
 			o_mux_alu <= MUX_ALU_RS1_IMM;
 			o_mux_reg <= MUX_REG_PC;

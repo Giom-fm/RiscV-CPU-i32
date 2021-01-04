@@ -45,20 +45,19 @@ package types is
 	constant MUX_REG_MEM		: T_MUX_REG := "10";
 	constant MUX_REG_PC			: T_MUX_REG := "11";
 
-	subtype T_PC_SRC is std_logic;
-	constant PC_SRC_ADD : T_PC_SRC := '0';
-	constant PC_SRC_ALU : T_PC_SRC := '1';
-	constant PC_ADD : integer := 1;
+	subtype T_PC_MODE is std_logic_vector(1 downto 0);
+	constant PC_SRC_ADD 		: T_PC_MODE := "00";
+	constant PC_SRC_COMP_ALU 	: T_PC_MODE := "01";
+	constant PC_SRC_ALU			: T_PC_MODE := "10";
+	constant PC_ADD : integer := 4;
 
 	subtype T_COMP_MODE is bit_vector(2 downto 0);
-	constant COMP_ALWAYS_ADD		: T_COMP_MODE := "000";
-	constant COMP_ALWAYS_ALU		: T_COMP_MODE := "001";
-	constant COMP_EQUAL 			: T_COMP_MODE := "010";
-	constant COMP_NOT_EQUAL 		: T_COMP_MODE := "011";
-	constant COMP_LESS_THEN 		: T_COMP_MODE := "100";
-	constant COMP_GREATER_EQUAL 	: T_COMP_MODE := "101";
-	constant COMP_LESS_THEN_U 		: T_COMP_MODE := "110";
-	constant COMP_GREATER_EQUAL_U 	: T_COMP_MODE := "111";
+	constant COMP_EQUAL 			: T_COMP_MODE := "001";
+	constant COMP_NOT_EQUAL 		: T_COMP_MODE := "010";
+	constant COMP_LESS_THEN 		: T_COMP_MODE := "011";
+	constant COMP_GREATER_EQUAL 	: T_COMP_MODE := "100";
+	constant COMP_LESS_THEN_U 		: T_COMP_MODE := "101";
+	constant COMP_GREATER_EQUAL_U 	: T_COMP_MODE := "110";
 	
 	subtype T_MEM_DIR is std_logic;
 	constant MEM_DIR_READ	: T_MEM_DIR := '0'; 

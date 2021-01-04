@@ -41,16 +41,16 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 0 64)
 		(input)
-		(text "i_data_address[31..0]" (rect 0 0 84 12)(font "Arial" ))
-		(text "i_data_address[31..0]" (rect 21 59 105 71)(font "Arial" ))
-		(line (pt 0 64)(pt 16 64)(line_width 3))
+		(text "i_read_write" (rect 0 0 48 12)(font "Arial" ))
+		(text "i_read_write" (rect 21 59 69 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64)(line_width 1))
 	)
 	(port
 		(pt 0 80)
 		(input)
-		(text "i_read_write" (rect 0 0 48 12)(font "Arial" ))
-		(text "i_read_write" (rect 21 75 69 87)(font "Arial" ))
-		(line (pt 0 80)(pt 16 80)(line_width 1))
+		(text "i_data_address[31..0]" (rect 0 0 84 12)(font "Arial" ))
+		(text "i_data_address[31..0]" (rect 21 75 105 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 3))
 	)
 	(port
 		(pt 0 96)
