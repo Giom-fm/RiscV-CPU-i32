@@ -72,6 +72,8 @@ set_location_assignment PIN_T2 -to debug[4]
 set_location_assignment PIN_R4 -to debug[5]
 set_location_assignment PIN_N5 -to debug[6]
 set_location_assignment PIN_N3 -to debug[7]
+set_global_assignment -name VHDL_FILE src/memory_byte.vhd
+set_global_assignment -name VHDL_FILE src/memory_word.vhd
 set_global_assignment -name VHDL_FILE src/ram.vhd
 set_global_assignment -name HEX_FILE src/memory.hex
 set_global_assignment -name VHDL_FILE src/sign_extender_mem.vhd

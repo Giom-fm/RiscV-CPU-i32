@@ -17,7 +17,7 @@ ENTITY memory_byte IS
 		clock			: IN STD_LOGIC  := '1';
 
 		input_data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		wren_data			: IN STD_LOGIC  := '0';
+		wren_data		: IN STD_LOGIC  := '0';
 
 		res_data		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
 		res_inst		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)

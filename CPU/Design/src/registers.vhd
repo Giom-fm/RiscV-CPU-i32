@@ -30,7 +30,7 @@ architecture a_registers of registers is
     begin
         o_read_register_1_data <= register_table(to_integer(unsigned(i_read_register_1_address)));
         o_read_register_2_data <= register_table(to_integer(unsigned(i_read_register_2_address)));
-        o_debug <= register_table(31)(7 downto 0);
+        o_debug <= register_table(15)(7 downto 0);
 
         process (i_clock, i_reset) begin
 					if i_reset = '1' then 
