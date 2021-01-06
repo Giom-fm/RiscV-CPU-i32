@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+// TODO Output path
+
 /*
 	fmt.Printf("File Header: ")
 	fmt.Println(_elf.FileHeader)
@@ -27,7 +29,7 @@ func main() {
 	path := flag.String("file", "", "Path to binary")
 	wordSize := *flag.Int("wordsize", 32, "Size of word in bit")
 	byteSize := *flag.Int("bytesize", 8, "Size of byte in bit")
-	memorySize := *flag.Int("memorySize", 256, "Memory Size in Words")
+	memorySize := *flag.Int("memorySize", 16384, "Memory Size in Words")
 	bytesInWord := wordSize / byteSize
 
 	flag.Parse()
@@ -50,8 +52,8 @@ func writePartitions(partitions [][]byte, wordSize int, byteSize int, memorySize
 	for i, partition := range partitions {
 		var stringBuilder strings.Builder
 
-		stringBuilder.WriteString(fmt.Sprintf("DEPTH = %d;\n", memorySize*wordSize))
-		stringBuilder.WriteString(fmt.Sprintf("WIDTH = %d;\n", wordSize))
+		stringBuilder.WriteString(fmt.Sprintf("DEPTH = %d;\n", memorySize))
+		stringBuilder.WriteString(fmt.Sprintf("WIDTH = %d;\n", byteSize))
 		stringBuilder.WriteString("ADDRESS_RADIX = HEX;\n")
 		stringBuilder.WriteString("DATA_RADIX = HEX;\n")
 		stringBuilder.WriteString("CONTENT\nBEGIN\n\n")
@@ -61,15 +63,15 @@ func writePartitions(partitions [][]byte, wordSize int, byteSize int, memorySize
 			stringBuilder.WriteString(hex.EncodeToString(partition[j : j+1]))
 			stringBuilder.WriteString(";\n")
 		}
-		stringBuilder.WriteString(fmt.Sprintf("[%s..%s]: 00;\n\n", fmt.Sprintf("%x", len(partitions[0])), fmt.Sprintf("%x", memorySize)))
+		stringBuilder.WriteString(fmt.Sprintf("[%s..%s]: 00;\n\n", fmt.Sprintf("%x", len(partitions[0])), fmt.Sprintf("%x", memorySize-1)))
 		stringBuilder.WriteString("END;")
-		ioutil.WriteFile(fmt.Sprintf("memory_%d.mif", i), []byte(stringBuilder.String()), 0644)
+		ioutil.WriteFile(fmt.Sprintf("memory_%d.mif", i+1), []byte(stringBuilder.String()), 0644)
 	}
 }
 
 func printPartitions(partitions [][]byte) {
 	for i, partition := range partitions {
-		fmt.Printf("Partition: %d: ", i)
+		fmt.Printf("Partition: %d: ", i+1)
 		for j := range partition {
 			fmt.Printf("%s ", hex.EncodeToString(partition[j:j+1]))
 		}
@@ -80,7 +82,7 @@ func printPartitions(partitions [][]byte) {
 func createPartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int) {
 	for i := 0; i < len(memory); i += bytesInWord {
 		bytes := memory[i : i+bytesInWord]
-		reverseBytes(bytes)
+		//reverseBytes(bytes)
 		for j := 0; j < bytesInWord; j++ {
 			memoryPartitions[j] = append(memoryPartitions[j], bytes[j])
 		}

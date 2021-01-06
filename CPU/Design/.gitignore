@@ -3,3 +3,4 @@ simulation/
 incremental_db/
 *.bak
 db/
+*.mif
