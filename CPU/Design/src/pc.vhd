@@ -13,7 +13,8 @@ entity pc is
         i_src_alu   : in std_logic_vector(31 downto 0);
         i_src_next  : in std_logic_vector(31 downto 0);
         o_current   : out std_logic_vector(31 downto 0);
-        o_next      : out std_logic_vector(31 downto 0)
+        o_next      : out std_logic_vector(31 downto 0);
+        o_debug     : out std_logic_vector(7 downto 0)
     );
 end pc;
 
@@ -25,13 +26,14 @@ architecture a_pc of pc is
     begin
         o_current <= pc_register;
         o_next <= std_logic_vector(unsigned(pc_register) + PC_ADD);
+        o_debug <= i_src_alu(7 downto 0);
+        --o_debug <= pc_register(7 downto 0);
 
         process (i_clock, i_reset) begin
             if i_reset = '1' then 
                 pc_register <= (others => '0');
             elsif rising_edge(i_clock) then
-                if i_mode = PC_SRC_ALU
-                    or (i_mode = PC_SRC_COMP_ALU and i_comp = '1') then
+                if i_mode = PC_SRC_ALU or (i_mode = PC_SRC_COMP_ALU and i_comp = '1') then
                     pc_register <= i_src_alu;
                 else
                     pc_register <= i_src_next;

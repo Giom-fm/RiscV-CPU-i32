@@ -248,7 +248,7 @@ begin
 			o_alu_mode <= ALU_ADD;
 			o_pc_mode <= PC_SRC_COMP_ALU;
 
-			o_mux_alu <= MUX_ALU_RS1_RS2;
+			o_mux_alu <= MUX_ALU_PC_IMM;
 			o_mux_reg <= MUX_REG_ZERO;
 
 			case funct_3 is
@@ -280,7 +280,7 @@ begin
 			o_immediate <= immediate_J;
 			o_pc_mode <= PC_SRC_ALU;
 
-			o_mux_alu <= MUX_ALU_RS1_IMM;
+			o_mux_alu <= MUX_ALU_PC_IMM;
 			o_mux_reg <= MUX_REG_PC;
 
 			o_rd_addr <= rd;

@@ -4,3 +4,4 @@ incremental_db/
 *.bak
 db/
 *.mif
+greybox_tmp/

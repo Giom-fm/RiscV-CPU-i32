@@ -49,9 +49,9 @@ package types is
 	constant PC_SRC_ADD 		: T_PC_MODE := "00";
 	constant PC_SRC_COMP_ALU 	: T_PC_MODE := "01";
 	constant PC_SRC_ALU			: T_PC_MODE := "10";
-	constant PC_ADD : integer := 4;
+	constant PC_ADD 			: integer := 4;
 
-	subtype T_COMP_MODE is bit_vector(2 downto 0);
+	subtype T_COMP_MODE is std_logic_vector(2 downto 0);
 	constant COMP_EQUAL 			: T_COMP_MODE := "001";
 	constant COMP_NOT_EQUAL 		: T_COMP_MODE := "010";
 	constant COMP_LESS_THEN 		: T_COMP_MODE := "011";
