@@ -14,7 +14,7 @@ entity clock_splitter is
 end clock_splitter;
 
 architecture a_clock_splitter of clock_splitter is
-    signal counter : std_logic := '0';
+    signal counter : std_logic := '1';
 begin
     o_clk <= i_clk;
     o_clk_div_2 <= counter;
