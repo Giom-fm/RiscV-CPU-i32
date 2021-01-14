@@ -18,7 +18,8 @@ entity decode is
 			o_sext_mem_mode 		: out T_SEXT_MEM_MODE;
 			o_mem_dir				: out T_MEM_DIR;
 			o_store_mode			: out T_STORE_MODE;
-			o_pc_mode				: out T_PC_MODE
+			o_pc_mode				: out T_PC_MODE;
+			o_debug					: out std_logic_vector(7 downto 0)
 		);
 		
 end decode;
@@ -72,6 +73,8 @@ begin
 		o_immediate <= (others => '0');
 		o_comp_mode <= COMP_EQUAL;
 		o_pc_mode <= PC_SRC_ADD;
+		o_debug <= '0' & opcode;
+
 
 		
 		
