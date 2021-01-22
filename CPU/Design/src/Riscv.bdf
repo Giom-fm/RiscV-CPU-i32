@@ -39,7 +39,7 @@ https://fpgasoftware.intel.com/eula.
 )
 (pin
 	(output)
-	(rect 1784 104 1974 120)
+	(rect 1816 672 2006 688)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "debug[7..0]" (rect 90 0 145 12)(font "Arial" ))
 	(pt 0 8)
@@ -52,7 +52,7 @@ https://fpgasoftware.intel.com/eula.
 		(line (pt 82 8)(pt 78 12))
 		(line (pt 78 12)(pt 82 8))
 	)
-	(annotation_block (location)(rect 1840 72 1920 104))
+	(annotation_block (location)(rect 1872 640 1952 672))
 )
 (symbol
 	(rect 640 680 864 792)
@@ -594,8 +594,8 @@ https://fpgasoftware.intel.com/eula.
 )
 (symbol
 	(rect 912 616 1176 760)
-	(text "memory_word" (rect 5 0 74 12)(font "Arial" ))
-	(text "inst12" (rect 8 128 37 140)(font "Arial" ))
+	(text "memory" (rect 5 0 46 12)(font "Arial" ))
+	(text "inst4" (rect 8 128 31 140)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -648,39 +648,13 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 264 64)
 		(output)
-		(text "o_debug[7..0]" (rect 0 0 67 12)(font "Arial" ))
-		(text "o_debug[7..0]" (rect 187 59 243 71)(font "Arial" ))
+		(text "o_leds[7..0]" (rect 0 0 57 12)(font "Arial" ))
+		(text "o_leds[7..0]" (rect 195 59 243 71)(font "Arial" ))
 		(line (pt 264 64)(pt 248 64)(line_width 3))
 	)
-	(parameter
-		"size_in_words"
-		"16384"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
-	(parameter
-		"init_filename_1"
-		"./src/memory_1.mif"
-		""
-		(type "PARAMETER_STRING")	)
-	(parameter
-		"init_filename_2"
-		"./src/memory_2.mif"
-		""
-		(type "PARAMETER_STRING")	)
-	(parameter
-		"init_filename_3"
-		"./src/memory_3.mif"
-		""
-		(type "PARAMETER_STRING")	)
-	(parameter
-		"init_filename_4"
-		"./src/memory_4.mif"
-		""
-		(type "PARAMETER_STRING")	)
 	(drawing
 		(rectangle (rect 16 16 248 128))
 	)
-	(annotation_block (parameter)(rect 912 496 1184 616))
 )
 (connector
 	(pt 840 344)
@@ -1250,11 +1224,6 @@ https://fpgasoftware.intel.com/eula.
 	(pt 896 536)
 )
 (connector
-	(pt 1208 112)
-	(pt 1784 112)
-	(bus)
-)
-(connector
 	(pt 896 536)
 	(pt -56 536)
 )
@@ -1279,23 +1248,8 @@ https://fpgasoftware.intel.com/eula.
 	(pt -256 136)
 )
 (connector
-	(pt 1208 632)
-	(pt 1208 112)
-	(bus)
-)
-(connector
-	(pt 1208 632)
-	(pt 1184 632)
-	(bus)
-)
-(connector
-	(pt 1184 632)
-	(pt 1184 680)
-	(bus)
-)
-(connector
-	(pt 1184 680)
 	(pt 1176 680)
+	(pt 1816 680)
 	(bus)
 )
 (junction (pt 576 680))

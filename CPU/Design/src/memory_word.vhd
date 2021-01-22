@@ -15,142 +15,124 @@ entity memory_word is
     port(
         i_clock           : in	std_logic;
         
-        i_inst_address    : in std_logic_vector(31 downto 0);
+        i_inst_address    : in std_logic_vector(15 downto 0);
 
         i_read_write      : in  T_MEM_DIR;       
-        i_data_address    : in  std_logic_vector(31 downto 0);
+        i_data_address    : in  std_logic_vector(15 downto 0);
         i_write_data      : in std_logic_vector(31 downto 0);
 
         o_inst_data       : out std_logic_vector(31 downto 0);
-        o_read_data       : out std_logic_vector(31 downto 0);
-
-        o_debug           : out std_logic_vector(7 downto 0)
+        o_read_data       : out std_logic_vector(31 downto 0)
     );
 
 end memory_word;
 
 architecture a_memory_word of memory_word is
 
-    signal mem_1_address_data : std_logic_vector(31 downto 0);
-    signal mem_1_address_inst : std_logic_vector(31 downto 0);
+    signal mem_1_address_data : std_logic_vector(13 downto 0);
+    signal mem_1_address_inst : std_logic_vector(13 downto 0);
     signal mem_1_input_data : std_logic_vector(7 downto 0);
     signal mem_1_result_data : std_logic_vector(7 downto 0);
     signal mem_1_result_inst : std_logic_vector(7 downto 0);
 
-    signal mem_2_address_data : std_logic_vector(31 downto 0);
-    signal mem_2_address_inst : std_logic_vector(31 downto 0);
+    signal mem_2_address_data : std_logic_vector(13 downto 0);
+    signal mem_2_address_inst : std_logic_vector(13 downto 0);
     signal mem_2_input_data : std_logic_vector(7 downto 0);
     signal mem_2_result_data : std_logic_vector(7 downto 0);
     signal mem_2_result_inst : std_logic_vector(7 downto 0);
 
-    signal mem_3_address_data : std_logic_vector(31 downto 0);
-    signal mem_3_address_inst : std_logic_vector(31 downto 0);
+    signal mem_3_address_data : std_logic_vector(13 downto 0);
+    signal mem_3_address_inst : std_logic_vector(13 downto 0);
     signal mem_3_input_data : std_logic_vector(7 downto 0);
     signal mem_3_result_data : std_logic_vector(7 downto 0);
     signal mem_3_result_inst : std_logic_vector(7 downto 0);
 
-    signal mem_4_address_data : std_logic_vector(31 downto 0);
-    signal mem_4_address_inst : std_logic_vector(31 downto 0);
+    signal mem_4_address_data : std_logic_vector(13 downto 0);
+    signal mem_4_address_inst : std_logic_vector(13 downto 0);
     signal mem_4_input_data : std_logic_vector(7 downto 0);
     signal mem_4_result_data : std_logic_vector(7 downto 0);
     signal mem_4_result_inst : std_logic_vector(7 downto 0);
 
-    signal data_address_0 : std_logic_vector(31 downto 0);
-    signal data_address_1 : std_logic_vector(31 downto 0);
+    signal data_address_0 : std_logic_vector(13 downto 0);
+    signal data_address_1 : std_logic_vector(13 downto 0);
     signal data_address_mask : std_logic_vector(1 downto 0);
 
-    signal inst_address_0 : std_logic_vector(31 downto 0);
-    signal inst_address_1 : std_logic_vector(31 downto 0);
+    signal inst_address_0 : std_logic_vector(13 downto 0);
+    signal inst_address_1 : std_logic_vector(13 downto 0);
     signal inst_address_mask : std_logic_vector(1 downto 0);
-
-    signal debug_register : std_logic_vector(31 downto 0);
 
 begin
 
-    o_debug <= debug_register(7 downto 0);
-
-    process(i_clock, i_write_data, debug_register) begin
-        if rising_edge(i_clock) and i_data_address = "11111111111111111111111111111111" and i_read_write = MEM_DIR_WRITE then
-            debug_register <= i_write_data;
-        else
-            debug_register <= debug_register;
-        end if;
-    end process;
-
-    data_address_0 <= "00" & i_data_address(31 downto 2);
+    data_address_0 <= i_data_address(15 downto 2);
     data_address_1 <= std_logic_vector(unsigned(data_address_0) + 1);
     data_address_mask <= i_data_address(1 downto 0);
 
     calc_address : process(i_data_address, data_address_mask, data_address_0, data_address_1, mem_1_result_data, mem_2_result_data, mem_3_result_data, mem_4_result_data, i_write_data) begin
-        mem_1_address_data  <= "00000000000000000000000000000000";
-        mem_2_address_data  <= "00000000000000000000000000000000";
-        mem_3_address_data  <= "00000000000000000000000000000000";
-        mem_4_address_data  <= "00000000000000000000000000000000";
-        o_read_data         <= "00000000000000000000000000000000";
+        mem_1_address_data  <= (others => '0');
+        mem_2_address_data  <= (others => '0');
+        mem_3_address_data  <= (others => '0');
+        mem_4_address_data  <= (others => '0');
+        o_read_data         <= (others => '0');
 
-        mem_1_input_data    <= "00000000";
-        mem_2_input_data    <= "00000000";
-        mem_3_input_data    <= "00000000";
-        mem_4_input_data    <= "00000000";
+        mem_1_input_data    <= (others => '0');
+        mem_2_input_data    <= (others => '0');
+        mem_3_input_data    <= (others => '0');
+        mem_4_input_data    <= (others => '0');
 
-        if i_data_address = "11111111111111111111111111111111" then
-        o_read_data <= debug_register;
-        else
-            case data_address_mask is
-                when "00" =>
-                    mem_1_address_data <= data_address_0;
-                    mem_2_address_data <= data_address_0;
-                    mem_3_address_data <= data_address_0;
-                    mem_4_address_data <= data_address_0;
-                    mem_1_input_data   <= i_write_data(7 downto 0);
-                    mem_2_input_data   <= i_write_data(15 downto 8);
-                    mem_3_input_data   <= i_write_data(23 downto 16);
-                    mem_4_input_data   <= i_write_data(31 downto 24);
-                    o_read_data <= mem_4_result_data & mem_3_result_data & mem_2_result_data & mem_1_result_data;
-                when "01" =>
-                    mem_1_address_data <= data_address_1;
-                    mem_2_address_data <= data_address_0;
-                    mem_3_address_data <= data_address_0;
-                    mem_4_address_data <= data_address_0;
-                    mem_1_input_data   <= i_write_data(31 downto 24);
-                    mem_2_input_data   <= i_write_data(7 downto 0);
-                    mem_3_input_data   <= i_write_data(15 downto 8);
-                    mem_4_input_data   <= i_write_data(23 downto 16);
-                    o_read_data <= mem_1_result_data & mem_4_result_data & mem_3_result_data & mem_2_result_data;
-                when "10" =>
-                    mem_1_address_data <= data_address_1;
-                    mem_2_address_data <= data_address_1;
-                    mem_3_address_data <= data_address_0;
-                    mem_4_address_data <= data_address_0;
-                    mem_1_input_data   <= i_write_data(23 downto 16);
-                    mem_2_input_data   <= i_write_data(31 downto 24);
-                    mem_3_input_data   <= i_write_data(7 downto 0);
-                    mem_4_input_data   <= i_write_data(15 downto 8);
-                    o_read_data <= mem_2_result_data & mem_1_result_data & mem_4_result_data & mem_3_result_data;
-                when "11" =>
-                    mem_1_address_data <= data_address_1;
-                    mem_2_address_data <= data_address_1;
-                    mem_3_address_data <= data_address_1;
-                    mem_4_address_data <= data_address_0;
-                    mem_1_input_data   <= i_write_data(15 downto 8);
-                    mem_2_input_data   <= i_write_data(23 downto 16);
-                    mem_3_input_data   <= i_write_data(31 downto 24);
-                    mem_4_input_data   <= i_write_data(7 downto 0);
-                    o_read_data <= mem_3_result_data & mem_2_result_data & mem_1_result_data & mem_4_result_data;
-            end case;
-        end if;
+        case data_address_mask is
+            when "00" =>
+                mem_1_address_data <= data_address_0;
+                mem_2_address_data <= data_address_0;
+                mem_3_address_data <= data_address_0;
+                mem_4_address_data <= data_address_0;
+                mem_1_input_data   <= i_write_data(7 downto 0);
+                mem_2_input_data   <= i_write_data(15 downto 8);
+                mem_3_input_data   <= i_write_data(23 downto 16);
+                mem_4_input_data   <= i_write_data(31 downto 24);
+                o_read_data <= mem_4_result_data & mem_3_result_data & mem_2_result_data & mem_1_result_data;
+            when "01" =>
+                mem_1_address_data <= data_address_1;
+                mem_2_address_data <= data_address_0;
+                mem_3_address_data <= data_address_0;
+                mem_4_address_data <= data_address_0;
+                mem_1_input_data   <= i_write_data(31 downto 24);
+                mem_2_input_data   <= i_write_data(7 downto 0);
+                mem_3_input_data   <= i_write_data(15 downto 8);
+                mem_4_input_data   <= i_write_data(23 downto 16);
+                o_read_data <= mem_1_result_data & mem_4_result_data & mem_3_result_data & mem_2_result_data;
+            when "10" =>
+                mem_1_address_data <= data_address_1;
+                mem_2_address_data <= data_address_1;
+                mem_3_address_data <= data_address_0;
+                mem_4_address_data <= data_address_0;
+                mem_1_input_data   <= i_write_data(23 downto 16);
+                mem_2_input_data   <= i_write_data(31 downto 24);
+                mem_3_input_data   <= i_write_data(7 downto 0);
+                mem_4_input_data   <= i_write_data(15 downto 8);
+                o_read_data <= mem_2_result_data & mem_1_result_data & mem_4_result_data & mem_3_result_data;
+            when "11" =>
+                mem_1_address_data <= data_address_1;
+                mem_2_address_data <= data_address_1;
+                mem_3_address_data <= data_address_1;
+                mem_4_address_data <= data_address_0;
+                mem_1_input_data   <= i_write_data(15 downto 8);
+                mem_2_input_data   <= i_write_data(23 downto 16);
+                mem_3_input_data   <= i_write_data(31 downto 24);
+                mem_4_input_data   <= i_write_data(7 downto 0);
+                o_read_data <= mem_3_result_data & mem_2_result_data & mem_1_result_data & mem_4_result_data;
+        end case;
    end process;
 
-    inst_address_0 <= "00" & i_inst_address(31 downto 2);
+    inst_address_0 <= i_inst_address(15 downto 2);
     inst_address_1 <= std_logic_vector(unsigned(inst_address_0) + 1);
     inst_address_mask <= i_inst_address(1 downto 0);
 
     calc_inst : process(inst_address_mask, inst_address_0, inst_address_1, mem_1_result_inst, mem_2_result_inst, mem_3_result_inst, mem_4_result_inst) begin
-        mem_1_address_inst  <= "00000000000000000000000000000000";
-        mem_2_address_inst  <= "00000000000000000000000000000000";
-        mem_3_address_inst  <= "00000000000000000000000000000000";
-        mem_4_address_inst  <= "00000000000000000000000000000000";
-        o_inst_data         <= "00000000000000000000000000000000";
+        mem_1_address_inst  <= (others => '0');
+        mem_2_address_inst  <= (others => '0');
+        mem_3_address_inst  <= (others => '0');
+        mem_4_address_inst  <= (others => '0');
+        o_inst_data         <= (others => '0');
 
         case inst_address_mask is
             when "00" =>

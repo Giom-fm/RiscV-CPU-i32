@@ -22,7 +22,7 @@ https://fpgasoftware.intel.com/eula.
 (header "symbol" (version "1.1"))
 (symbol
 	(rect 16 16 280 160)
-	(text "memory_word" (rect 5 0 65 12)(font "Arial" ))
+	(text "memory" (rect 5 0 40 12)(font "Arial" ))
 	(text "inst" (rect 8 128 20 140)(font "Arial" ))
 	(port
 		(pt 0 32)
@@ -34,8 +34,8 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 0 48)
 		(input)
-		(text "i_inst_address[15..0]" (rect 0 0 81 12)(font "Arial" ))
-		(text "i_inst_address[15..0]" (rect 21 43 102 55)(font "Arial" ))
+		(text "i_inst_address[31..0]" (rect 0 0 81 12)(font "Arial" ))
+		(text "i_inst_address[31..0]" (rect 21 43 102 55)(font "Arial" ))
 		(line (pt 0 48)(pt 16 48)(line_width 3))
 	)
 	(port
@@ -48,8 +48,8 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 0 80)
 		(input)
-		(text "i_data_address[15..0]" (rect 0 0 84 12)(font "Arial" ))
-		(text "i_data_address[15..0]" (rect 21 75 105 87)(font "Arial" ))
+		(text "i_data_address[31..0]" (rect 0 0 84 12)(font "Arial" ))
+		(text "i_data_address[31..0]" (rect 21 75 105 87)(font "Arial" ))
 		(line (pt 0 80)(pt 16 80)(line_width 3))
 	)
 	(port
@@ -73,33 +73,14 @@ https://fpgasoftware.intel.com/eula.
 		(text "o_read_data[31..0]" (rect 169 43 243 55)(font "Arial" ))
 		(line (pt 264 48)(pt 248 48)(line_width 3))
 	)
-	(parameter
-		"size_in_words"
-		"16384"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
-	(parameter
-		"init_filename_1"
-		"./src/memory_1.mif"
-		""
-		(type "PARAMETER_STRING")	)
-	(parameter
-		"init_filename_2"
-		"./src/memory_2.mif"
-		""
-		(type "PARAMETER_STRING")	)
-	(parameter
-		"init_filename_3"
-		"./src/memory_3.mif"
-		""
-		(type "PARAMETER_STRING")	)
-	(parameter
-		"init_filename_4"
-		"./src/memory_4.mif"
-		""
-		(type "PARAMETER_STRING")	)
+	(port
+		(pt 264 64)
+		(output)
+		(text "o_leds[7..0]" (rect 0 0 46 12)(font "Arial" ))
+		(text "o_leds[7..0]" (rect 197 59 243 71)(font "Arial" ))
+		(line (pt 264 64)(pt 248 64)(line_width 3))
+	)
 	(drawing
 		(rectangle (rect 16 16 248 128)(line_width 1))
 	)
-	(annotation_block (parameter)(rect 280 -64 380 16))
 )

@@ -18,11 +18,14 @@ entity alu is
 end alu;
 
 architecture a_alu of alu is
+    signal res_add : std_logic_vector(31 downto 0);
 begin
-    calculation : process(i_alu_mode, i_left, i_right) begin
+    calculation : process(i_alu_mode, i_left, i_right, res_add)
+    begin
+        res_add <= std_logic_vector(unsigned(i_left) + unsigned(i_right));
         case i_alu_mode is
-            when ALU_ADD  => o_result <= std_logic_vector(unsigned(i_left) + unsigned(i_right));
-            when ALU_ADD_EVEN  => o_result <= std_logic_vector(unsigned(i_left) + unsigned(i_right))(31 downto 1) & "0";
+            when ALU_ADD  => o_result <= res_add;
+            when ALU_ADD_EVEN  => o_result <= res_add(31 downto 1) & '0';
             when ALU_SUB  => o_result <= std_logic_vector(unsigned(i_left) - unsigned(i_right));
             when ALU_SLL  => o_result <= std_logic_vector(shift_left(unsigned(i_left), to_integer(unsigned(i_right(4 downto 0)))));
             when ALU_SRL  => o_result <= std_logic_vector(shift_right(unsigned(i_left), to_integer(unsigned(i_right(4 downto 0)))));

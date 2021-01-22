@@ -12,8 +12,8 @@ ENTITY memory_byte IS
 	);   
 	PORT
 	(
-		address_data	: IN STD_LOGIC_VECTOR (31 DOWNTO 0);
-		address_inst	: IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+		address_data	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+		address_inst	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
 		clock			: IN STD_LOGIC  := '1';
 
 		input_data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
@@ -61,8 +61,8 @@ BEGIN
 		wrcontrol_wraddress_reg_b => "CLOCK0"
 	)
 	PORT MAP (
-		address_a => address_data(13 downto 0),
-		address_b => address_inst(13 downto 0),
+		address_a => address_data,
+		address_b => address_inst,
 		clock0 => clock,
 		data_a => input_data,
 		data_b => "00000000",
