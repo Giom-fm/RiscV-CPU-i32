@@ -111,7 +111,7 @@ begin
 
 			o_mux_alu <= MUX_ALU_RS1_IMM;
 			o_mux_reg <= MUX_REG_MEM;
-
+			o_rd_addr <= rd;
 			o_immediate <= immediate_I;
 			o_mem_dir <= MEM_DIR_READ;
 			o_alu_mode <= ALU_ADD;
