@@ -2,21 +2,20 @@
 
 #include "plattform.h"
 
-void sleep(int delay_cycles);
+void sleep(int delay_cyclces);
 
-int main() {
+int main(void) {
   LED = 0;
 
   while (1) {
-    sleep(100000);
+    sleep(10000);
     LED += 1;
   }
 
   return 0;
 }
 
-
-void sleep(int delay_cyclces) {
-  for (int i = 0; i < delay_cyclces; i++)
+void sleep(int delay_time) {
+  for (volatile int i = 0; i < delay_time; i++)
     ;
 }

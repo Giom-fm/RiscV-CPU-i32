@@ -6,7 +6,8 @@ fileext=$(basename $file)
 name=${fileext%.*}
 newfile="$path/$name.elf"
 
-riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -O1 -I /usr/include/ -c $file -o $newfile
+riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 crt0.s -o crt0.o
+riscv64-unknown-elf-gcc -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -O1 -I /usr/include/ -T linker.lds crt0.o $file -o $newfile
 go run ./memory/main.go --file $newfile
 mv ./*.mif ../CPU/Design/src/
-riscv64-unknown-elf-objdump -M no-aliases,numeric -d $newfile
+riscv64-unknown-elf-objdump -M no-aliases -d $newfile
