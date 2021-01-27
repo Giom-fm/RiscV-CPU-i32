@@ -7,46 +7,77 @@ entity memory_custom is
     port(
 	    i_clock           : in	std_logic;
         
-        i_inst_address    : in std_logic_vector(3 downto 0);
-
         i_read_write      : in  T_MEM_DIR;       
-        i_data_address    : in  std_logic_vector(3 downto 0);
+        i_data_address    : in  std_logic_vector(1 downto 0);
         i_write_data      : in std_logic_vector(31 downto 0);
 
-        o_inst_data       : out std_logic_vector(31 downto 0);
         o_read_data       : out std_logic_vector(31 downto 0);
 
-        o_leds            : out std_logic_vector(7 downto 0)
+        o_leds            : out std_logic_vector(7 downto 0);
+        i_rx              : in std_logic;
+        o_tx              : out std_logic
     );
 end memory_custom;
 
 
 architecture a_memory_custom of memory_custom is
-    type T_MEMORY is array(0 to 15) of std_logic_vector(7 downto 0);
+    type T_MEMORY is array(0 to 3) of std_logic_vector(31 downto 0);
     signal memory_table : T_MEMORY := (others => (others => '0'));
 
-begin
+    signal address : integer;
 
-    o_leds <= memory_table(0);
+    signal uart_rx_data : std_logic_vector(7 downto 0);
+    signal uart_tx_data : std_logic_vector(7 downto 0);
+    signal uart_status : std_logic_vector(7 downto 0) := "00000000";
+    signal uart_tx_enable : std_logic;
+    signal rx_error : std_logic;
+
     
-    o_read_data <= memory_table(to_integer(unsigned(i_data_address) + "11"))
-                 & memory_table(to_integer(unsigned(i_data_address) + "10"))
-                 & memory_table(to_integer(unsigned(i_data_address) + "01"))
-                 & memory_table(to_integer(unsigned(i_data_address) + "00"));
 
-    o_inst_data <= memory_table(to_integer(unsigned(i_inst_address) + "11"))
-                 & memory_table(to_integer(unsigned(i_inst_address) + "10"))
-                 & memory_table(to_integer(unsigned(i_inst_address) + "01"))
-                 & memory_table(to_integer(unsigned(i_inst_address) + "00"));
+begin
+    address <= to_integer(unsigned(i_data_address));
+    o_read_data <= memory_table(address);
 
+    -- LED-IO memory
+    o_leds <= memory_table(0)(7 downto 0);
+
+    -- UART memory
+    uart_tx_data <= memory_table(2)(7 downto 0);
+
+    uart_tx_enable <= i_read_write when address = 2 else '0';
+    
+    
     process (i_clock) begin
         if rising_edge(i_clock) then
-            if i_read_write = MEM_DIR_WRITE then
-                memory_table(to_integer(unsigned(i_data_address) + "11")) <= i_write_data(31 downto 24);
-                memory_table(to_integer(unsigned(i_data_address) + "10")) <= i_write_data(23 downto 16);
-                memory_table(to_integer(unsigned(i_data_address) + "01")) <= i_write_data(15 downto  8);
-                memory_table(to_integer(unsigned(i_data_address) + "00")) <= i_write_data( 7 downto  0);
+            memory_table(1) <= "000000000000000000000000" & uart_rx_data;
+            memory_table(3) <= "000000000000000000000000" & uart_status;
+
+            if i_read_write = MEM_DIR_WRITE and address /= 1 and address /= 3 then
+                memory_table(address) <= i_write_data;
             end if;
         end if;
     end process;
+
+    uart : entity work.UART(logic)
+    generic map(
+        clk_freq    => 12_000_000,
+        baud_rate   => 9600,
+        os_rate     => 16,
+        d_width     => 8,
+        parity      => 0,
+        parity_eo   => '0' 
+    )
+	port map(
+        clk         => i_clock,
+        reset_n     => '1',
+        tx_ena      => uart_tx_enable,
+        tx_data     => uart_tx_data,
+        rx          => i_rx,
+        rx_busy     => uart_status(1),
+        rx_error    => uart_status(2),
+        rx_data     => uart_rx_data,
+        tx_busy     => uart_status(0),
+        tx          => o_tx
+    );
+    
 end a_memory_custom;

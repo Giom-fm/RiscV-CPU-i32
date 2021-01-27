@@ -60,6 +60,13 @@ https://fpgasoftware.intel.com/eula.
 		(line (pt 0 96)(pt 16 96)(line_width 3))
 	)
 	(port
+		(pt 0 112)
+		(input)
+		(text "i_rx" (rect 0 0 15 12)(font "Arial" ))
+		(text "i_rx" (rect 21 107 36 119)(font "Arial" ))
+		(line (pt 0 112)(pt 16 112)(line_width 1))
+	)
+	(port
 		(pt 264 32)
 		(output)
 		(text "o_inst_data[31..0]" (rect 0 0 69 12)(font "Arial" ))
@@ -79,6 +86,13 @@ https://fpgasoftware.intel.com/eula.
 		(text "o_leds[7..0]" (rect 0 0 46 12)(font "Arial" ))
 		(text "o_leds[7..0]" (rect 197 59 243 71)(font "Arial" ))
 		(line (pt 264 64)(pt 248 64)(line_width 3))
+	)
+	(port
+		(pt 264 80)
+		(output)
+		(text "o_tx" (rect 0 0 17 12)(font "Arial" ))
+		(text "o_tx" (rect 226 75 243 87)(font "Arial" ))
+		(line (pt 264 80)(pt 248 80)(line_width 1))
 	)
 	(drawing
 		(rectangle (rect 16 16 248 128)(line_width 1))
