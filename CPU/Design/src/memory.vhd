@@ -54,7 +54,7 @@ begin
 		if i_data_address <= x"0000FFFF" then
 			o_read_data <= mem_o_read_data;
 			mem_i_read_write <= i_read_write;
-		elsif i_data_address <= x"00010003" then
+		elsif i_data_address <= x"0001000B" then
 			o_read_data <= mem_custom_o_read_data;
 			mem_custom_i_read_write <= i_read_write;
 		end if;
