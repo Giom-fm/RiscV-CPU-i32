@@ -17,7 +17,9 @@ entity memory is
         o_inst_data       : out std_logic_vector(31 downto 0);
 		o_read_data       : out std_logic_vector(31 downto 0);
 		
-		o_leds			  : out std_logic_vector(7 downto 0)
+		o_leds			  : out std_logic_vector(7 downto 0);
+		i_rx              : in std_logic;
+        o_tx              : out std_logic
     );
 
 end memory;
@@ -52,7 +54,7 @@ begin
 		if i_data_address <= x"0000FFFF" then
 			o_read_data <= mem_o_read_data;
 			mem_i_read_write <= i_read_write;
-		elsif i_data_address <= x"0001000F" then
+		elsif i_data_address <= x"00010003" then
 			o_read_data <= mem_custom_o_read_data;
 			mem_custom_i_read_write <= i_read_write;
 		end if;
@@ -74,13 +76,14 @@ begin
 	mem_custom : entity work.memory_custom(a_memory_custom)
 	port map(
 		i_clock           => i_clock,
-        i_inst_address    => i_inst_address(3 downto 0),
 		i_read_write      => mem_custom_i_read_write,
-        i_data_address    => i_data_address(3 downto 0),
+        i_data_address    => i_data_address(1 downto 0),
         i_write_data      => i_write_data,
-		o_inst_data       => mem_custom_o_inst_data,
 		o_read_data       => mem_custom_o_read_data,
-		o_leds            => o_leds
+		o_leds            => o_leds,
+		i_rx              => i_rx,
+        o_tx              => o_tx
+
 	);
 		
 		
