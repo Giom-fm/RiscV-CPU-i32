@@ -6,7 +6,9 @@ use work.types.all;
 
 entity memory is
 	port(
-	    i_clock           : in	std_logic;
+		i_clock           : in	std_logic;
+		
+		i_store_mode	  : in T_STORE_MODE;
         
         i_inst_address    : in std_logic_vector(31 downto 0);
 
@@ -26,37 +28,42 @@ end memory;
 
 
 architecture a_memory of memory is
+
+	signal clock : std_logic;
 	
-	signal mem_i_read_write			: T_MEM_DIR;       
-	signal mem_o_inst_data			: std_logic_vector(31 downto 0);
-	signal mem_o_read_data			: std_logic_vector(31 downto 0);
+	signal m9k_rw			: T_MEM_DIR;       
+	signal m9k_inst			: std_logic_vector(31 downto 0);
+	signal m9k_data			: std_logic_vector(31 downto 0);
 	
-	signal mem_custom_i_read_write	: T_MEM_DIR;       
-	signal mem_custom_o_inst_data	: std_logic_vector(31 downto 0);
-	signal mem_custom_o_read_data	: std_logic_vector(31 downto 0);
+	signal ext_rw	: T_MEM_DIR;       
+	-- signal ext_inst	: std_logic_vector(31 downto 0); --unused
+	signal ext_data	: std_logic_vector(31 downto 0);
 begin
 
-	process(i_inst_address, mem_o_inst_data) begin
+	--clock <= i_clock;
+	clock <= not i_clock;
+
+	process(i_inst_address, m9k_inst) begin
 
 		o_inst_data <= (others => '0');
 		if i_inst_address <= x"FFFF" then
-			o_inst_data <= mem_o_inst_data;
+			o_inst_data <= m9k_inst;
 		end if;
 
 	end process;
 
 
-	process(i_data_address, i_read_write, mem_o_read_data, mem_custom_o_read_data) begin
-		mem_i_read_write		<= MEM_DIR_READ;
-		mem_custom_i_read_write	<= MEM_DIR_READ;
+	process(i_data_address, i_read_write, m9k_data, ext_data) begin
+		m9k_rw <= MEM_DIR_READ;
+		ext_rw <= MEM_DIR_READ;
 
 		o_read_data <= (others => '0');
 		if i_data_address <= x"0000FFFF" then
-			o_read_data <= mem_o_read_data;
-			mem_i_read_write <= i_read_write;
-		elsif i_data_address <= x"0001000B" then
-			o_read_data <= mem_custom_o_read_data;
-			mem_custom_i_read_write <= i_read_write;
+			o_read_data <= m9k_data;
+			m9k_rw <= i_read_write;
+		elsif i_data_address <= x"00010003" then
+			o_read_data <= ext_data;
+			ext_rw <= i_read_write;
 		end if;
 
 	end process;
@@ -64,27 +71,27 @@ begin
 
 	mem : entity work.memory_word(a_memory_word)
 	port map(
-		i_clock           => i_clock,
-        i_inst_address    => i_inst_address(15 downto 0),
-		i_read_write      => mem_i_read_write,
+		i_clock           => clock,
+		i_inst_address    => i_inst_address(15 downto 0),
+		i_store_mode	  => i_store_mode,
+		i_read_write      => m9k_rw,
         i_data_address    => i_data_address(15 downto 0),
         i_write_data      => i_write_data,
-		o_inst_data       => mem_o_inst_data,
-        o_read_data       => mem_o_read_data
+		o_inst_data       => m9k_inst,
+        o_read_data       => m9k_data
 	);
 
 	mem_custom : entity work.memory_custom(a_memory_custom)
 	port map(
 		i_clock           => i_clock,
-		i_read_write      => mem_custom_i_read_write,
+		i_store_mode	  => i_store_mode,
+		i_read_write      => ext_rw,
         i_data_address    => i_data_address(1 downto 0),
         i_write_data      => i_write_data,
-		o_read_data       => mem_custom_o_read_data,
+		o_read_data       => ext_data,
 		o_leds            => o_leds,
 		i_rx              => i_rx,
         o_tx              => o_tx
-
 	);
-		
 		
 end a_memory;

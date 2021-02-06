@@ -2,11 +2,13 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 use work.types.all;
+use work.utils.all;
 
 entity memory_custom is
     port(
 	    i_clock           : in	std_logic;
         
+        i_store_mode	  : in T_STORE_MODE;
         i_read_write      : in  T_MEM_DIR;       
         i_data_address    : in  std_logic_vector(1 downto 0);
         i_write_data      : in std_logic_vector(31 downto 0);
@@ -24,15 +26,13 @@ architecture a_memory_custom of memory_custom is
     type T_MEMORY is array(0 to 3) of std_logic_vector(31 downto 0);
     signal memory_table : T_MEMORY := (others => (others => '0'));
 
-    signal address : integer;
+    signal address : integer := 0;
 
     signal uart_rx_data : std_logic_vector(7 downto 0);
     signal uart_tx_data : std_logic_vector(7 downto 0);
     signal uart_status : std_logic_vector(7 downto 0) := "00000000";
     signal uart_tx_enable : std_logic;
     signal rx_error : std_logic;
-
-    
 
 begin
     address <= to_integer(unsigned(i_data_address));
@@ -47,13 +47,19 @@ begin
     uart_tx_enable <= i_read_write when address = 2 else '0';
     
     
-    process (i_clock) begin
+    process (i_clock, i_store_mode, i_write_data) begin
         if rising_edge(i_clock) then
             memory_table(1) <= "000000000000000000000000" & uart_rx_data;
             memory_table(3) <= "000000000000000000000000" & uart_status;
 
             if i_read_write = MEM_DIR_WRITE and address /= 1 and address /= 3 then
-                memory_table(address) <= i_write_data;
+                -- memory_table(address) <= i_write_data;
+                case i_store_mode is 
+                    when STORE_B => memory_table(address) <= extend(i_write_data(7 downto 0), 32);
+                    when STORE_H => memory_table(address) <= extend(i_write_data(15 downto 0), 32);
+                    when STORE_W => memory_table(address) <= i_write_data;
+                    when others => null;
+                end case;
             end if;
         end if;
     end process;
@@ -61,7 +67,8 @@ begin
     uart : entity work.UART(logic)
     generic map(
         clk_freq    => 12_000_000,
-        baud_rate   => 9600,
+        --baud_rate   => 9600,
+        baud_rate   => 19_200,
         os_rate     => 16,
         d_width     => 8,
         parity      => 0,

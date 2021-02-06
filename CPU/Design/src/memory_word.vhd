@@ -14,11 +14,12 @@ entity memory_word is
     );   
     port(
         i_clock           : in	std_logic;
-        
+
         i_inst_address    : in std_logic_vector(15 downto 0);
 
-        i_read_write      : in  T_MEM_DIR;       
-        i_data_address    : in  std_logic_vector(15 downto 0);
+        i_store_mode	  : in T_STORE_MODE;
+        i_read_write      : in T_MEM_DIR;       
+        i_data_address    : in std_logic_vector(15 downto 0);
         i_write_data      : in std_logic_vector(31 downto 0);
 
         o_inst_data       : out std_logic_vector(31 downto 0);
@@ -34,24 +35,28 @@ architecture a_memory_word of memory_word is
     signal mem_1_input_data : std_logic_vector(7 downto 0);
     signal mem_1_result_data : std_logic_vector(7 downto 0);
     signal mem_1_result_inst : std_logic_vector(7 downto 0);
+    signal mem_1_write_enable : std_logic;
 
     signal mem_2_address_data : std_logic_vector(13 downto 0);
     signal mem_2_address_inst : std_logic_vector(13 downto 0);
     signal mem_2_input_data : std_logic_vector(7 downto 0);
     signal mem_2_result_data : std_logic_vector(7 downto 0);
     signal mem_2_result_inst : std_logic_vector(7 downto 0);
+    signal mem_2_write_enable : std_logic;
 
     signal mem_3_address_data : std_logic_vector(13 downto 0);
     signal mem_3_address_inst : std_logic_vector(13 downto 0);
     signal mem_3_input_data : std_logic_vector(7 downto 0);
     signal mem_3_result_data : std_logic_vector(7 downto 0);
     signal mem_3_result_inst : std_logic_vector(7 downto 0);
+    signal mem_3_write_enable : std_logic;
 
     signal mem_4_address_data : std_logic_vector(13 downto 0);
     signal mem_4_address_inst : std_logic_vector(13 downto 0);
     signal mem_4_input_data : std_logic_vector(7 downto 0);
     signal mem_4_result_data : std_logic_vector(7 downto 0);
     signal mem_4_result_inst : std_logic_vector(7 downto 0);
+    signal mem_4_write_enable : std_logic;
 
     signal data_address_0 : std_logic_vector(13 downto 0);
     signal data_address_1 : std_logic_vector(13 downto 0);
@@ -67,7 +72,7 @@ begin
     data_address_1 <= std_logic_vector(unsigned(data_address_0) + 1);
     data_address_mask <= i_data_address(1 downto 0);
 
-    calc_address : process(i_data_address, data_address_mask, data_address_0, data_address_1, mem_1_result_data, mem_2_result_data, mem_3_result_data, mem_4_result_data, i_write_data) begin
+    calc_address : process(i_data_address, data_address_mask, data_address_0, data_address_1, mem_1_result_data, mem_2_result_data, mem_3_result_data, mem_4_result_data, i_write_data, i_store_mode, i_read_write) begin
         mem_1_address_data  <= (others => '0');
         mem_2_address_data  <= (others => '0');
         mem_3_address_data  <= (others => '0');
@@ -79,6 +84,11 @@ begin
         mem_3_input_data    <= (others => '0');
         mem_4_input_data    <= (others => '0');
 
+        mem_1_write_enable  <= '0';
+        mem_2_write_enable  <= '0';
+        mem_3_write_enable  <= '0';
+        mem_4_write_enable  <= '0';
+
         case data_address_mask is
             when "00" =>
                 mem_1_address_data <= data_address_0;
@@ -89,6 +99,19 @@ begin
                 mem_2_input_data   <= i_write_data(15 downto 8);
                 mem_3_input_data   <= i_write_data(23 downto 16);
                 mem_4_input_data   <= i_write_data(31 downto 24);
+                case i_store_mode is
+                    when STORE_B =>
+                        mem_1_write_enable <= i_read_write;
+                    when STORE_H =>
+                        mem_1_write_enable <= i_read_write;
+                        mem_2_write_enable <= i_read_write;
+                    when STORE_W =>
+                        mem_1_write_enable <= i_read_write;
+                        mem_2_write_enable <= i_read_write;
+                        mem_3_write_enable <= i_read_write;
+                        mem_4_write_enable <= i_read_write;
+                    when others => null;
+                end case;
                 o_read_data <= mem_4_result_data & mem_3_result_data & mem_2_result_data & mem_1_result_data;
             when "01" =>
                 mem_1_address_data <= data_address_1;
@@ -99,6 +122,19 @@ begin
                 mem_2_input_data   <= i_write_data(7 downto 0);
                 mem_3_input_data   <= i_write_data(15 downto 8);
                 mem_4_input_data   <= i_write_data(23 downto 16);
+                case i_store_mode is
+                    when STORE_B =>
+                        mem_2_write_enable <= i_read_write;
+                    when STORE_H =>
+                        mem_2_write_enable <= i_read_write;
+                        mem_3_write_enable <= i_read_write;
+                    when STORE_W =>
+                        mem_2_write_enable <= i_read_write;
+                        mem_3_write_enable <= i_read_write;
+                        mem_4_write_enable <= i_read_write;
+                        mem_1_write_enable <= i_read_write;
+                    when others => null;
+                end case;
                 o_read_data <= mem_1_result_data & mem_4_result_data & mem_3_result_data & mem_2_result_data;
             when "10" =>
                 mem_1_address_data <= data_address_1;
@@ -109,6 +145,19 @@ begin
                 mem_2_input_data   <= i_write_data(31 downto 24);
                 mem_3_input_data   <= i_write_data(7 downto 0);
                 mem_4_input_data   <= i_write_data(15 downto 8);
+                case i_store_mode is
+                    when STORE_B =>
+                        mem_3_write_enable <= i_read_write;
+                    when STORE_H =>
+                        mem_3_write_enable <= i_read_write;
+                        mem_4_write_enable <= i_read_write;
+                    when STORE_W =>
+                        mem_3_write_enable <= i_read_write;
+                        mem_4_write_enable <= i_read_write;
+                        mem_1_write_enable <= i_read_write;
+                        mem_2_write_enable <= i_read_write;
+                    when others => null;
+                end case;
                 o_read_data <= mem_2_result_data & mem_1_result_data & mem_4_result_data & mem_3_result_data;
             when "11" =>
                 mem_1_address_data <= data_address_1;
@@ -119,7 +168,21 @@ begin
                 mem_2_input_data   <= i_write_data(23 downto 16);
                 mem_3_input_data   <= i_write_data(31 downto 24);
                 mem_4_input_data   <= i_write_data(7 downto 0);
+                case i_store_mode is
+                    when STORE_B =>
+                        mem_4_write_enable <= i_read_write;
+                    when STORE_H =>
+                        mem_4_write_enable <= i_read_write;
+                        mem_1_write_enable <= i_read_write;
+                    when STORE_W =>
+                        mem_4_write_enable <= i_read_write;
+                        mem_1_write_enable <= i_read_write;
+                        mem_2_write_enable <= i_read_write;
+                        mem_3_write_enable <= i_read_write;
+                    when others => null;
+                end case;
                 o_read_data <= mem_3_result_data & mem_2_result_data & mem_1_result_data & mem_4_result_data;
+                when others => null;
         end case;
    end process;
 
@@ -159,6 +222,7 @@ begin
                 mem_3_address_inst <= inst_address_1;
                 mem_4_address_inst <= inst_address_0;
                 o_inst_data <= mem_3_result_inst & mem_2_result_inst & mem_1_result_inst & mem_4_result_inst;
+            when others => null;
         end case;
     end process;
 
@@ -175,7 +239,7 @@ begin
 		address_inst	=> mem_1_address_inst,
 		clock			=> i_clock,
 		input_data		=> mem_1_input_data,
-		wren_data		=> i_read_write,
+		wren_data		=> mem_1_write_enable,
 		res_data		=> mem_1_result_data,
 		res_inst		=> mem_1_result_inst
     );
@@ -190,7 +254,7 @@ begin
 		address_inst	=> mem_2_address_inst,
 		clock			=> i_clock,
 		input_data		=> mem_2_input_data,
-		wren_data		=> i_read_write,
+		wren_data		=> mem_2_write_enable,
 		res_data		=> mem_2_result_data,
 		res_inst		=> mem_2_result_inst
     );
@@ -205,7 +269,7 @@ begin
 		address_inst	=> mem_3_address_inst,
 		clock			=> i_clock,
 		input_data		=> mem_3_input_data,
-		wren_data		=> i_read_write,
+		wren_data		=> mem_3_write_enable,
 		res_data		=> mem_3_result_data,
 		res_inst		=> mem_3_result_inst
     );
@@ -220,7 +284,7 @@ begin
 		address_inst	=> mem_4_address_inst,
 		clock			=> i_clock,
 		input_data		=> mem_4_input_data,
-		wren_data		=> i_read_write,
+		wren_data		=> mem_4_write_enable,
 		res_data		=> mem_4_result_data,
 		res_inst		=> mem_4_result_inst
     );

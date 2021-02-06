@@ -67,6 +67,7 @@ BEGIN
 		data_a => input_data,
 		data_b => "00000000",
 		wren_a => wren_data,
+		--wren_a => '0',
 		wren_b => '0',
 		q_a => res_data,
 		q_b => res_inst
