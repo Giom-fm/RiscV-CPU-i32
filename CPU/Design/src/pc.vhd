@@ -8,40 +8,38 @@ entity pc is
     port(
         i_clock 	: in std_logic;
         i_reset 	: in std_logic;
-        i_mode  	: in T_PC_Mode;
+        i_mode  	: in T_PC_MODE;
         i_comp      : in std_logic;
         i_src_alu   : in std_logic_vector(31 downto 0);
         i_src_next  : in std_logic_vector(31 downto 0);
         o_current   : out std_logic_vector(31 downto 0);
         o_next      : out std_logic_vector(31 downto 0);
-        o_debug     : out std_logic_vector(7 downto 0)
+        o_mem_addr  : out std_logic_vector(31 downto 0)
+
     );
 end pc;
 
 
 architecture a_pc of pc is
 
-    signal pc_register : std_logic_vector(31 downto 0) := (others => '0');
-    signal debug_helper : std_logic_vector(1 downto 0) := "11";
-    
+    signal pc_register : std_logic_vector(31 downto 0) := to_stdlogicvector(x"FFFFFFFC");
 
     begin
         o_current <= pc_register;
         o_next <= std_logic_vector(unsigned(pc_register) + PC_ADD);
-        --o_debug <= i_src_alu(7 downto 0);
-        o_debug <= pc_register(7 downto 2) & debug_helper;
+
+        o_mem_addr <= i_src_alu when i_mode = PC_SRC_ALU or (i_mode = PC_SRC_COMP_ALU and i_comp = '1')
+                    else std_logic_vector(unsigned(pc_register) + PC_ADD);
         
         process (i_clock, i_reset, i_mode) begin
             --debug_helper <= "00";
             if i_reset = '1' then 
-                pc_register <= (others => '0');
+                pc_register <= to_stdlogicvector(x"FFFFFFFC");
             elsif rising_edge(i_clock) then
                 if i_mode = PC_SRC_ALU or (i_mode = PC_SRC_COMP_ALU and i_comp = '1') then
                     pc_register <= i_src_alu;
-                    debug_helper <= "01";
                 else
                     pc_register <= i_src_next;
-                    debug_helper <= "10";
                 end if;
             end if;
         end process;

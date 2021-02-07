@@ -14,7 +14,8 @@ ENTITY memory_byte IS
 	(
 		address_data	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
 		address_inst	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
-		clock			: IN STD_LOGIC  := '1';
+		clock_inst		: IN STD_LOGIC  := '1';
+		clock_data		: IN STD_LOGIC  := '1';
 
 		input_data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
 		wren_data		: IN STD_LOGIC  := '0';
@@ -31,12 +32,12 @@ BEGIN
 
 	altsyncram_component : altsyncram
 	GENERIC MAP (
-		address_reg_b => "CLOCK0",
+		address_reg_b => "CLOCK1",
 		clock_enable_input_a => "NORMAL",
 		clock_enable_input_b => "NORMAL",
 		clock_enable_output_a => "BYPASS",
 		clock_enable_output_b => "BYPASS",
-		indata_reg_b => "CLOCK0",
+		indata_reg_b => "CLOCK1",
 		init_file => init_filename,
 		intended_device_family => "Cyclone 10 LP",
 		lpm_type => "altsyncram",
@@ -58,12 +59,13 @@ BEGIN
 		width_b => 8,
 		width_byteena_a => 1,
 		width_byteena_b => 1,
-		wrcontrol_wraddress_reg_b => "CLOCK0"
+		wrcontrol_wraddress_reg_b => "CLOCK1"
 	)
 	PORT MAP (
 		address_a => address_data,
 		address_b => address_inst,
-		clock0 => clock,
+		clock0 => clock_data,
+		clock1 => clock_inst,
 		data_a => input_data,
 		data_b => "00000000",
 		wren_a => wren_data,

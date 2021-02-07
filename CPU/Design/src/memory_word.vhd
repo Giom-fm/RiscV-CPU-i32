@@ -13,7 +13,8 @@ entity memory_word is
 		init_filename_4	: string := "./src/memory_4.mif"
     );   
     port(
-        i_clock           : in	std_logic;
+        i_clock_inst      : in	std_logic;
+        i_clock_data      : in	std_logic;
 
         i_inst_address    : in std_logic_vector(15 downto 0);
 
@@ -237,7 +238,8 @@ begin
     port map(
         address_data	=> mem_1_address_data,
 		address_inst	=> mem_1_address_inst,
-		clock			=> i_clock,
+		clock_inst		=> i_clock_inst,
+		clock_data		=> i_clock_data,
 		input_data		=> mem_1_input_data,
 		wren_data		=> mem_1_write_enable,
 		res_data		=> mem_1_result_data,
@@ -252,7 +254,8 @@ begin
     port map(
         address_data	=> mem_2_address_data,
 		address_inst	=> mem_2_address_inst,
-		clock			=> i_clock,
+		clock_inst		=> i_clock_inst,
+		clock_data		=> i_clock_data,
 		input_data		=> mem_2_input_data,
 		wren_data		=> mem_2_write_enable,
 		res_data		=> mem_2_result_data,
@@ -267,7 +270,8 @@ begin
     port map(
         address_data	=> mem_3_address_data,
 		address_inst	=> mem_3_address_inst,
-		clock			=> i_clock,
+		clock_inst		=> i_clock_inst,
+		clock_data		=> i_clock_data,
 		input_data		=> mem_3_input_data,
 		wren_data		=> mem_3_write_enable,
 		res_data		=> mem_3_result_data,
@@ -282,7 +286,8 @@ begin
     port map(
         address_data	=> mem_4_address_data,
 		address_inst	=> mem_4_address_inst,
-		clock			=> i_clock,
+		clock_inst		=> i_clock_inst,
+		clock_data		=> i_clock_data,
 		input_data		=> mem_4_input_data,
 		wren_data		=> mem_4_write_enable,
 		res_data		=> mem_4_result_data,

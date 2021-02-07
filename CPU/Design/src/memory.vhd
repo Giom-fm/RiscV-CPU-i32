@@ -29,7 +29,7 @@ end memory;
 
 architecture a_memory of memory is
 
-	signal clock : std_logic;
+	signal clock_invert : std_logic;
 	
 	signal m9k_rw			: T_MEM_DIR;       
 	signal m9k_inst			: std_logic_vector(31 downto 0);
@@ -40,8 +40,7 @@ architecture a_memory of memory is
 	signal ext_data	: std_logic_vector(31 downto 0);
 begin
 
-	--clock <= i_clock;
-	clock <= not i_clock;
+	clock_invert <= not i_clock;
 
 	process(i_inst_address, m9k_inst) begin
 
@@ -71,7 +70,8 @@ begin
 
 	mem : entity work.memory_word(a_memory_word)
 	port map(
-		i_clock           => clock,
+		i_clock_inst      => i_clock,
+		i_clock_data      => clock_invert,
 		i_inst_address    => i_inst_address(15 downto 0),
 		i_store_mode	  => i_store_mode,
 		i_read_write      => m9k_rw,
@@ -83,7 +83,7 @@ begin
 
 	mem_custom : entity work.memory_custom(a_memory_custom)
 	port map(
-		i_clock           => i_clock,
+		i_clock           => clock_invert,
 		i_store_mode	  => i_store_mode,
 		i_read_write      => ext_rw,
         i_data_address    => i_data_address(1 downto 0),
