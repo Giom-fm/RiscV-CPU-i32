@@ -6,12 +6,12 @@ use work.utils.all;
 
 entity cpu is 
 		port(
-            i_clock : std_logic;
-            i_reset : std_logic;
+            i_clock : in std_logic;
+            i_reset : in std_logic;
 
-            leds    : std_logic_vector(7 downto 0);
-            uart_rx : std_logic;
-            uart_tx : std_logic
+            leds    : out std_logic_vector(7 downto 0);
+            uart_rx : in std_logic;
+            uart_tx : out std_logic
         );
 end cpu;
 
@@ -112,7 +112,7 @@ begin
 
     sign_extender_mem : entity work.sign_extender_mem(a_sign_extender_mem) port map (
         i_mode  => decode_sign_extender_mode,
-        i_data   => i_data,
+        i_data   => memory_data,
         o_data  => sign_extender_mem_data
         );
 
@@ -142,7 +142,7 @@ begin
         o_mem_addr  => pc_mem_inst
         );
 
-    decode : entity work.pc(a_decode) port map (
+    decode : entity work.decode(a_decode) port map (
         i_instruction   => memory_inst,
         o_comp_mode	    => decode_comparator_mode,
         o_alu_mode	    => decode_alu_mode,
