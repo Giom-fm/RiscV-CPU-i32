@@ -22,7 +22,7 @@ architecture a_sign_extender_mem of sign_extender_mem is
                 when SEXT_MEM_U_16  => o_data <= extend(i_data(15 downto 0), o_data'length);
                 when SEXT_MEM_S_8   => o_data <= extend_signed(i_data(7 downto 0), o_data'length);
                 when SEXT_MEM_S_16  => o_data <= extend_signed(i_data(15 downto 0), o_data'length);
-                when others => o_data <= i_data;
+                when SEXT_MEM_32    => o_data <= i_data;
             end case;
         end process;
 end a_sign_extender_mem;

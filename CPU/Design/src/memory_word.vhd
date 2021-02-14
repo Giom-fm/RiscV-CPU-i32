@@ -36,28 +36,28 @@ architecture a_memory_word of memory_word is
     signal mem_1_input_data : std_logic_vector(7 downto 0);
     signal mem_1_result_data : std_logic_vector(7 downto 0);
     signal mem_1_result_inst : std_logic_vector(7 downto 0);
-    signal mem_1_write_enable : std_logic;
+    signal mem_1_write_enable : T_MEM_DIR;
 
     signal mem_2_address_data : std_logic_vector(13 downto 0);
     signal mem_2_address_inst : std_logic_vector(13 downto 0);
     signal mem_2_input_data : std_logic_vector(7 downto 0);
     signal mem_2_result_data : std_logic_vector(7 downto 0);
     signal mem_2_result_inst : std_logic_vector(7 downto 0);
-    signal mem_2_write_enable : std_logic;
+    signal mem_2_write_enable : T_MEM_DIR;
 
     signal mem_3_address_data : std_logic_vector(13 downto 0);
     signal mem_3_address_inst : std_logic_vector(13 downto 0);
     signal mem_3_input_data : std_logic_vector(7 downto 0);
     signal mem_3_result_data : std_logic_vector(7 downto 0);
     signal mem_3_result_inst : std_logic_vector(7 downto 0);
-    signal mem_3_write_enable : std_logic;
+    signal mem_3_write_enable : T_MEM_DIR;
 
     signal mem_4_address_data : std_logic_vector(13 downto 0);
     signal mem_4_address_inst : std_logic_vector(13 downto 0);
     signal mem_4_input_data : std_logic_vector(7 downto 0);
     signal mem_4_result_data : std_logic_vector(7 downto 0);
     signal mem_4_result_inst : std_logic_vector(7 downto 0);
-    signal mem_4_write_enable : std_logic;
+    signal mem_4_write_enable : T_MEM_DIR;
 
     signal data_address_0 : std_logic_vector(13 downto 0);
     signal data_address_1 : std_logic_vector(13 downto 0);
@@ -85,10 +85,10 @@ begin
         mem_3_input_data    <= (others => '0');
         mem_4_input_data    <= (others => '0');
 
-        mem_1_write_enable  <= '0';
-        mem_2_write_enable  <= '0';
-        mem_3_write_enable  <= '0';
-        mem_4_write_enable  <= '0';
+        mem_1_write_enable  <= MEM_DIR_READ;
+        mem_2_write_enable  <= MEM_DIR_READ;
+        mem_3_write_enable  <= MEM_DIR_READ;
+        mem_4_write_enable  <= MEM_DIR_READ;
 
         case data_address_mask is
             when "00" =>
@@ -111,7 +111,6 @@ begin
                         mem_2_write_enable <= i_read_write;
                         mem_3_write_enable <= i_read_write;
                         mem_4_write_enable <= i_read_write;
-                    when others => null;
                 end case;
                 o_read_data <= mem_4_result_data & mem_3_result_data & mem_2_result_data & mem_1_result_data;
             when "01" =>
@@ -134,7 +133,6 @@ begin
                         mem_3_write_enable <= i_read_write;
                         mem_4_write_enable <= i_read_write;
                         mem_1_write_enable <= i_read_write;
-                    when others => null;
                 end case;
                 o_read_data <= mem_1_result_data & mem_4_result_data & mem_3_result_data & mem_2_result_data;
             when "10" =>
@@ -157,7 +155,6 @@ begin
                         mem_4_write_enable <= i_read_write;
                         mem_1_write_enable <= i_read_write;
                         mem_2_write_enable <= i_read_write;
-                    when others => null;
                 end case;
                 o_read_data <= mem_2_result_data & mem_1_result_data & mem_4_result_data & mem_3_result_data;
             when "11" =>
@@ -180,7 +177,6 @@ begin
                         mem_1_write_enable <= i_read_write;
                         mem_2_write_enable <= i_read_write;
                         mem_3_write_enable <= i_read_write;
-                    when others => null;
                 end case;
                 o_read_data <= mem_3_result_data & mem_2_result_data & mem_1_result_data & mem_4_result_data;
                 when others => null;
@@ -236,14 +232,14 @@ begin
 		init_filename	=> init_filename_1
     )
     port map(
-        address_data	=> mem_1_address_data,
-		address_inst	=> mem_1_address_inst,
-		clock_inst		=> i_clock_inst,
-		clock_data		=> i_clock_data,
-		input_data		=> mem_1_input_data,
-		wren_data		=> mem_1_write_enable,
-		res_data		=> mem_1_result_data,
-		res_inst		=> mem_1_result_inst
+        i_address_data	=> mem_1_address_data,
+		i_address_inst	=> mem_1_address_inst,
+		i_clock_inst		=> i_clock_inst,
+		i_clock_data		=> i_clock_data,
+		i_input_data		=> mem_1_input_data,
+		i_wren_data		=> mem_1_write_enable,
+		o_res_data		=> mem_1_result_data,
+		o_res_inst		=> mem_1_result_inst
     );
 
     mem_2 : entity work.memory_byte(a_memory_byte)
@@ -252,14 +248,14 @@ begin
 		init_filename	=> init_filename_2
     )
     port map(
-        address_data	=> mem_2_address_data,
-		address_inst	=> mem_2_address_inst,
-		clock_inst		=> i_clock_inst,
-		clock_data		=> i_clock_data,
-		input_data		=> mem_2_input_data,
-		wren_data		=> mem_2_write_enable,
-		res_data		=> mem_2_result_data,
-		res_inst		=> mem_2_result_inst
+        i_address_data	=> mem_2_address_data,
+		i_address_inst	=> mem_2_address_inst,
+		i_clock_inst		=> i_clock_inst,
+		i_clock_data		=> i_clock_data,
+		i_input_data		=> mem_2_input_data,
+		i_wren_data		=> mem_2_write_enable,
+		o_res_data		=> mem_2_result_data,
+		o_res_inst		=> mem_2_result_inst
     );
 
     mem_3 : entity work.memory_byte(a_memory_byte)
@@ -268,14 +264,14 @@ begin
 		init_filename	=> init_filename_3
     )
     port map(
-        address_data	=> mem_3_address_data,
-		address_inst	=> mem_3_address_inst,
-		clock_inst		=> i_clock_inst,
-		clock_data		=> i_clock_data,
-		input_data		=> mem_3_input_data,
-		wren_data		=> mem_3_write_enable,
-		res_data		=> mem_3_result_data,
-		res_inst		=> mem_3_result_inst
+        i_address_data	=> mem_3_address_data,
+		i_address_inst	=> mem_3_address_inst,
+		i_clock_inst		=> i_clock_inst,
+		i_clock_data		=> i_clock_data,
+		i_input_data		=> mem_3_input_data,
+		i_wren_data		=> mem_3_write_enable,
+		o_res_data		=> mem_3_result_data,
+		o_res_inst		=> mem_3_result_inst
     );
 
     mem_4 : entity work.memory_byte(a_memory_byte)
@@ -284,14 +280,14 @@ begin
 		init_filename	=> init_filename_4
     )
     port map(
-        address_data	=> mem_4_address_data,
-		address_inst	=> mem_4_address_inst,
-		clock_inst		=> i_clock_inst,
-		clock_data		=> i_clock_data,
-		input_data		=> mem_4_input_data,
-		wren_data		=> mem_4_write_enable,
-		res_data		=> mem_4_result_data,
-		res_inst		=> mem_4_result_inst
+        i_address_data	=> mem_4_address_data,
+		i_address_inst	=> mem_4_address_inst,
+		i_clock_inst		=> i_clock_inst,
+		i_clock_data		=> i_clock_data,
+		i_input_data		=> mem_4_input_data,
+		i_wren_data		=> mem_4_write_enable,
+		o_res_data		=> mem_4_result_data,
+		o_res_inst		=> mem_4_result_inst
     );
 
 end a_memory_word;

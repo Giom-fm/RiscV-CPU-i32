@@ -47,7 +47,6 @@ begin
 				if unsigned(i_left) >= unsigned(i_right) then
 					o_result <= '1';
 				end if;
-			when others => null;
         end case;	
 	end process;	
 end a_comparator;

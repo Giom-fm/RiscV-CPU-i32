@@ -1,6 +1,8 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
+USE work.types.all;
+
 
 LIBRARY altera_mf;
 USE altera_mf.altera_mf_components.all;
@@ -12,23 +14,27 @@ ENTITY memory_byte IS
 	);   
 	PORT
 	(
-		address_data	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
-		address_inst	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
-		clock_inst		: IN STD_LOGIC  := '1';
-		clock_data		: IN STD_LOGIC  := '1';
+		i_address_data	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+		i_address_inst	: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+		i_clock_inst		: IN STD_LOGIC  := '1';
+		i_clock_data		: IN STD_LOGIC  := '1';
 
-		input_data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		wren_data		: IN STD_LOGIC  := '0';
+		i_input_data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		i_wren_data		: IN T_MEM_DIR;
 
-		res_data		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-		res_inst		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		o_res_data		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+		o_res_inst		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
 	);
 END memory_byte;
 
 
 ARCHITECTURE a_memory_byte OF memory_byte IS
 
+	signal wren_data : std_logic := '0';
+
 BEGIN
+
+	wren_data <= '0' when i_wren_data = MEM_DIR_READ else '1';
 
 	altsyncram_component : altsyncram
 	GENERIC MAP (
@@ -62,17 +68,17 @@ BEGIN
 		wrcontrol_wraddress_reg_b => "CLOCK1"
 	)
 	PORT MAP (
-		address_a => address_data,
-		address_b => address_inst,
-		clock0 => clock_data,
-		clock1 => clock_inst,
-		data_a => input_data,
+		address_a => i_address_data,
+		address_b => i_address_inst,
+		clock0 => i_clock_data,
+		clock1 => i_clock_inst,
+		data_a => i_input_data,
 		data_b => "00000000",
 		wren_a => wren_data,
 		--wren_a => '0',
 		wren_b => '0',
-		q_a => res_data,
-		q_b => res_inst
+		q_a => o_res_data,
+		q_b => o_res_inst
 	);
 
 END a_memory_byte;

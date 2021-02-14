@@ -24,6 +24,7 @@ begin
     begin
         res_add <= std_logic_vector(unsigned(i_left) + unsigned(i_right));
         case i_alu_mode is
+            when ALU_UNUSED => o_result <= (others => '0');
             when ALU_ADD  => o_result <= res_add;
             when ALU_ADD_EVEN  => o_result <= res_add(31 downto 1) & '0';
             when ALU_SUB  => o_result <= std_logic_vector(unsigned(i_left) - unsigned(i_right));
@@ -35,7 +36,6 @@ begin
             when ALU_XOR  => o_result <= i_left xor i_right;
             when ALU_OR   => o_result <= i_left or i_right;
             when ALU_AND  => o_result <= i_left and i_right;
-            when others   => o_result <= (others => '0');
         end case;	
 	end process;	
 end a_alu;

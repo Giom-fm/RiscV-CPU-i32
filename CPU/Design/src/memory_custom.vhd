@@ -33,8 +33,10 @@ architecture a_memory_custom of memory_custom is
     signal uart_status : std_logic_vector(7 downto 0) := "00000000";
     signal uart_tx_enable : std_logic;
     signal rx_error : std_logic;
+    signal uart_read_write : std_logic;
 
 begin
+
     address <= to_integer(unsigned(i_data_address));
     o_read_data <= memory_table(address);
 
@@ -43,8 +45,8 @@ begin
 
     -- UART memory
     uart_tx_data <= memory_table(2)(7 downto 0);
-
-    uart_tx_enable <= i_read_write when address = 2 else '0';
+    uart_read_write <= '0' when i_read_write = MEM_DIR_READ else '0';
+    uart_tx_enable <= uart_read_write when address = 2 else '0';
     
     
     process (i_clock, i_store_mode, i_write_data) begin
@@ -58,7 +60,6 @@ begin
                     when STORE_B => memory_table(address) <= extend(i_write_data(7 downto 0), 32);
                     when STORE_H => memory_table(address) <= extend(i_write_data(15 downto 0), 32);
                     when STORE_W => memory_table(address) <= i_write_data;
-                    when others => null;
                 end case;
             end if;
         end if;
