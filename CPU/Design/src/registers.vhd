@@ -29,7 +29,7 @@ architecture a_registers of registers is
         o_read_register_2_data <= register_table(to_integer(unsigned(i_read_register_2_address)));
 
         process (i_clock, i_reset) begin
-            if i_reset = '1' then 
+            if i_reset = '0' then 
                     register_table <= (others => (others => '0'));
             elsif rising_edge(i_clock) then
                     if i_write_register_address /= "00000" then

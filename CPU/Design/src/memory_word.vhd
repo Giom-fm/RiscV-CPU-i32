@@ -63,9 +63,8 @@ architecture a_memory_word of memory_word is
     signal data_address_1 : std_logic_vector(13 downto 0);
     signal data_address_mask : std_logic_vector(1 downto 0);
 
-    signal inst_address_0 : std_logic_vector(13 downto 0);
-    signal inst_address_1 : std_logic_vector(13 downto 0);
-    signal inst_address_mask : std_logic_vector(1 downto 0);
+    signal inst_address : std_logic_vector(13 downto 0);
+
 
 begin
 
@@ -183,45 +182,14 @@ begin
         end case;
    end process;
 
-    inst_address_0 <= i_inst_address(15 downto 2);
-    inst_address_1 <= std_logic_vector(unsigned(inst_address_0) + 1);
-    inst_address_mask <= i_inst_address(1 downto 0);
 
-    calc_inst : process(inst_address_mask, inst_address_0, inst_address_1, mem_1_result_inst, mem_2_result_inst, mem_3_result_inst, mem_4_result_inst) begin
-        mem_1_address_inst  <= (others => '0');
-        mem_2_address_inst  <= (others => '0');
-        mem_3_address_inst  <= (others => '0');
-        mem_4_address_inst  <= (others => '0');
-        o_inst_data         <= (others => '0');
-
-        case inst_address_mask is
-            when "00" =>
-                mem_1_address_inst <= inst_address_0;
-                mem_2_address_inst <= inst_address_0;
-                mem_3_address_inst <= inst_address_0;
-                mem_4_address_inst <= inst_address_0;
-                o_inst_data <= mem_4_result_inst & mem_3_result_inst & mem_2_result_inst & mem_1_result_inst;
-            when "01" =>
-                mem_1_address_inst <= inst_address_1;
-                mem_2_address_inst <= inst_address_0;
-                mem_3_address_inst <= inst_address_0;
-                mem_4_address_inst <= inst_address_0;
-                o_inst_data <= mem_1_result_inst & mem_4_result_inst & mem_3_result_inst & mem_2_result_inst;
-            when "10" =>
-                mem_1_address_inst <= inst_address_1;
-                mem_2_address_inst <= inst_address_1;
-                mem_3_address_inst <= inst_address_0;
-                mem_4_address_inst <= inst_address_0;
-                o_inst_data <= mem_2_result_inst & mem_1_result_inst & mem_4_result_inst & mem_3_result_inst;
-            when "11" =>
-                mem_1_address_inst <= inst_address_1;
-                mem_2_address_inst <= inst_address_1;
-                mem_3_address_inst <= inst_address_1;
-                mem_4_address_inst <= inst_address_0;
-                o_inst_data <= mem_3_result_inst & mem_2_result_inst & mem_1_result_inst & mem_4_result_inst;
-            when others => null;
-        end case;
-    end process;
+    -- Instructions
+    inst_address <= i_inst_address(15 downto 2);
+    mem_1_address_inst <= inst_address;
+    mem_2_address_inst <= inst_address;
+    mem_3_address_inst <= inst_address;
+    mem_4_address_inst <= inst_address;
+    o_inst_data <= mem_4_result_inst & mem_3_result_inst & mem_2_result_inst & mem_1_result_inst;
 
 
     -- Define Byte-Memory-Blocks

@@ -90,7 +90,7 @@ BEGIN
 	END PROCESS;
 
 	--receive state machine
-	PROCESS(reset_n, clk)
+	PROCESS(reset_n, clk, os_pulse)
 			VARIABLE rx_count	:	INTEGER RANGE 0 TO parity+d_width+2 := 0;		--count the bits received
 			VARIABLE	os_count	:	INTEGER RANGE 0 TO os_rate-1 := 0;				--count the oversampling rate pulses
 	BEGIN

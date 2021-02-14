@@ -26,7 +26,7 @@ architecture a_test_cpu of test_cpu is
 begin
     cpu : entity work.cpu(a_cpu) port map (
         i_clock => clock,
-        i_reset => reset,
+        --i_reset => reset,
         leds    => leds,
         uart_rx => uart_rx,
         uart_tx => uart_tx

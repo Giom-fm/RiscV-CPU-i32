@@ -22,19 +22,21 @@ end pc;
 
 architecture a_pc of pc is
 
-    signal pc_register : std_logic_vector(31 downto 0) := to_stdlogicvector(x"FFFFFFFC");
+    signal pc_register : std_logic_vector(31 downto 0) := "11111111111111111111111111111100";
+    signal s_next : std_logic_vector(31 downto 0);
 
     begin
+        s_next <= std_logic_vector(unsigned(pc_register) + PC_ADD);
         o_current <= pc_register;
-        o_next <= std_logic_vector(unsigned(pc_register) + PC_ADD);
+        o_next <= s_next;
 
-        o_mem_addr <= i_src_alu when i_mode = PC_SRC_ALU or (i_mode = PC_SRC_COMP_ALU and i_comp = '1')
-                    else std_logic_vector(unsigned(pc_register) + PC_ADD);
+        o_mem_addr <= i_src_alu when i_mode = PC_SRC_ALU or (i_mode = PC_SRC_COMP_ALU and i_comp = '1') else s_next;
+        --o_mem_addr <= std_logic_vector(unsigned(pc_register) + PC_ADD);
+        --o_mem_addr <= pc_register;
         
         process (i_clock, i_reset, i_mode) begin
-            --debug_helper <= "00";
-            if i_reset = '1' then 
-                pc_register <= to_stdlogicvector(x"FFFFFFFC");
+            if i_reset = '0' then 
+                pc_register <= "11111111111111111111111111111100";
             elsif rising_edge(i_clock) then
                 if i_mode = PC_SRC_ALU or (i_mode = PC_SRC_COMP_ALU and i_comp = '1') then
                     pc_register <= i_src_alu;

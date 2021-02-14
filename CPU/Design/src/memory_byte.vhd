@@ -39,8 +39,8 @@ BEGIN
 	altsyncram_component : altsyncram
 	GENERIC MAP (
 		address_reg_b => "CLOCK1",
-		clock_enable_input_a => "NORMAL",
-		clock_enable_input_b => "NORMAL",
+		clock_enable_input_a => "BYPASS",
+		clock_enable_input_b => "BYPASS",
 		clock_enable_output_a => "BYPASS",
 		clock_enable_output_b => "BYPASS",
 		indata_reg_b => "CLOCK1",
@@ -56,9 +56,9 @@ BEGIN
 		outdata_reg_b => "UNREGISTERED",
 		power_up_uninitialized => "FALSE",
 		ram_block_type => "M9K",
-		read_during_write_mode_mixed_ports => "DONT_CARE",
-		read_during_write_mode_port_a => "DONT_CARE",
-		read_during_write_mode_port_b => "DONT_CARE",
+		read_during_write_mode_mixed_ports => "OLD_DATA",
+		read_during_write_mode_port_a => "OLD_DATA",
+		read_during_write_mode_port_b => "OLD_DATA",
 		widthad_a => 14,
 		widthad_b => 14,
 		width_a => 8,

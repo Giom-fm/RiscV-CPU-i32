@@ -1,7 +1,7 @@
 int main() {
   register int counter = 0;
   while (1) {
-    for (int i = 0; i < 1000000; i++)
+    for (register int i = 0; i < 1000000; i++)
       ;
 
     if (counter == 255) {

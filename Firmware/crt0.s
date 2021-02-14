@@ -12,4 +12,5 @@ _start:
 	addi	sp, a1, -4
         # Call the main function
         jal     ra, main
-        j       _start
+_end:
+        j       _end

@@ -7,6 +7,7 @@ use work.utils.all;
 entity memory_custom is
     port(
 	    i_clock           : in	std_logic;
+        i_reset           : in 	std_logic;
         
         i_store_mode	  : in T_STORE_MODE;
         i_read_write      : in  T_MEM_DIR;       
@@ -49,8 +50,11 @@ begin
     uart_tx_enable <= uart_read_write when address = 2 else '0';
     
     
-    process (i_clock, i_store_mode, i_write_data) begin
-        if rising_edge(i_clock) then
+    process (i_clock, i_store_mode, i_write_data, i_reset) begin
+
+        if i_reset = '0' then 
+            memory_table <= (others => (others => '0'));
+        elsif rising_edge(i_clock) then
             memory_table(1) <= "000000000000000000000000" & uart_rx_data;
             memory_table(3) <= "000000000000000000000000" & uart_status;
 
@@ -77,7 +81,7 @@ begin
     )
 	port map(
         clk         => i_clock,
-        reset_n     => '1',
+        reset_n     => i_reset,
         tx_ena      => uart_tx_enable,
         tx_data     => uart_tx_data,
         rx          => i_rx,

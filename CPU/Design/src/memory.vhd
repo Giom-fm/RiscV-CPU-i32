@@ -7,6 +7,7 @@ use work.types.all;
 entity memory is
 	port(
 		i_clock           : in	std_logic;
+		i_reset			  : in	std_logic;
 		
 		i_store_mode	  : in T_STORE_MODE;
         
@@ -41,16 +42,7 @@ architecture a_memory of memory is
 begin
 
 	clock_invert <= not i_clock;
-
-	process(i_inst_address, m9k_inst) begin
-
-		o_inst_data <= (others => '0');
-		if i_inst_address <= x"FFFF" then
-			o_inst_data <= m9k_inst;
-		end if;
-
-	end process;
-
+	o_inst_data <= m9k_inst;
 
 	process(i_data_address, i_read_write, m9k_data, ext_data) begin
 		m9k_rw <= MEM_DIR_READ;
@@ -84,6 +76,7 @@ begin
 	mem_custom : entity work.memory_custom(a_memory_custom)
 	port map(
 		i_clock           => clock_invert,
+		i_reset			  => i_reset,
 		i_store_mode	  => i_store_mode,
 		i_read_write      => ext_rw,
         i_data_address    => i_data_address(1 downto 0),

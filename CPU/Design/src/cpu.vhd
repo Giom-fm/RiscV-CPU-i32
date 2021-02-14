@@ -7,7 +7,7 @@ use work.utils.all;
 entity cpu is 
 		port(
             i_clock : in std_logic;
-            i_reset : in std_logic;
+            --i_reset : in std_logic;
 
             leds    : out std_logic_vector(7 downto 0);
             uart_rx : in std_logic;
@@ -16,6 +16,10 @@ entity cpu is
 end cpu;
 
 architecture a_cpu of cpu is
+
+
+    signal i_reset : std_logic := '1';
+
 
     -- DECODE
     signal decode_alu_mode          : T_ALU_MODE;
@@ -63,6 +67,10 @@ architecture a_cpu of cpu is
     signal memory_inst   : std_logic_vector(31 downto 0);
 
 begin
+
+    --leds <= memory_inst(7 downto 0);
+
+
     alu : entity work.alu(a_alu) port map (
         i_alu_mode  => decode_alu_mode,
         i_left      => mux_alu_left_data,
@@ -118,6 +126,7 @@ begin
 
     memory : entity work.memory(a_memory) port map (
         i_clock           => i_clock,
+		i_reset 	      => i_reset,
         i_store_mode	  => decode_store_mode,
         i_inst_address    => pc_mem_inst,
         i_read_write      => decode_mem_read_write,

@@ -1,9 +1,11 @@
 #include "stdbool.h"
+#include "plattform.h"
 
 int main() {
   int counter = 1;
   bool direction_up = true;
   while (1) {
+    LED = counter;    
     for (int i = 0; i < 1000000; i++)
       ;
     if (direction_up) {
