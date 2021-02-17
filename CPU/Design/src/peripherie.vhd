@@ -4,7 +4,7 @@ use IEEE.numeric_std.all;
 use work.types.all;
 use work.utils.all;
 
-entity memory_custom is
+entity peripherie is
     port(
 	    i_clock           : in	std_logic;
         i_reset           : in 	std_logic;
@@ -20,51 +20,49 @@ entity memory_custom is
         i_rx              : in std_logic;
         o_tx              : out std_logic
     );
-end memory_custom;
+end peripherie;
 
 
-architecture a_memory_custom of memory_custom is
-    type T_MEMORY is array(0 to 3) of std_logic_vector(31 downto 0);
-    signal memory_table : T_MEMORY := (others => (others => '0'));
-
+architecture a_peripherie of peripherie is
     signal address : integer := 0;
+    constant C_LEDS : integer := 0;
+    constant C_UART_RX : integer := 1;
+    constant C_UART_TX : integer := 2;
+    constant C_UART_STATUS : integer := 3;
+
+    signal io_register : std_logic_vector(7 downto 0);
 
     signal uart_rx_data : std_logic_vector(7 downto 0);
     signal uart_tx_data : std_logic_vector(7 downto 0);
     signal uart_status : std_logic_vector(7 downto 0) := "00000000";
     signal uart_tx_enable : std_logic;
-    signal rx_error : std_logic;
-    signal uart_read_write : std_logic;
 
 begin
 
     address <= to_integer(unsigned(i_data_address));
-    o_read_data <= memory_table(address);
 
     -- LED-IO memory
-    o_leds <= memory_table(0)(7 downto 0);
+    o_leds <= io_register;
 
     -- UART memory
-    uart_tx_data <= memory_table(2)(7 downto 0);
-    uart_read_write <= '0' when i_read_write = MEM_DIR_READ else '0';
-    uart_tx_enable <= uart_read_write when address = 2 else '0';
-    
+    uart_tx_data <= i_write_data(7 downto 0);
+    uart_tx_enable <= '1' when address = C_UART_TX and i_read_write = MEM_DIR_WRITE else '0';
+
+    process (address, io_register, uart_rx_data, uart_status) begin
+        case(address) is
+            when C_LEDS         =>  o_read_data <= extend(io_register, 32);
+            when C_UART_RX      =>  o_read_data <= extend(uart_rx_data, 32);
+            when C_UART_STATUS  =>  o_read_data <= extend(uart_status, 32);
+            when others         =>  o_read_data <= (others => '0');
+        end case ;
+    end process;
     
     process (i_clock, i_store_mode, i_write_data, i_reset) begin
-
         if i_reset = '0' then 
-            memory_table <= (others => (others => '0'));
+            io_register <= (others => '0');
         elsif rising_edge(i_clock) then
-            memory_table(1) <= "000000000000000000000000" & uart_rx_data;
-            memory_table(3) <= "000000000000000000000000" & uart_status;
-
-            if i_read_write = MEM_DIR_WRITE and address /= 1 and address /= 3 then
-                -- memory_table(address) <= i_write_data;
-                case i_store_mode is 
-                    when STORE_B => memory_table(address) <= extend(i_write_data(7 downto 0), 32);
-                    when STORE_H => memory_table(address) <= extend(i_write_data(15 downto 0), 32);
-                    when STORE_W => memory_table(address) <= i_write_data;
-                end case;
+            if i_read_write = MEM_DIR_WRITE and address = C_LEDS then
+                io_register <= i_write_data(7 downto 0);
             end if;
         end if;
     end process;
@@ -92,4 +90,4 @@ begin
         tx          => o_tx
     );
     
-end a_memory_custom;
+end a_peripherie;

@@ -73,7 +73,7 @@ begin
         o_read_data       => m9k_data
 	);
 
-	mem_custom : entity work.memory_custom(a_memory_custom)
+	mem_peripherie : entity work.peripherie(a_peripherie)
 	port map(
 		i_clock           => clock_invert,
 		i_reset			  => i_reset,
