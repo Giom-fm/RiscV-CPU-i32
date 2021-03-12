@@ -65,7 +65,7 @@ func writePartitions(partitions [][]byte, wordSize int, byteSize int, memorySize
 		}
 		stringBuilder.WriteString(fmt.Sprintf("[%s..%s]: 00;\n\n", fmt.Sprintf("%x", len(partitions[0])), fmt.Sprintf("%x", memorySize-1)))
 		stringBuilder.WriteString("END;")
-		ioutil.WriteFile(fmt.Sprintf("memory_%d.mif", i+1), []byte(stringBuilder.String()), 0644)
+		ioutil.WriteFile(fmt.Sprintf("intel_mem_%d.mif", i), []byte(stringBuilder.String()), 0644)
 	}
 }
 
@@ -82,7 +82,7 @@ func printPartitions(partitions [][]byte) {
 func createPartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int) {
 	for i := 0; i < len(memory); i += bytesInWord {
 		bytes := memory[i : i+bytesInWord]
-		//reverseBytes(bytes)
+		reverseBytes(bytes)
 		for j := 0; j < bytesInWord; j++ {
 			memoryPartitions[j] = append(memoryPartitions[j], bytes[j])
 		}
