@@ -7,10 +7,10 @@ use work.types.all;
 entity memory_word is
     GENERIC(
 		size_in_words   : integer   := 16384;
-		init_filename_1	: string := "./src/memory_1.mif";
-		init_filename_2	: string := "./src/memory_2.mif";
-		init_filename_3	: string := "./src/memory_3.mif";
-		init_filename_4	: string := "./src/memory_4.mif"
+		init_filename_1	: string := "./src/intel_mem_3.mif";
+		init_filename_2	: string := "./src/intel_mem_2.mif";
+		init_filename_3	: string := "./src/intel_mem_1.mif";
+		init_filename_4	: string := "./src/intel_mem_0.mif"
     );   
     port(
         i_clock_inst      : in	std_logic;

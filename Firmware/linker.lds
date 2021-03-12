@@ -13,8 +13,14 @@ SECTIONS
         *(.text*);
     } > ROM
 
+    .rodata :
+    {
+        *(.rodata*);
+    } > ROM 
+
     .data :
     {
         *(.data*);
-    } > RAM AT > ROM 
+    } > ROM 
+
 }
