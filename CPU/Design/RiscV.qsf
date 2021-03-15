@@ -44,30 +44,6 @@ set_global_assignment -name ORIGINAL_QUARTUS_VERSION 20.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:56:10  OCTOBER 23, 2020"
 set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
-set_global_assignment -name MIF_FILE src/intel_mem_3.mif
-set_global_assignment -name MIF_FILE src/intel_mem_2.mif
-set_global_assignment -name MIF_FILE src/intel_mem_1.mif
-set_global_assignment -name MIF_FILE src/intel_mem_0.mif
-set_global_assignment -name VHDL_FILE src/peripherie.vhd
-set_global_assignment -name VHDL_FILE src/cpu.vhd
-set_global_assignment -name VHDL_FILE src/clock_splitter.vhd
-set_global_assignment -name VHDL_FILE src/clock_prescaler.vhd
-set_global_assignment -name VHDL_FILE src/memory_byte.vhd
-set_global_assignment -name VHDL_FILE src/memory_word.vhd
-set_global_assignment -name VHDL_FILE src/ram.vhd
-set_global_assignment -name VHDL_FILE src/sign_extender_mem.vhd
-set_global_assignment -name VHDL_FILE src/utils.vhd
-set_global_assignment -name VHDL_FILE src/UART.vhd
-set_global_assignment -name VHDL_FILE src/types.vhd
-set_global_assignment -name VHDL_FILE src/registers.vhd
-set_global_assignment -name VHDL_FILE src/pc.vhd
-set_global_assignment -name VHDL_FILE src/mux_register.vhd
-set_global_assignment -name VHDL_FILE src/mux_alu_right.vhd
-set_global_assignment -name VHDL_FILE src/mux_alu_left.vhd
-set_global_assignment -name VHDL_FILE src/memory.vhd
-set_global_assignment -name VHDL_FILE src/decode.vhd
-set_global_assignment -name VHDL_FILE src/comparator.vhd
-set_global_assignment -name VHDL_FILE src/alu.vhd
 
 # Pin & Location Assignments
 # ==========================
@@ -179,4 +155,28 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 # ---------------
 set_global_assignment -name VHDL_INPUT_VERSION VHDL_2008
 set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
+set_global_assignment -name SMART_RECOMPILE ON
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name VHDL_FILE src/cpu.vhd
+set_global_assignment -name VHDL_FILE src/utils/utils.vhd
+set_global_assignment -name VHDL_FILE src/utils/types.vhd
+set_global_assignment -name VHDL_FILE src/registers/registers.vhd
+set_global_assignment -name VHDL_FILE src/registers/mux_register.vhd
+set_global_assignment -name VHDL_FILE src/pc/pc.vhd
+set_global_assignment -name VHDL_FILE src/pc/comparator.vhd
+set_global_assignment -name MIF_FILE src/memory/intel_mem_3.mif
+set_global_assignment -name MIF_FILE src/memory/intel_mem_2.mif
+set_global_assignment -name MIF_FILE src/memory/intel_mem_1.mif
+set_global_assignment -name MIF_FILE src/memory/intel_mem_0.mif
+set_global_assignment -name VHDL_FILE src/memory/sign_extender_mem.vhd
+set_global_assignment -name VHDL_FILE src/memory/memory_word.vhd
+set_global_assignment -name VHDL_FILE src/memory/memory_byte.vhd
+set_global_assignment -name VHDL_FILE src/memory/memory.vhd
+set_global_assignment -name VHDL_FILE src/io/UART.vhd
+set_global_assignment -name VHDL_FILE src/io/peripherie.vhd
+set_global_assignment -name VHDL_FILE src/decode/decode.vhd
+set_global_assignment -name VHDL_FILE src/alu/mux_alu_right.vhd
+set_global_assignment -name VHDL_FILE src/alu/mux_alu_left.vhd
+set_global_assignment -name VHDL_FILE src/alu/alu.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

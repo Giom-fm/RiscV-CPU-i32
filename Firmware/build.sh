@@ -11,5 +11,5 @@ riscv64-unknown-elf-gcc -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -
 #riscv64-unknown-elf-gcc -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -O1 -I /usr/include/ -T linker.lds  $file -o $newfile
 go run ./memory/main.go --file $newfile
 cp ./*.mif ../CPU/Design-Test/src/
-mv ./*.mif ../CPU/Design/src/
+mv ./*.mif ../CPU/Design/src/memory/
 riscv64-unknown-elf-objdump -M no-aliases -d $newfile
