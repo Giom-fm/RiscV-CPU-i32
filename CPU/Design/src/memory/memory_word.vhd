@@ -11,13 +11,13 @@ entity memory_word is
     -- Sums up to 65536 Bytes
     mem_size_in_bytes : integer := 16384;
     -- first memory init file
-    init_filename_1 : string := "./src/memory/intel_mem_0.mif";
+    init_filename_0 : string := "./src/memory/intel_mem_0.mif";
     -- second memory init file
-    init_filename_2 : string := "./src/memory/intel_mem_1.mif";
+    init_filename_1 : string := "./src/memory/intel_mem_1.mif";
     -- third memory init file
-    init_filename_3 : string := "./src/memory/intel_mem_2.mif";
+    init_filename_2 : string := "./src/memory/intel_mem_2.mif";
     -- fourth memory init file
-    init_filename_4 : string := "./src/memory/intel_mem_3.mif"
+    init_filename_3 : string := "./src/memory/intel_mem_3.mif"
   );
   port (
     -- The instruction clock
@@ -45,29 +45,16 @@ end memory_word;
 
 architecture a_memory_word of memory_word is
 
-  signal mem_1_data_address : std_logic_vector(13 downto 0);
-  signal mem_1_data_input   : std_logic_vector(7 downto 0);
-  signal mem_1_data_result  : std_logic_vector(7 downto 0);
-  signal mem_1_inst_output  : std_logic_vector(7 downto 0);
-  signal mem_1_read_write   : T_MEM_DIR;
+  type T_MEMORY is record
+    data_address : std_logic_vector(13 downto 0);
+    data_input   : std_logic_vector(7 downto 0);
+    data_result  : std_logic_vector(7 downto 0);
+    inst_output  : std_logic_vector(7 downto 0);
+    read_write   : T_MEM_DIR;
+  end record;
 
-  signal mem_2_data_address : std_logic_vector(13 downto 0);
-  signal mem_2_data_input   : std_logic_vector(7 downto 0);
-  signal mem_2_data_result  : std_logic_vector(7 downto 0);
-  signal mem_2_inst_output  : std_logic_vector(7 downto 0);
-  signal mem_2_read_write   : T_MEM_DIR;
-
-  signal mem_3_data_address : std_logic_vector(13 downto 0);
-  signal mem_3_data_input   : std_logic_vector(7 downto 0);
-  signal mem_3_data_result  : std_logic_vector(7 downto 0);
-  signal mem_3_inst_output  : std_logic_vector(7 downto 0);
-  signal mem_3_read_write   : T_MEM_DIR;
-
-  signal mem_4_data_address : std_logic_vector(13 downto 0);
-  signal mem_4_data_input   : std_logic_vector(7 downto 0);
-  signal mem_4_data_result  : std_logic_vector(7 downto 0);
-  signal mem_4_inst_output  : std_logic_vector(7 downto 0);
-  signal mem_4_read_write   : T_MEM_DIR;
+  type T_MEMORIES is array (3 downto 0) of T_MEMORY;
+  signal memories : T_MEMORIES;
 
   signal data_address_0    : std_logic_vector(13 downto 0);
   signal data_address_1    : std_logic_vector(13 downto 0);
@@ -79,186 +66,186 @@ begin
   data_address_0    <= i_data_address(15 downto 2);
   data_address_1    <= std_logic_vector(unsigned(data_address_0) + 1);
   data_address_mask <= i_data_address(1 downto 0);
+  -- Instructions
+  inst_address <= i_inst_address(15 downto 2);
+  o_inst       <= memories(3).inst_output & memories(2).inst_output & memories(1).inst_output & memories(0).inst_output;
 
-  calc_address : process (i_data_address, data_address_mask, data_address_0, data_address_1, mem_1_data_result, mem_2_data_result, mem_3_data_result, mem_4_data_result, i_data, i_data_store_mode, i_data_rw) begin
-    mem_1_data_address <= (others => '0');
-    mem_2_data_address <= (others => '0');
-    mem_3_data_address <= (others => '0');
-    mem_4_data_address <= (others => '0');
-    o_data             <= (others => '0');
+  -- 
+  calc_address : process (i_data_address, data_address_mask, data_address_0, data_address_1, memories, i_data, i_data_store_mode, i_data_rw) begin
 
-    mem_1_data_input <= (others => '0');
-    mem_2_data_input <= (others => '0');
-    mem_3_data_input <= (others => '0');
-    mem_4_data_input <= (others => '0');
-
-    mem_1_read_write <= MEM_DIR_READ;
-    mem_2_read_write <= MEM_DIR_READ;
-    mem_3_read_write <= MEM_DIR_READ;
-    mem_4_read_write <= MEM_DIR_READ;
+    -- default cases
+    for i in 0 to 3 loop
+      memories(i).data_address <= (others => '0');
+      memories(i).data_input   <= (others => '0');
+      memories(i).read_write   <= MEM_DIR_READ;
+    end loop;
+    o_data <= (others => '0');
 
     case data_address_mask is
       when "00" =>
-        mem_1_data_address <= data_address_0;
-        mem_2_data_address <= data_address_0;
-        mem_3_data_address <= data_address_0;
-        mem_4_data_address <= data_address_0;
-        mem_1_data_input   <= i_data(7 downto 0);
-        mem_2_data_input   <= i_data(15 downto 8);
-        mem_3_data_input   <= i_data(23 downto 16);
-        mem_4_data_input   <= i_data(31 downto 24);
+        memories(0).data_address <= data_address_0;
+        memories(1).data_address <= data_address_0;
+        memories(2).data_address <= data_address_0;
+        memories(3).data_address <= data_address_0;
+        memories(0).data_input   <= i_data(7 downto 0);
+        memories(1).data_input   <= i_data(15 downto 8);
+        memories(2).data_input   <= i_data(23 downto 16);
+        memories(3).data_input   <= i_data(31 downto 24);
         case i_data_store_mode is
           when STORE_B =>
-            mem_1_read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
           when STORE_H =>
-            mem_1_read_write <= i_data_rw;
-            mem_2_read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
           when STORE_W =>
-            mem_1_read_write <= i_data_rw;
-            mem_2_read_write <= i_data_rw;
-            mem_3_read_write <= i_data_rw;
-            mem_4_read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
         end case;
-        o_data <= mem_4_data_result & mem_3_data_result & mem_2_data_result & mem_1_data_result;
+        o_data <= memories(3).data_result & memories(2).data_result & memories(1).data_result & memories(0).data_result;
       when "01" =>
-        mem_1_data_address <= data_address_1;
-        mem_2_data_address <= data_address_0;
-        mem_3_data_address <= data_address_0;
-        mem_4_data_address <= data_address_0;
-        mem_1_data_input   <= i_data(31 downto 24);
-        mem_2_data_input   <= i_data(7 downto 0);
-        mem_3_data_input   <= i_data(15 downto 8);
-        mem_4_data_input   <= i_data(23 downto 16);
+        memories(0).data_address <= data_address_1;
+        memories(1).data_address <= data_address_0;
+        memories(2).data_address <= data_address_0;
+        memories(3).data_address <= data_address_0;
+        memories(0).data_input   <= i_data(31 downto 24);
+        memories(1).data_input   <= i_data(7 downto 0);
+        memories(2).data_input   <= i_data(15 downto 8);
+        memories(3).data_input   <= i_data(23 downto 16);
         case i_data_store_mode is
           when STORE_B =>
-            mem_2_read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
           when STORE_H =>
-            mem_2_read_write <= i_data_rw;
-            mem_3_read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
           when STORE_W =>
-            mem_2_read_write <= i_data_rw;
-            mem_3_read_write <= i_data_rw;
-            mem_4_read_write <= i_data_rw;
-            mem_1_read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
+
         end case;
-        o_data <= mem_1_data_result & mem_4_data_result & mem_3_data_result & mem_2_data_result;
+        o_data <= memories(0).data_result & memories(3).data_result & memories(2).data_result & memories(1).data_result;
       when "10" =>
-        mem_1_data_address <= data_address_1;
-        mem_2_data_address <= data_address_1;
-        mem_3_data_address <= data_address_0;
-        mem_4_data_address <= data_address_0;
-        mem_1_data_input   <= i_data(23 downto 16);
-        mem_2_data_input   <= i_data(31 downto 24);
-        mem_3_data_input   <= i_data(7 downto 0);
-        mem_4_data_input   <= i_data(15 downto 8);
+        memories(0).data_address <= data_address_1;
+        memories(1).data_address <= data_address_1;
+        memories(2).data_address <= data_address_0;
+        memories(3).data_address <= data_address_0;
+        memories(0).data_input   <= i_data(23 downto 16);
+        memories(1).data_input   <= i_data(31 downto 24);
+        memories(2).data_input   <= i_data(7 downto 0);
+        memories(3).data_input   <= i_data(15 downto 8);
         case i_data_store_mode is
           when STORE_B =>
-            mem_3_read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
           when STORE_H =>
-            mem_3_read_write <= i_data_rw;
-            mem_4_read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
           when STORE_W =>
-            mem_3_read_write <= i_data_rw;
-            mem_4_read_write <= i_data_rw;
-            mem_1_read_write <= i_data_rw;
-            mem_2_read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
         end case;
-        o_data <= mem_2_data_result & mem_1_data_result & mem_4_data_result & mem_3_data_result;
+        o_data <= memories(1).data_result & memories(0).data_result & memories(3).data_result & memories(2).data_result;
       when "11" =>
-        mem_1_data_address <= data_address_1;
-        mem_2_data_address <= data_address_1;
-        mem_3_data_address <= data_address_1;
-        mem_4_data_address <= data_address_0;
-        mem_1_data_input   <= i_data(15 downto 8);
-        mem_2_data_input   <= i_data(23 downto 16);
-        mem_3_data_input   <= i_data(31 downto 24);
-        mem_4_data_input   <= i_data(7 downto 0);
+        memories(0).data_address <= data_address_1;
+        memories(1).data_address <= data_address_1;
+        memories(2).data_address <= data_address_1;
+        memories(3).data_address <= data_address_0;
+        memories(0).data_input   <= i_data(15 downto 8);
+        memories(1).data_input   <= i_data(23 downto 16);
+        memories(2).data_input   <= i_data(31 downto 24);
+        memories(3).data_input   <= i_data(7 downto 0);
         case i_data_store_mode is
           when STORE_B =>
-            mem_4_read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
           when STORE_H =>
-            mem_4_read_write <= i_data_rw;
-            mem_1_read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
           when STORE_W =>
-            mem_4_read_write <= i_data_rw;
-            mem_1_read_write <= i_data_rw;
-            mem_2_read_write <= i_data_rw;
-            mem_3_read_write <= i_data_rw;
+            memories(0).read_write <= i_data_rw;
+            memories(1).read_write <= i_data_rw;
+            memories(2).read_write <= i_data_rw;
+            memories(3).read_write <= i_data_rw;
         end case;
-        o_data <= mem_3_data_result & mem_2_data_result & mem_1_data_result & mem_4_data_result;
+        o_data <= memories(2).data_result & memories(1).data_result & memories(0).data_result & memories(3).data_result;
       when others => null;
     end case;
   end process;
-  -- Instructions
-  inst_address <= i_inst_address(15 downto 2);
-  o_inst       <= mem_4_inst_output & mem_3_inst_output & mem_2_inst_output & mem_1_inst_output;
+
   -- Define Byte-Memory-Blocks
+  -- The first memory block
   mem_1 : entity work.memory_byte(a_memory_byte)
+    generic map(
+      mem_size_in_bytes => mem_size_in_bytes,
+      init_filename     => init_filename_0
+    )
+    port map(
+      i_data_clock   => i_data_clock,
+      i_data_address => memories(0).data_address,
+      i_data         => memories(0).data_input,
+      i_data_wren    => memories(0).read_write,
+      o_data         => memories(0).data_result,
+
+      i_inst_clock   => i_inst_clock,
+      i_inst_address => inst_address,
+      o_inst         => memories(0).inst_output
+    );
+
+  -- The second memory block
+  mem_2 : entity work.memory_byte(a_memory_byte)
     generic map(
       mem_size_in_bytes => mem_size_in_bytes,
       init_filename     => init_filename_1
     )
     port map(
       i_data_clock   => i_data_clock,
-      i_data_address => mem_1_data_address,
-      i_data         => mem_1_data_input,
-      i_data_wren    => mem_1_read_write,
-      o_data         => mem_1_data_result,
+      i_data_address => memories(1).data_address,
+      i_data         => memories(1).data_input,
+      i_data_wren    => memories(1).read_write,
+      o_data         => memories(1).data_result,
 
       i_inst_clock   => i_inst_clock,
       i_inst_address => inst_address,
-      o_inst         => mem_1_inst_output
+      o_inst         => memories(1).inst_output
     );
 
-  mem_2 : entity work.memory_byte(a_memory_byte)
+  -- The third memory block
+  mem_3 : entity work.memory_byte(a_memory_byte)
     generic map(
       mem_size_in_bytes => mem_size_in_bytes,
       init_filename     => init_filename_2
     )
     port map(
       i_data_clock   => i_data_clock,
-      i_data_address => mem_2_data_address,
-      i_data         => mem_2_data_input,
-      i_data_wren    => mem_2_read_write,
-      o_data         => mem_2_data_result,
+      i_data_address => memories(2).data_address,
+      i_data         => memories(2).data_input,
+      i_data_wren    => memories(2).read_write,
+      o_data         => memories(2).data_result,
 
       i_inst_clock   => i_inst_clock,
       i_inst_address => inst_address,
-      o_inst         => mem_2_inst_output
+      o_inst         => memories(2).inst_output
     );
 
-  mem_3 : entity work.memory_byte(a_memory_byte)
+  -- The fourth memory block
+  mem_4 : entity work.memory_byte(a_memory_byte)
     generic map(
       mem_size_in_bytes => mem_size_in_bytes,
       init_filename     => init_filename_3
     )
     port map(
       i_data_clock   => i_data_clock,
-      i_data_address => mem_3_data_address,
-      i_data         => mem_3_data_input,
-      i_data_wren    => mem_3_read_write,
-      o_data         => mem_3_data_result,
+      i_data_address => memories(3).data_address,
+      i_data         => memories(3).data_input,
+      i_data_wren    => memories(3).read_write,
+      o_data         => memories(3).data_result,
 
       i_inst_clock   => i_inst_clock,
       i_inst_address => inst_address,
-      o_inst         => mem_3_inst_output
-    );
-
-  mem_4 : entity work.memory_byte(a_memory_byte)
-    generic map(
-      mem_size_in_bytes => mem_size_in_bytes,
-      init_filename     => init_filename_4
-    )
-    port map(
-      i_data_clock   => i_data_clock,
-      i_data_address => mem_4_data_address,
-      i_data         => mem_4_data_input,
-      i_data_wren    => mem_4_read_write,
-      o_data         => mem_4_data_result,
-
-      i_inst_clock   => i_inst_clock,
-      i_inst_address => inst_address,
-      o_inst         => mem_4_inst_output
+      o_inst         => memories(3).inst_output
     );
 
 end a_memory_word;
