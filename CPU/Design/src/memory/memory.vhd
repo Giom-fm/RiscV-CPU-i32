@@ -11,24 +11,31 @@ entity memory is
     i_reset : in std_logic;
 
     -- Programm memory
+    -- The instruction address
     i_inst_address : in std_logic_vector(31 downto 0);
-    o_inst         : out std_logic_vector(31 downto 0);
+    -- The instruction that were read at the address
+    o_inst : out std_logic_vector(31 downto 0);
 
-    i_data_address    : in std_logic_vector(31 downto 0);
-    i_data            : in std_logic_vector(31 downto 0);
+    -- The data address
+    i_data_address : in std_logic_vector(31 downto 0);
+    -- The data to be written to the address
+    i_data : in std_logic_vector(31 downto 0);
+    -- Read or write
     i_data_read_write : in T_MEM_DIR;
+    -- The data store mode
     i_data_store_mode : in T_STORE_MODE;
-    o_data            : out std_logic_vector(31 downto 0);
+    -- The data that were read at the address
+    o_data : out std_logic_vector(31 downto 0);
 
-    -- IO memory
+    -- Extended memory (IO)
     o_leds : out std_logic_vector(7 downto 0);
     i_rx   : in std_logic;
     o_tx   : out std_logic
   );
 
 end memory;
-architecture a_memory of memory is
 
+architecture a_memory of memory is
   signal clock_invert : std_logic;
 
   signal ram_read_write : T_MEM_DIR;
@@ -39,10 +46,14 @@ architecture a_memory of memory is
   signal ext_data       : std_logic_vector(31 downto 0);
 begin
 
+  -- Invert the clock to generate two edges.
+  -- This allows data and instructions to be read out simultaneously in one cycle.
   clock_invert <= not i_clock;
-  o_inst       <= ram_inst;
-
-  process (i_data_address, i_data_read_write, ram_data, ext_data) begin
+  -- The instruction that were read at the address
+  o_inst <= ram_inst;
+  -- Decides whether the specified address is in
+  -- RAM or in the extended area and sets the corresponding data. 
+  ram_or_ext : process (i_data_address, i_data_read_write, ram_data, ext_data) begin
     ram_read_write <= MEM_DIR_READ;
     ext_read_write <= MEM_DIR_READ;
 
@@ -54,9 +65,9 @@ begin
       o_data               <= ext_data;
       ext_read_write       <= i_data_read_write;
     end if;
-
   end process;
-  mem : entity work.memory_word(a_memory_word)
+  -- The area that represents the RAM
+  ram : entity work.memory_word(a_memory_word)
     port map(
       i_inst_clock   => i_clock,
       i_inst_address => i_inst_address(15 downto 0),
@@ -69,8 +80,8 @@ begin
       i_data_store_mode => i_data_store_mode,
       o_data            => ram_data
     );
-
-  mem_peripherie : entity work.peripherie(a_peripherie)
+  -- The area that represents the extended area (IO)
+  extended : entity work.peripherie(a_peripherie)
     port map(
       i_clock           => clock_invert,
       i_reset           => i_reset,
