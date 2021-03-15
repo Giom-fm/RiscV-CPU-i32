@@ -56,11 +56,13 @@ begin
   ram_or_ext : process (i_data_address, i_data_read_write, ram_data, ext_data) begin
     ram_read_write <= MEM_DIR_READ;
     ext_read_write <= MEM_DIR_READ;
+    o_data         <= (others => '0');
 
-    o_data               <= (others => '0');
-    if i_data_address    <= x"0000FFFF" then
-      o_data               <= ram_data;
-      ram_read_write       <= i_data_read_write;
+    -- Address is in RAM section
+    if i_data_address <= x"0000FFFF" then
+      o_data            <= ram_data;
+      ram_read_write    <= i_data_read_write;
+      -- Address is in extendet Section
     elsif i_data_address <= x"00010003" then
       o_data               <= ext_data;
       ext_read_write       <= i_data_read_write;
@@ -85,11 +87,13 @@ begin
     port map(
       i_clock           => clock_invert,
       i_reset           => i_reset,
-      i_data_store_mode => i_data_store_mode,
-      i_data_read_write => ext_read_write,
+
       i_data_address    => i_data_address(1 downto 0),
       i_data            => i_data,
+      i_data_store_mode => i_data_store_mode,
+      i_data_read_write => ext_read_write,
       o_data            => ext_data,
+      
       o_leds            => o_leds,
       i_rx              => i_rx,
       o_tx              => o_tx
