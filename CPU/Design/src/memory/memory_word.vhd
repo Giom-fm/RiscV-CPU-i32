@@ -8,16 +8,16 @@ use work.types.all;
 entity memory_word is
   generic (
     -- The memory size in byte of the underlying 8Bit memory.
-    -- Sums up to 65536 Bits
+    -- Sums up to 65536 Bytes
     mem_size_in_bytes : integer := 16384;
     -- first memory init file
-    init_filename_1 : string := "./src/memory/intel_mem_3.mif";
+    init_filename_1 : string := "./src/memory/intel_mem_0.mif";
     -- second memory init file
-    init_filename_2 : string := "./src/memory/intel_mem_2.mif";
+    init_filename_2 : string := "./src/memory/intel_mem_1.mif";
     -- third memory init file
-    init_filename_3 : string := "./src/memory/intel_mem_1.mif";
+    init_filename_3 : string := "./src/memory/intel_mem_2.mif";
     -- fourth memory init file
-    init_filename_4 : string := "./src/memory/intel_mem_0.mif"
+    init_filename_4 : string := "./src/memory/intel_mem_3.mif"
   );
   port (
     -- The instruction clock

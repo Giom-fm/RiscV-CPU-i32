@@ -82,7 +82,7 @@ func printPartitions(partitions [][]byte) {
 func createPartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int) {
 	for i := 0; i < len(memory); i += bytesInWord {
 		bytes := memory[i : i+bytesInWord]
-		reverseBytes(bytes)
+		//reverseBytes(bytes)
 		for j := 0; j < bytesInWord; j++ {
 			memoryPartitions[j] = append(memoryPartitions[j], bytes[j])
 		}
