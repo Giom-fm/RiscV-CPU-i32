@@ -1,0 +1,40 @@
+\section{Motivation}
+
+    \subsection{RISC-V}
+        \textit{RISC-V} ist eine offene und erweiterbare Befehlssatzarchitektur (ISA) die sich an dem
+        \textit{RISC (Reduced Instruction Set Computer)} Designprinzip orentiert.
+        Dank der freizügigen \textit{BSD-Lizenz} ist es, im gegensatz zu bspw. der \textit{x86} ISA von \textit{Intel},
+        jedem erlaubt \textit{RISC-V} Mikroprozessoren zu entwerfen, herzustellen und zu verkaufen.
+        Die Lizenz erlaubt es zusätzlich den Befehlssatz nach belieben zu erweitern und somit
+        optimal an eine Hardwarearchitektur anzupassen.
+        In Tabelle \ref{label:riscv-base} werden die Grundbefehlssätze von RISC-V dargestellt.
+        Darüber hinaus besitzt RISC-V noch zusätzliche Befehlssätze die z.B. Hardwaremultiplikation erlauben. \cite{riscv-isa-specs}
+        
+        \begin{center}
+            \begin{longtable}{| l | l | l |}
+                \hline
+                    Name & Beschreibung & Version \\
+                \hline
+                    RV32I & 32Bit Basisbefehlssatz mit 32 Registern & 2.1 (Ratifiziert)\\
+                \hline
+                    RV32E & 32Bit Basisbefehlssatz mit 16 Registern (Eingebettete Systeme) & 1.9 (Offen)\\
+                \hline
+                    RV64I & 64Bit Basisbefehlssatz & 2.1 (Ratifiziert)\\
+                \hline
+                    RV128I & 128Bit Basisbefehlssatz & 1.7 (Offen)\\
+                \hline
+                \caption{RISC-V Grundbefehlssätze}
+                \label{label:riscv-base}
+            \end{longtable}
+        \end{center}
+
+    \subsection{FPGA (Field Programmable Gate Array)}
+        Ein FPGA, (Field Programmable Gate Array) ist ein integrierter Schaltkreis (IC) der Digitaltechnik,
+        in welchen eine logische Schaltung geladen werden kann.
+        Im Vergleich zu der Programmierung von Computern oder Mikrocontrollern wird die Schaltungsstruktur eines FPGAs durch eine
+        Hardwarebeschreibungssprache z.B. VHDL beschrieben. Man spricht daher auch von der Konfiguration des FPGA.
+        Ohne diese hat der Baustein keine Funktion. \cite{fpga-wiki}
+        \\
+        Durch einen FPGA ist es somit möglich einen \textit{RISC-V} Befehlssatz in VHDL zu formulieren und auf Hardware zu testen,
+        ohne Kosten für eine Fertigung des Chips aufbringen zu müssen.
+

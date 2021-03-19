@@ -1,0 +1,26 @@
+\section{Aufgabenstellung}
+    In dem Laborprojekt soll ein Mikrocontroller entwickelt werden der den \textit{RV32I} Befehlssatz implementiert.
+    Dieser soll auf ein FPGA board hochgeladen werden können und Programmcode ausführen.
+    Zusätzlich soll durch Simulationstests sowie durch Tests durch Programmcode die Korrektheit
+    bewiesen werden.
+
+    \subsection{Aufgabenanalyse}
+        Die Aufgabenstellung kann in Soft- und Hardware unterteilt werden.
+
+        \subsubsection{Software}
+            Aus Softwaresicht wird ein \textit{Compiler} benötigt der in der Lage ist Programmcode
+            in \textit{RISC-V} Maschinenbefehle zu übersetzen. Zusätzlich wird ein Dateiformat benötigt
+            welches der Mikrocontroller interpretieren kann.
+            \\
+            Um Programmcode in \textit{RISC-V} Maschinenbefehle zu übersetzen wird die 
+            offene und freie \textit{GCC (GNU Compiler Collection)} verwendet.
+            Das \textit{RISC-V} Team hat hierfür schon vorarbeitet geleistet und bietet
+            den kompletten Toolchain Quellcode an.
+            Dies ermöglicht das Bauen des \textit{Cross-Compilers} sowie von hilfreichen Zusatzprogrammen.
+            \\
+            \url{https://github.com/riscv/riscv-gnu-toolchain}
+
+        \subsubsection{Hardware}
+            Aus Hardwaresicht wird ein FPGA-Board benötigt welches eine Möglichkeit bietet
+            den in VHDL modellierten Mikrocontroller auf das FPGA-Board sowie Programmcode
+            in den Mikrocontroller zu laden.

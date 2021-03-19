@@ -33,7 +33,7 @@ parskip=half,
 
 %% Konstanten %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\course}{Labor Projekt}
-\newcommand{\exercise}{RV32I CPU}
+\newcommand{\exercise}{RISC-V RV32I Mikrocontroller}
 \newcommand{\topic}{Dokumentation}
 \newcommand{\authorname}{Guillaume Fournier-Mayer}
 \newcommand{\matnum}{Tinf-101922}
@@ -114,13 +114,21 @@ parskip=half,
 \fancyfoot[R]{\thepage}
 
 
-%% URL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Zitate %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[backend=biber,style=alphabetic,]{biblatex}
+\addbibresource{literatur.bib}
 
 \begin{document}
-  \input{./tex/Titel.tex}
-  \tableofcontents
-  \newpage
-  \setcounter{page}{1}
-  \listoffigures
-  \lstlistoflistings
+\input{tex/Titel.tex}
+\tableofcontents
+\newpage
+\setcounter{page}{1}
+\input{tex/benutzerhandbuch/benutzerhandbuch.tex}
+\input{tex/programmiererhandbuch/programmiererhandbuch.tex}
+\newpage
+\listoffigures
+%\lstlistoflistings
+\printbibliography
+
 \end{document}
