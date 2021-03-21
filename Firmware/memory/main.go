@@ -38,11 +38,31 @@ func main() {
 	_elf, err := elf.Open(*path)
 	handleError(err)
 
-	memory, err := _elf.Sections[1].Data()
-	handleError(err)
+	var memory []byte
+	elf_text := getTextSection(_elf.Sections)
+	elf_rodata := getRoDataSection(_elf.Sections)
+	elf_data := getDataSection(_elf.Sections)
+
+	if elf_text != nil {
+		elf_bytes, err := elf_text.Data()
+		handleError(err)
+		memory = append(memory, elf_bytes...)
+	}
+
+	if elf_rodata != nil {
+		elf_bytes, err := elf_rodata.Data()
+		handleError(err)
+		memory = append(memory, elf_bytes...)
+	}
+
+	if elf_data != nil {
+		elf_bytes, err := elf_data.Data()
+		handleError(err)
+		memory = append(memory, elf_bytes...)
+	}
 
 	memoryPartitions := make([][]byte, bytesInWord)
-	createPartitions(memory[:], memoryPartitions[:], bytesInWord)
+	createPartitions(memory, memoryPartitions[:], bytesInWord)
 	printPartitions(memoryPartitions[:])
 	writePartitions(memoryPartitions, wordSize, byteSize, memorySize)
 }
@@ -95,13 +115,32 @@ func reverseBytes(bytes []byte) {
 	}
 }
 
-func getTextSextion(sections []*elf.Section) *elf.Section {
+func getTextSection(sections []*elf.Section) *elf.Section {
 	for _, section := range sections {
-		if section.Name == ".text" {
+		if section.SectionHeader.Name == ".text" {
 			return section
 		}
 	}
-	panic("Section .text not found in ELF")
+	return nil
+}
+
+func getDataSection(sections []*elf.Section) *elf.Section {
+	for _, section := range sections {
+		if section.SectionHeader.Name == ".data" {
+			return section
+		}
+	}
+
+	return nil
+}
+
+func getRoDataSection(sections []*elf.Section) *elf.Section {
+	for _, section := range sections {
+		if section.SectionHeader.Name == ".rodata" {
+			return section
+		}
+	}
+	return nil
 }
 
 func handleFlags(path *string) {

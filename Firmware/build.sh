@@ -8,6 +8,9 @@ newfile="$path/$name.elf"
 
 riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 crt0.s -o crt0.o
 riscv64-unknown-elf-gcc -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -I /usr/include/ -T linker.lds crt0.o $file -o $newfile
+riscv64-unknown-elf-readelf -x .text $newfile
+riscv64-unknown-elf-readelf -x .rodata $newfile
+riscv64-unknown-elf-readelf -x .data $newfile
 #riscv64-unknown-elf-gcc -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -O1 -I /usr/include/ -T linker.lds  $file -o $newfile
 go run ./memory/main.go --file $newfile
 cp ./*.mif ../CPU/Design-Test/src/

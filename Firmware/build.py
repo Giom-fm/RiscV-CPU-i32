@@ -1,10 +1,13 @@
+#!/usr/bin/python
+
 import subprocess
 import os
 import sys
 import argparse
 
 
-TOOLPATH = 'compiler\\riscv64-unknown-elf-gcc-10.1.0-2020.08.2-x86_64-w64-mingw32\\bin\\'
+#TOOLPATH = 'compiler\\riscv64-unknown-elf-gcc-10.1.0-2020.08.2-x86_64-w64-mingw32\\bin\\'
+TOOLPATH = ''
 
 FILENAME_ASSEMBLER_COMPILED = 'crt0.o'
 FILENAME_ELF = 'out.elf'
@@ -61,10 +64,13 @@ if __name__ == "__main__":
 
     FILE = args.i
 
+    os.system(TOOLPATH + 'riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 crt0.s '
+            + '-o ' + OUTPUTPATH + '/'+ FILENAME_ASSEMBLER_COMPILED)
+
     # compilieren assembler
     try:
         subprocess.check_output(
-            TOOLPATH + 'riscv64-unknown-elf-as.exe -march=rv32i -mabi=ilp32 crt0.s '
+            TOOLPATH + 'riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 crt0.s '
             + '-o ' + OUTPUTPATH + '/'+ FILENAME_ASSEMBLER_COMPILED)
     except subprocess.CalledProcessError:
         print("build failed!")
@@ -73,8 +79,8 @@ if __name__ == "__main__":
     # compilieren c-file und linken
     try:
         subprocess.check_output(
-            TOOLPATH + 'riscv64-unknown-elf-gcc.exe -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -O1 -T linker.lds '
-            #TOOLPATH + 'riscv64-unknown-elf-gcc.exe -march=rv32i -mabi=ilp32 -O1 -T linker.lds '
+            TOOLPATH + 'riscv64-unknown-elf-gcc -ffunction-sections -nostdlib -march=rv32i -mabi=ilp32 -O1 -T linker.lds '
+            #TOOLPATH + 'riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -O1 -T linker.lds '
             + OUTPUTPATH + '/' + FILENAME_ASSEMBLER_COMPILED + ' '
             + FILE + ' '
             + '-o ' + OUTPUTPATH + '/' + FILENAME_ELF)
@@ -85,13 +91,13 @@ if __name__ == "__main__":
     # print objdump
     if args.print:
         os.system(
-            TOOLPATH + 'riscv64-unknown-elf-objdump.exe -d '
+            TOOLPATH + 'riscv64-unknown-elf-objdump -d '
             + OUTPUTPATH + '/' + FILENAME_ELF + ' '
             + '-M numeric -M no-aliases')
 
     # read elf section .text
     data_text = subprocess.check_output(
-        TOOLPATH + 'riscv64-unknown-elf-readelf.exe -x .text '
+        TOOLPATH + 'riscv64-unknown-elf-readelf -x .text '
         + OUTPUTPATH + '/' + FILENAME_ELF).decode('utf8')
 
     print(data_text)
@@ -99,7 +105,7 @@ if __name__ == "__main__":
 
     # read elf section .rodata
     data_rodata = subprocess.check_output(
-        TOOLPATH + 'riscv64-unknown-elf-readelf.exe -x .rodata '
+        TOOLPATH + 'riscv64-unknown-elf-readelf -x .rodata '
         + OUTPUTPATH + '/' + FILENAME_ELF).decode('utf8')
 
     print(data_rodata)
@@ -107,7 +113,7 @@ if __name__ == "__main__":
 
     # read elf section .data
     data_data = subprocess.check_output(
-        TOOLPATH + 'riscv64-unknown-elf-readelf.exe -x .data '
+        TOOLPATH + 'riscv64-unknown-elf-readelf -x .data '
         + OUTPUTPATH + '/' + FILENAME_ELF).decode('utf8')
 
     print(data_data)

@@ -2,8 +2,7 @@ ENTRY(_start)
 
 MEMORY
 {
-    ROM (rx) : ORIGIN = 0x0, LENGTH = 30k
-    RAM (w)  : ORIGIN = 0x7530, LENGTH = 35535
+    MEM (wrx) : ORIGIN = 0x0, LENGTH = 65536
 }
 
 SECTIONS
@@ -11,16 +10,16 @@ SECTIONS
     .text :
     {   
         *(.text*);
-    } > ROM
+    } > MEM
 
     .rodata :
     {
         *(.rodata*);
-    } > ROM 
+    } > MEM 
 
     .data :
     {
         *(.data*);
-    } > ROM 
+    } > MEM 
 
 }
