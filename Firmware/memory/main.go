@@ -10,20 +10,6 @@ import (
 	"strings"
 )
 
-// TODO Output path
-
-/*
-	fmt.Printf("File Header: ")
-	fmt.Println(_elf.FileHeader)
-	fmt.Printf("ELF Class: %s\n", _elf.Class.String())
-	fmt.Printf("Machine: %s\n", _elf.Machine.String())
-	fmt.Printf("ELF Type: %s\n", _elf.Type)
-	fmt.Printf("ELF Data: %s\n", _elf.Data)
-	fmt.Printf("Entry Point: %d\n", _elf.Entry)
-	fmt.Printf("Section Addresses: %d\n", _elf.Sections)
-	fmt.Printf("Section Addresses: %d\n", _elf.Sections)
-*/
-
 func main() {
 
 	path := flag.String("file", "", "Path to binary")
@@ -38,29 +24,7 @@ func main() {
 	_elf, err := elf.Open(*path)
 	handleError(err)
 
-	var memory []byte
-	elf_text := getTextSection(_elf.Sections)
-	elf_rodata := getRoDataSection(_elf.Sections)
-	elf_data := getDataSection(_elf.Sections)
-
-	if elf_text != nil {
-		elf_bytes, err := elf_text.Data()
-		handleError(err)
-		memory = append(memory, elf_bytes...)
-	}
-
-	if elf_rodata != nil {
-		elf_bytes, err := elf_rodata.Data()
-		handleError(err)
-		memory = append(memory, elf_bytes...)
-	}
-
-	if elf_data != nil {
-		elf_bytes, err := elf_data.Data()
-		handleError(err)
-		memory = append(memory, elf_bytes...)
-	}
-
+	memory := createMemory(_elf.Sections)
 	memoryPartitions := make([][]byte, bytesInWord)
 	createPartitions(memory, memoryPartitions[:], bytesInWord)
 	printPartitions(memoryPartitions[:])
@@ -99,6 +63,31 @@ func printPartitions(partitions [][]byte) {
 	}
 }
 
+func createMemory(sections []*elf.Section) []byte {
+	var memory []byte
+	text_section, rodata_section, data_section := getSections(sections)
+
+	if text_section != nil {
+		elf_bytes, err := text_section.Data()
+		handleError(err)
+		memory = append(memory, elf_bytes...)
+	}
+
+	if rodata_section != nil {
+		elf_bytes, err := rodata_section.Data()
+		handleError(err)
+		memory = append(memory, elf_bytes...)
+	}
+
+	if data_section != nil {
+		elf_bytes, err := data_section.Data()
+		handleError(err)
+		memory = append(memory, elf_bytes...)
+	}
+
+	return memory
+}
+
 func createPartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int) {
 	for i := 0; i < len(memory); i += bytesInWord {
 		bytes := memory[i : i+bytesInWord]
@@ -109,38 +98,22 @@ func createPartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int)
 	}
 }
 
-func reverseBytes(bytes []byte) {
-	for i, j := 0, len(bytes)-1; i < j; i, j = i+1, j-1 {
-		bytes[i], bytes[j] = bytes[j], bytes[i]
-	}
-}
+func getSections(sections []*elf.Section) (*elf.Section, *elf.Section, *elf.Section) {
 
-func getTextSection(sections []*elf.Section) *elf.Section {
+	var text *elf.Section
+	var data *elf.Section
+	var rodata *elf.Section
+
 	for _, section := range sections {
 		if section.SectionHeader.Name == ".text" {
-			return section
+			text = section
+		} else if section.SectionHeader.Name == ".rodata" {
+			rodata = section
+		} else if section.SectionHeader.Name == ".data" {
+			data = section
 		}
 	}
-	return nil
-}
-
-func getDataSection(sections []*elf.Section) *elf.Section {
-	for _, section := range sections {
-		if section.SectionHeader.Name == ".data" {
-			return section
-		}
-	}
-
-	return nil
-}
-
-func getRoDataSection(sections []*elf.Section) *elf.Section {
-	for _, section := range sections {
-		if section.SectionHeader.Name == ".rodata" {
-			return section
-		}
-	}
-	return nil
+	return text, rodata, data
 }
 
 func handleFlags(path *string) {

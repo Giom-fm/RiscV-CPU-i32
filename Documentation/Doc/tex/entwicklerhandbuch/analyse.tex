@@ -1,0 +1,183 @@
+\section{Probelmanalyse}
+    In dem Laborprojekt soll ein Softcore entwickelt werden der den \textit{RV32I} Befehlssatz implementiert.
+    Dieser soll auf ein FPGA board hochgeladen werden und Programmcode ausführen können.
+    Zusätzlich soll durch Simulationstests sowie durch Tests durch Programmcode die Korrektheit
+    bewiesen werden.
+
+    Die Aufgabenstellung kann in Soft- und Hardware unterteilt werden.
+
+        \subsubsection{Software}
+            Aus Softwaresicht wird ein \textit{Compiler} benötigt der in der Lage ist Programmcode
+            in \textit{RISC-V} Maschinenbefehle zu übersetzen. Zusätzlich wird ein Dateiformat benötigt
+            welches der Mikrocontroller interpretieren kann.
+            \\
+            Um Programmcode in \textit{RISC-V} Maschinenbefehle zu übersetzen wird die 
+            offene und freie \textit{GCC (GNU Compiler Collection)} verwendet.
+            Das \textit{RISC-V} Team hat hierfür schon vorarbeitet geleistet und bietet
+            den kompletten Toolchain Quellcode an.
+            Dies ermöglicht das Bauen des \textit{Cross-Compilers} sowie von hilfreichen Zusatzprogrammen.
+            \\
+            \url{https://github.com/riscv/riscv-gnu-toolchain}
+
+        \subsubsection{Hardware}
+            Aus Hardwaresicht wird ein FPGA-Board benötigt welches eine Möglichkeit bietet
+            den in VHDL modellierten Softcore auf das FPGA-Board sowie Programmcode
+            in den Softcore zu laden.
+
+
+
+
+    \subsection{RV32I Befehlssatz}
+        Der \textit{RV32I} ist eine \textit{Load and Store} Architektur und kann somit nur mit
+        Lade- bzw. Speicherbefehlen auf den Speicher zugreifen.
+        Der Prozessor arbeitet nur auf den 32 Registern die zuvor mit Daten aus dem Speicher geladen werden müssen.
+        Dabei bietet \textit{RV32I}, 32 Bit weite Register und kann nur Integerarithmetik in Hardware ausführen.
+        \\
+        Dieser Befehlssatz bietet die Basis für alle \textit{RISC-V} Befehlssätze,
+        da jede Erweiterung zumindest diesen implementieren muss.
+        Für den zu entwickelnden Softcore wurde somit der unprivilegierte \textit{RV32I} Befehlssatz gewählt.
+        \\
+        Tablle \ref{tab:rv32i-types} zeigt hierbei die verschiedenen Typen des \textit{RV32I} Befehlssatzes.
+        
+
+        \begin{center}
+            \begin{longtable}{| c | c | c | c | c | c | c |}
+                \hline
+                   Typ & 31-25 & 24-20 & 19-15 & 14-12 & 11-7 & 6-0 \\
+                \hline
+                    R-Type & funct7 & rs2 & rs1 & funct3 & rd & opcode \\
+                \hline
+                    I-Type & \multicolumn{2}{c |}{imm[11:0]} & rs1 & funct3 & rd & opcode \\
+                \hline
+                    S-Type & imm[11:5] & rs2 & rs1 & funct3 & imm[4:0] & opcode \\
+                \hline
+                    B-Type & imm[12|10:5] & rs2 & rs1 & funct3 & imm[4:1|11] & opcode \\
+                \hline
+                    U-Type & \multicolumn{4}{c |}{imm[31:12]} & rd & opcode \\
+                \hline
+                    J-Type & \multicolumn{4}{c |}{imm[20|10:1|11|19:12]} & rd & opcode \\
+                \hline
+                \caption[RV32I Befehlssatztypen]{RV32I Befehlssatztypen \cite{riscv-isa-specs}}
+                \label{tab:rv32i-types}
+            \end{longtable}
+        \end{center}
+        \begin{description}
+            \item[R-Type] sind arithmetische und logische Befehle
+            \item[I-Type] sind Immediate-, Lade- sowie relative Sprungbefehle
+            \item[S-Type] sind Speicherbefehle
+            \item[B-Type] sind Branchbefehle
+            \item[J-Type] sind absolute Sprungbefehle
+        \end{description}
+
+
+    \subsection{Softcore Design}
+
+        \subsubsection{Von-Neumann-Architektur vs. Harward-Architektur}
+            Die nach \textit{John von Neumann} benante Mikroarchitektur \textit{Von-Neumann-Architektur (VNA)}
+            bietet eine Grundlage für die Arbeitsweise der meisten heute bekannten Computer.
+            Dabei ist charakteristisch, dass die Daten sowie das Programm im selben Speicher abgelegt sind und
+            der Zugriff auf diese nur über den selben Bus stattfindet (Abbildung \ref{fig:vonneumann}).
+            Dies hat den Vorteil, dass \textit{Race Conditions} sowie Daten-Inkohärenzen ausgeschlossen werden können.
+            Ein wesentlicher nachteil dieses Ansatzes ist der sogenante \textit{Von-Neumann-Flaschenhals}.
+            Dieser entsteht dadurch, dass die Instruktionen nicht zur gleichen Zeit gelesen,
+            wie Daten geschrieben bzw. gelesen werden können. Wenn bspw. ein Ladebefehl aus dem Programmspeicher
+            geladen wird, beinhaltet dieser die Adresse aus der die eigentlichen Daten ausgelesen werden sollen.
+            Nun kann der Adressbus aber nicht zur gleichen Zeit die Instruktion sowie die Daten ansprechen.
+            Das auslesen der Daten erfolgt somit erst im nächsten Taktzyklus. Dadurch werden für
+            die Lade- und Speicheroperationen immer zwei Zyklen verwendet, welches sich
+            negativ auf die Performance auswirkt.
+            Da es aus sicht der Speichers keinen unterschied zwischen Instruktion und Daten gibt
+            könnten theoretisch Daten als Instruktionen ausgelesen werden und könnte von Schadcode ausgenutzt werden.
+            Ein \textit{Von-Neumann-Rechner} kann in folgeden Komponenten unterteilt werden.
+
+            \begin{description}
+                \item[ALU (Arithmetic Logic Unit)] Das Rechenwerk führt arithmetische Operationen sowie logische Verknüpfungen durch. 
+                \item[Control Unit] Das Steuerwerk decodiert die Befehle des Programmes,
+                setzt die entsprechenden Steuerleitungen und regelt die Befehlsabfolge.
+                \item[Bus] Das Bussystem (Steuerbus, Adressbus und Datenbus) ist für die Kommunikation zwischen den einzelnen
+                Komponenten verantwortlich.
+                \item[Memory] Der Speicher, speichert das eigentliche Programm sowie auch die Daten.
+                \item[IO] Das Ein- bzw Ausgabewerk steuert die Ein bzw. Ausgabedaten die zum Anwender sowie zu anderen Systemen führen.
+            \end{description}
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=0.2]{img/vonneumann.png}
+                \caption[Von-Neumann-Architektur]{Von-Neumann-Architektur \cite{von-neumann-architektur}}
+                \label{fig:vonneumann}
+            \end{figure}
+
+            Eine weitere verbreitete Architektur ist die \textit{Harvard-Architektur}.
+            Grundlegen unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
+            nur in ihrem Speicher und dem Bus. Die \textit{Harvard-Architektur} verfolgt den Ansatz
+            Instruktionen und Daten physikalisch strikt voneinander zu trennen.
+            Dabei werden zwei separate Speicher mit eigenem Adress- sowie Datenbus verwendet.
+            Dies hat, im gegensatz zur \textit{Von-Neumann-Architektur}, den Vorteil, dass Instruktionen
+            und Daten in einem Taktzyklus gelesen bzw. geschrieben werden können. Hauptnachteil ist jedoch,
+            dass es zu Speicherfragmentierung kommt, da weder nicht genutzter Programmspeicher als Datenspeicher
+            sowie umgekehrt, genutzt werden kann.
+            \\\\
+            Für den zu entwickelnden Softcore wird eine \textit{modifizierte Harvard-Architektur} verwendet die,
+            die Vorteile der beiden oben genanten Architekturen vereint. Um die Speicherfragmentierung zu eliminieren, 
+            wird wie bei der \textit{Von-Neumann-Architektur} nur ein Speicher verwendet.
+            Jedoch werden wie bei der \textit{Harvard-Architektur} zwei Bussysteme (Instruktionsbus und Datenbus)
+            implementiert. 
+
+        \subsubsection{Einzyklus vs. Pipelining}
+
+            Als Einzyklusmaschine wird ein Prozessor verstanden der eine Instruktion pro Taktzyklus abarbeitet.
+            Der eindeutige Vorteil ist hierbei, dass der Prozessor die Instruktion in nur einem Taktzyklus
+            abarbeiten kann und sein Verhalten deterministisch ist.
+            Nicht jede Instruktion benötigt jedoch die selbe Zeit bis diese abgearbeitet ist.
+            Eine absoluter Sprung z.B. ist schneller abgearbeitet als eine arithmetische
+            Operation die zunächst die Operanden aus den Registern laden,
+            verarbeiten und anschließend zurück in die Register schreiben muss.
+            Dies geschieht zwar beides in einem Taktzyklus, benötigt jedoch unterschiedlich viel Zeit.
+            Die Taktfrequenz ist damit direkt abhängig davon wie viel Zeit benötigt wird
+            um den längsten Befehl abzuarbeiten.
+            \\\\
+            Im gegensatz zu der Einzyklusmaschine steht die Pipeliningmaschine.
+            Statt eines gesamten Befehls wird während eines Taktzyklus des Prozessors nur jeweils eine Teilaufgabe abgearbeitet.
+            Dabei können Teilaufgaben mehrerer Befehle gleichzeitig abgearbeitet werden.
+            Da die Teilaufgaben eines Befehls schneller ausgeführt werden können als der eigentliche Befehl,
+            kann die Taktfrequenz erhöht werden.
+            Zwar benötigt ein Befehl nun mehrere Taktzyklen bevor das Ergebnis anliegt,
+            doch der Gesamtdurchsatz erhöht sich dadurch, dass mehrere Befehle Parallel abgearbeitet werden.
+            Die Teilaufgaben eines Befehls werden auch \textit{Pipeline-Stages} genant.
+            Abbildung \ref{fig:pipelining} zeigt eine vierstufige Befehlspipeline und der daraus resultierende erhöhte Gesamtdurchsatz.
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=0.375]{img/pipelining.png}
+                \caption[Befehlsverarbeitung mit und ohne Pipelining]{Befehlsverarbeitung mit und ohne Pipelining \cite{pipelining} }
+                \label{fig:pipelining}
+            \end{figure}
+
+            \begin{description}
+                \item[A: Befehlscode laden (IF, Instruction Fetch)] 
+                \item[B: Instruktion dekodieren und Laden der Daten (ID, Instruction Decoding)] 
+                \item[C: Befehl ausführen (EX, Execution)] 
+                \item[D: Ergebnisse zurückgeben (WB, Write Back)] 
+            \end{description}
+            Ein wesentlicher Nachteil von Pipelining sind jedoch die Konflikte \textit{(Pipeline-Hazards)}
+            die dabei auftretten können. Dabei können folgende drei Konfliktarten auftretten.
+
+            \begin{description}
+                \item[Ressourcenkonflikte] wenn eine Stufe der Pipeline Zugriff auf eine Ressource benötigt, die bereits von einer anderen Stufe belegt ist 
+                \item[Datenkonflikte] wenn ein Befehl, der sich in der Pipeline befindet abhängig von einem Befehl ist der weiter vorne ist.
+                \item[Kontrollflusskonflikte] wenn die Pipeline abwarten muss, ob ein bedingter Sprung ausgeführt wird oder nicht
+            \end{description}
+            Aus zeitlichen Gründen wurde für den Softcore der Einzyklusansatz gewählt.
+            
+
+            
+
+            
+
+
+
+            
+    
+        
+
+    
