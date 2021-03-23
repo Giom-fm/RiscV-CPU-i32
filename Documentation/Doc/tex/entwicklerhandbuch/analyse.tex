@@ -1,4 +1,7 @@
-\section{Probelmanalyse}
+\chapter{Probelmanalyse}
+
+
+
     In dem Laborprojekt soll ein Softcore entwickelt werden der den \textit{RV32I} Befehlssatz implementiert.
     Dieser soll auf ein FPGA board hochgeladen werden und Programmcode ausführen können.
     Zusätzlich soll durch Simulationstests sowie durch Tests durch Programmcode die Korrektheit
@@ -27,7 +30,7 @@
 
 
 
-    \subsection{RV32I Befehlssatz}
+    \section{RV32I Befehlssatz}
         Der \textit{RV32I} ist eine \textit{Load and Store} Architektur und kann somit nur mit
         Lade- bzw. Speicherbefehlen auf den Speicher zugreifen.
         Der Prozessor arbeitet nur auf den 32 Registern die zuvor mit Daten aus dem Speicher geladen werden müssen.
@@ -70,9 +73,9 @@
         \end{description}
 
 
-    \subsection{Softcore Design}
+    \section{Softcore Design}
 
-        \subsubsection{Von-Neumann-Architektur vs. Harward-Architektur}
+        \subsection{Mikroarchitektur}
             Die nach \textit{John von Neumann} benante Mikroarchitektur \textit{Von-Neumann-Architektur (VNA)}
             bietet eine Grundlage für die Arbeitsweise der meisten heute bekannten Computer.
             Dabei ist charakteristisch, dass die Daten sowie das Programm im selben Speicher abgelegt sind und
@@ -99,14 +102,12 @@
                 \item[Memory] Der Speicher, speichert das eigentliche Programm sowie auch die Daten.
                 \item[IO] Das Ein- bzw Ausgabewerk steuert die Ein bzw. Ausgabedaten die zum Anwender sowie zu anderen Systemen führen.
             \end{description}
-
             \begin{figure}[H]
                 \centering
                 \includegraphics[scale=0.2]{img/vonneumann.png}
                 \caption[Von-Neumann-Architektur]{Von-Neumann-Architektur \cite{von-neumann-architektur}}
                 \label{fig:vonneumann}
             \end{figure}
-
             Eine weitere verbreitete Architektur ist die \textit{Harvard-Architektur}.
             Grundlegen unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
             nur in ihrem Speicher und dem Bus. Die \textit{Harvard-Architektur} verfolgt den Ansatz
@@ -123,28 +124,69 @@
             Jedoch werden wie bei der \textit{Harvard-Architektur} zwei Bussysteme (Instruktionsbus und Datenbus)
             implementiert. 
 
-        \subsubsection{Einzyklus vs. Pipelining}
+        \subsection{Befehlsverarbeitung}
 
-            Als Einzyklusmaschine wird ein Prozessor verstanden der eine Instruktion pro Taktzyklus abarbeitet.
-            Der eindeutige Vorteil ist hierbei, dass der Prozessor die Instruktion in nur einem Taktzyklus
-            abarbeiten kann und sein Verhalten deterministisch ist.
-            Nicht jede Instruktion benötigt jedoch die selbe Zeit bis diese abgearbeitet ist.
-            Eine absoluter Sprung z.B. ist schneller abgearbeitet als eine arithmetische
-            Operation die zunächst die Operanden aus den Registern laden,
-            verarbeiten und anschließend zurück in die Register schreiben muss.
-            Dies geschieht zwar beides in einem Taktzyklus, benötigt jedoch unterschiedlich viel Zeit.
-            Die Taktfrequenz ist damit direkt abhängig davon wie viel Zeit benötigt wird
-            um den längsten Befehl abzuarbeiten.
-            \\\\
-            Im gegensatz zu der Einzyklusmaschine steht die Pipeliningmaschine.
-            Statt eines gesamten Befehls wird während eines Taktzyklus des Prozessors nur jeweils eine Teilaufgabe abgearbeitet.
-            Dabei können Teilaufgaben mehrerer Befehle gleichzeitig abgearbeitet werden.
-            Da die Teilaufgaben eines Befehls schneller ausgeführt werden können als der eigentliche Befehl,
-            kann die Taktfrequenz erhöht werden.
-            Zwar benötigt ein Befehl nun mehrere Taktzyklen bevor das Ergebnis anliegt,
-            doch der Gesamtdurchsatz erhöht sich dadurch, dass mehrere Befehle Parallel abgearbeitet werden.
-            Die Teilaufgaben eines Befehls werden auch \textit{Pipeline-Stages} genant.
-            Abbildung \ref{fig:pipelining} zeigt eine vierstufige Befehlspipeline und der daraus resultierende erhöhte Gesamtdurchsatz.
+            \subsubsection{Von-Neumann-Zyklus}
+                Die Phasen der Befehlsverarbeitung werden als \textit{Von-Neumann-Zyklus}
+                bezeichnet und bestehen aus folgenden fünf Teilschritten.
+                Jede Phase benötigt unterschiedlich viel Zeit um sie zu durchlaufen.
+                Dabei ist zu beachten, dass nicht jede Instruktion alle Phasen durchlaufen muss.
+                Eine absoluter Sprung z.B. ist schneller abgearbeitet als eine arithmetische
+                Operation die zunächst die Operanden aus den Registern laden,
+                verarbeiten und anschließend zurück in die Register schreiben muss.
+            
+                \begin{description}
+                    \item[Fetch] Der Befehl wird aus dem Speicher geladen.
+                    \item[Decode] Der Befehl wird dekodiert und die Steuerleitungen werden gesetzt.
+                    \item[Fetch Operands] Die Operanden für die ALU werden geladen 
+                    \item[Execute] Das Rechenwerk verarbeitet die Operanden
+                    \item[Writeback] Das Ergebnis wird in den Speicher zurück geschrieben
+                \end{description}
+
+
+            \subsubsection{Cycles per Instruction (CPI)}
+                \textit{Cycles per Instruction (CPI)} ist ein Maß zur Beurteilung der Performanz eines Prozessors
+                und sagt aus wie viele Taktzyklen benötigt werden um eine Instruktion abzuarbeiten.
+                Je kleiner der CPI Wert ist desto performanter kann Prozessor eingeschätzt werden.
+                \begin{equation}
+                    CPI = \frac{Taktzyklen}{Instruktion}
+                \end{equation}
+                Dabei wird ein Prozessor mit einem CPI Wert größer als eins ($CPI > 1$) als subskalar,
+                mit einem Wert gleich eins ($CPI = 1$) als skalar und mit einem Wert kleiner als eins
+                ($CPI < 1$) als superskalarer Prozessor bezeichnet.
+   
+
+            \subsubsection{Ein-Zyklus-Prozessor}
+                Als Ein-Zyklus-Prozessor wird ein Prozessor verstanden der alle Phasen des \textit{Von-Neumann-Zyklus}
+                in einem Taktzyklus abarbeitet.
+                Somit ergibt sich ein CPI-Wert von eins ($CPI = 1$) und der Prozessor kann als \textit{Skalar} bezeichnet werden.
+                Die maximal Taktfrequenz bzw. die minimale Taktzeit ist dabei direkt abhängig von der Signallaufzeit
+                der längsten Instruktion.
+                \begin{equation}
+                    Taktzeit > Signallaufzeit_{Gesamtbefehl}
+                \end{equation}
+                Ein wesentlicher Vorteil dieser Architektur ist die einfache implementierung, da
+                keine zusätzliche Logik benötigt wird.
+
+            \subsubsection{Pipelining-Prozessor}
+                Im gegensatz zum Ein-Zyklus-Prozessor steht der Pipelining-Prozessor.
+                Statt eines gesamten Befehls wird während eines Taktzyklus nur jeweils eine Teilaufgabe abgearbeitet.
+                Dabei können Teilaufgaben mehrerer Befehle gleichzeitig abgearbeitet werden.
+                Eine Teilaufgabe kann dabei z.B. eine \textit{Von-Neumann-Phase} sein oder noch feiner Granuliert werden.
+                Da eine Teilaufgaben eine kürzere Signallaufzeit aufweist als der Gesamtbefehl,
+                kann die Taktzeit kürzer sein als die Signallaufzeit des Gesamtbefehls.
+                \begin{equation}
+                    \begin{split}
+                        Taktzeit < Signallaufzeit_{Gesamtbefehl} \\
+                        Taktzeit > Signallaufzeit_{Teilaufgabe}
+                    \end{split}
+                \end{equation}
+                Die Taktzeit kann somit kürzer sein als die Signallaufzeit und ist nur noch abhängig von
+                der Signallaufzeit der Teilaufgabe die am längsten dauert.
+                Zwar benötigt ein Befehl nun mehrere Taktzyklen bevor das Ergebnis anliegt,
+                doch der Gesamtdurchsatz erhöht sich dadurch, dass mehrere Befehle Parallel abgearbeitet werden.
+                Die Teilaufgaben eines Befehls werden auch \textit{Pipeline-Stages} genant.
+                Abbildung \ref{fig:pipelining} zeigt eine vierstufige Befehlspipeline und der daraus resultierende erhöhte Gesamtdurchsatz.
 
             \begin{figure}[H]
                 \centering
@@ -167,7 +209,7 @@
                 \item[Datenkonflikte] wenn ein Befehl, der sich in der Pipeline befindet abhängig von einem Befehl ist der weiter vorne ist.
                 \item[Kontrollflusskonflikte] wenn die Pipeline abwarten muss, ob ein bedingter Sprung ausgeführt wird oder nicht
             \end{description}
-            Aus zeitlichen Gründen wurde für den Softcore der Einzyklusansatz gewählt.
+            Aus zeitlichen Gründen wurde für den Softcore der Ein-Zyklusansatz gewählt.
             
 
             

@@ -21,7 +21,7 @@ parskip=half,
 %fleqn,								% Ausgabe von Gleichungen linksbündig
 %draft								% überlangen Zeilen in Ausgabe gekennzeichnet
 ]
-{article}
+{report}
 
 
 %% Deutsche Anpassungen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -115,9 +115,11 @@ parskip=half,
 
 
 %% Zitate %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \usepackage[backend=biber,style=alphabetic,]{biblatex}
 \addbibresource{literatur.bib}
+
+%% Formeln %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
 
 \begin{document}
 \input{tex/Titel.tex}
