@@ -6,14 +6,13 @@
     Dieser soll auf ein FPGA board hochgeladen werden und Programmcode ausführen können.
     Zusätzlich soll durch Simulationstests sowie durch Tests durch Programmcode die Korrektheit
     bewiesen werden.
-
     Die Aufgabenstellung kann in Soft- und Hardware unterteilt werden.
 
-        \subsubsection{Software}
+        \subsection{Software}
             Aus Softwaresicht wird ein \textit{Compiler} benötigt der in der Lage ist Programmcode
             in \textit{RISC-V} Maschinenbefehle zu übersetzen. Zusätzlich wird ein Dateiformat benötigt
             welches der Mikrocontroller interpretieren kann.
-            \\
+            \\\\
             Um Programmcode in \textit{RISC-V} Maschinenbefehle zu übersetzen wird die 
             offene und freie \textit{GCC (GNU Compiler Collection)} verwendet.
             Das \textit{RISC-V} Team hat hierfür schon vorarbeitet geleistet und bietet
@@ -22,11 +21,51 @@
             \\
             \url{https://github.com/riscv/riscv-gnu-toolchain}
 
-        \subsubsection{Hardware}
-            Aus Hardwaresicht wird ein FPGA-Board benötigt welches eine Möglichkeit bietet
-            den in VHDL modellierten Softcore auf das FPGA-Board sowie Programmcode
+        \subsection{Hardware}\label{lab:hardware}
+            Aus Hardwaresicht wird ein \textit{FPGA}-Board benötigt welches eine Möglichkeit bietet
+            den in \textit{VHDL} modellierten Softcore auf das \textit{FPGA}-Board sowie Programmcode
             in den Softcore zu laden.
+            \\\\
+            Die Wahl fällt auf das \textit{FPGA}-Board \textit{TEI0003 TRM} von \textit{Trenz Electronic}.
+            Herz des Boards ist der \textit{Cyclone 10LP 10CL025 FPGA SoC} von Intel der an einem $12 Mhz$
+            Oszillator angeschlossen ist. 
+            Als Speicher stehen 66 \textit{M9K}-Blöcke \cite{intel-cyc10lp-io-datasheet}[2.1 Tabelle 2] mit jeweils 8.192 Bit
+            \cite{intel-cyc10lp-io-datasheet}[2.2] ($66*8192/8 = 67584KB$) des \textit{Cyclone 10LP} sowie $8 MB$ des \textit{TEI0003-02} zu Verfügung.
+            Abbildung \ref{fig:fpga_schematic} zeigt den schematischen Aufbau des \textit{TEI0003 TRM}.
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=0.5]{img/fpga_board_schematic.png}
+                \caption[Schaubild des TEI0003 TRM FPGA-Board]{Schaubild des TEI0003 TRM FPGA-Board \cite{terz} }
+                \label{fig:fpga_schematic}
+            \end{figure}
 
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=0.5]{img/fpga_board_layout.png}
+                \caption[Platine des TEI0003 TRM FPGA-Board]{Platine des TEI0003 TRM FPGA-Board \cite{terz} }
+                \label{fig:fpga_layout}
+            \end{figure}
+
+            \begin{enumerate}
+                \item Intel Cyclone 10LP 10CL025 FPGA SoC, U1
+                \item 8 Mbyte SDRAM 166MHz, U2
+                \item 2 MByte serial configuration memory, U5
+                \item ST Microelectronics LIS3DH 3-axis accelerometer, U4
+                \item FTDI USB2 to JTAG/UART adapter, U3
+                \item Configuration EEPROM for FTDI chip, U9
+                \item 12.0000 MHz oscillator, U7
+                \item 8x red user LEDs, D2 ... D9
+                \item Red LED (Conf. DONE), D10
+                \item Green LED (indicating supply voltage), D1
+                \item Push button (user), S2
+                \item Push button (reset), S1
+                \item Micro USB2 B socket (receptacle), J9
+                \item 1x14 pin header (2.54mm pitch), J2
+                \item 1x6 pin header (2.54mm pitch), J4
+                \item 2x6 Pmod connector, J6
+                \item 3-pin header (2.54mm pitch), J3
+                \item 1x14 pin header (2.54mm pitch), J1
+            \end{enumerate}
 
 
 
@@ -76,53 +115,56 @@
     \section{Softcore Design}
 
         \subsection{Mikroarchitektur}
-            Die nach \textit{John von Neumann} benante Mikroarchitektur \textit{Von-Neumann-Architektur (VNA)}
-            bietet eine Grundlage für die Arbeitsweise der meisten heute bekannten Computer.
-            Dabei ist charakteristisch, dass die Daten sowie das Programm im selben Speicher abgelegt sind und
-            der Zugriff auf diese nur über den selben Bus stattfindet (Abbildung \ref{fig:vonneumann}).
-            Dies hat den Vorteil, dass \textit{Race Conditions} sowie Daten-Inkohärenzen ausgeschlossen werden können.
-            Ein wesentlicher nachteil dieses Ansatzes ist der sogenante \textit{Von-Neumann-Flaschenhals}.
-            Dieser entsteht dadurch, dass die Instruktionen nicht zur gleichen Zeit gelesen,
-            wie Daten geschrieben bzw. gelesen werden können. Wenn bspw. ein Ladebefehl aus dem Programmspeicher
-            geladen wird, beinhaltet dieser die Adresse aus der die eigentlichen Daten ausgelesen werden sollen.
-            Nun kann der Adressbus aber nicht zur gleichen Zeit die Instruktion sowie die Daten ansprechen.
-            Das auslesen der Daten erfolgt somit erst im nächsten Taktzyklus. Dadurch werden für
-            die Lade- und Speicheroperationen immer zwei Zyklen verwendet, welches sich
-            negativ auf die Performance auswirkt.
-            Da es aus sicht der Speichers keinen unterschied zwischen Instruktion und Daten gibt
-            könnten theoretisch Daten als Instruktionen ausgelesen werden und könnte von Schadcode ausgenutzt werden.
-            Ein \textit{Von-Neumann-Rechner} kann in folgeden Komponenten unterteilt werden.
+                \subsubsection{Von-Neumann-Architektur (VNA)}
+                    Die nach \textit{John von Neumann} benante Mikroarchitektur \textit{Von-Neumann-Architektur (VNA)}
+                    bietet eine Grundlage für die Arbeitsweise der meisten heute bekannten Computer.
+                    Dabei ist charakteristisch, dass die Daten sowie das Programm im selben Speicher abgelegt sind und
+                    der Zugriff auf diese nur über den selben Bus stattfindet (Abbildung \ref{fig:vonneumann}).
+                    Dies hat den Vorteil, dass \textit{Race Conditions} sowie Daten-Inkohärenzen ausgeschlossen werden können.
+                    Ein wesentlicher nachteil dieses Ansatzes ist der sogenante \textit{Von-Neumann-Flaschenhals}.
+                    Dieser entsteht dadurch, dass die Instruktionen nicht zur gleichen Zeit gelesen,
+                    wie Daten geschrieben bzw. gelesen werden können. Wenn bspw. ein Ladebefehl aus dem Programmspeicher
+                    geladen wird, beinhaltet dieser die Adresse aus der die eigentlichen Daten ausgelesen werden sollen.
+                    Nun kann der Adressbus aber nicht zur gleichen Zeit die Instruktion sowie die Daten ansprechen.
+                    Das auslesen der Daten erfolgt somit erst im nächsten Taktzyklus. Dadurch werden für
+                    die Lade- und Speicheroperationen immer zwei Zyklen verwendet, welches sich
+                    negativ auf die Performance auswirkt.
+                    Da es aus sicht der Speichers keinen unterschied zwischen Instruktion und Daten gibt
+                    könnten theoretisch Daten als Instruktionen ausgelesen werden und könnte von Schadcode ausgenutzt werden.
+                    Ein \textit{Von-Neumann-Rechner} kann in folgeden Komponenten unterteilt werden.
 
-            \begin{description}
-                \item[ALU (Arithmetic Logic Unit)] Das Rechenwerk führt arithmetische Operationen sowie logische Verknüpfungen durch. 
-                \item[Control Unit] Das Steuerwerk decodiert die Befehle des Programmes,
-                setzt die entsprechenden Steuerleitungen und regelt die Befehlsabfolge.
-                \item[Bus] Das Bussystem (Steuerbus, Adressbus und Datenbus) ist für die Kommunikation zwischen den einzelnen
-                Komponenten verantwortlich.
-                \item[Memory] Der Speicher, speichert das eigentliche Programm sowie auch die Daten.
-                \item[IO] Das Ein- bzw Ausgabewerk steuert die Ein bzw. Ausgabedaten die zum Anwender sowie zu anderen Systemen führen.
-            \end{description}
-            \begin{figure}[H]
-                \centering
-                \includegraphics[scale=0.2]{img/vonneumann.png}
-                \caption[Von-Neumann-Architektur]{Von-Neumann-Architektur \cite{von-neumann-architektur}}
-                \label{fig:vonneumann}
-            \end{figure}
-            Eine weitere verbreitete Architektur ist die \textit{Harvard-Architektur}.
-            Grundlegen unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
-            nur in ihrem Speicher und dem Bus. Die \textit{Harvard-Architektur} verfolgt den Ansatz
-            Instruktionen und Daten physikalisch strikt voneinander zu trennen.
-            Dabei werden zwei separate Speicher mit eigenem Adress- sowie Datenbus verwendet.
-            Dies hat, im gegensatz zur \textit{Von-Neumann-Architektur}, den Vorteil, dass Instruktionen
-            und Daten in einem Taktzyklus gelesen bzw. geschrieben werden können. Hauptnachteil ist jedoch,
-            dass es zu Speicherfragmentierung kommt, da weder nicht genutzter Programmspeicher als Datenspeicher
-            sowie umgekehrt, genutzt werden kann.
-            \\\\
-            Für den zu entwickelnden Softcore wird eine \textit{modifizierte Harvard-Architektur} verwendet die,
-            die Vorteile der beiden oben genanten Architekturen vereint. Um die Speicherfragmentierung zu eliminieren, 
-            wird wie bei der \textit{Von-Neumann-Architektur} nur ein Speicher verwendet.
-            Jedoch werden wie bei der \textit{Harvard-Architektur} zwei Bussysteme (Instruktionsbus und Datenbus)
-            implementiert. 
+                    \begin{description}
+                        \item[ALU (Arithmetic Logic Unit)] Das Rechenwerk führt arithmetische Operationen sowie logische Verknüpfungen durch. 
+                        \item[Control Unit] Das Steuerwerk decodiert die Befehle des Programmes,
+                        setzt die entsprechenden Steuerleitungen und regelt die Befehlsabfolge.
+                        \item[Bus] Das Bussystem (Steuerbus, Adressbus und Datenbus) ist für die Kommunikation zwischen den einzelnen
+                        Komponenten verantwortlich.
+                        \item[Memory] Der Speicher, speichert das eigentliche Programm sowie auch die Daten.
+                        \item[IO] Das Ein- bzw Ausgabewerk steuert die Ein bzw. Ausgabedaten die zum Anwender sowie zu anderen Systemen führen.
+                    \end{description}
+                    \begin{figure}[H]
+                        \centering
+                        \includegraphics[scale=0.2]{img/vonneumann.png}
+                        \caption[Von-Neumann-Architektur]{Von-Neumann-Architektur \cite{von-neumann-architektur}}
+                        \label{fig:vonneumann}
+                    \end{figure}
+
+                \subsubsection{Harvard-Architektur}
+                    Eine weitere verbreitete Architektur ist die \textit{Harvard-Architektur}.
+                    Grundlegen unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
+                    nur in ihrem Speicher und dem Bus. Die \textit{Harvard-Architektur} verfolgt den Ansatz,
+                    Instruktionen und Daten physikalisch strikt voneinander zu trennen.
+                    Dabei werden zwei separate Speicher mit eigenem Adress- sowie Datenbus verwendet.
+                    Dies hat, im gegensatz zur \textit{Von-Neumann-Architektur}, den Vorteil, dass Instruktionen
+                    und Daten in einem Taktzyklus gelesen bzw. geschrieben werden können. Hauptnachteil ist jedoch,
+                    dass es zu Speicherfragmentierung kommt, da weder nicht genutzter Programmspeicher als Datenspeicher
+                    sowie umgekehrt, genutzt werden kann.
+                    \\\\
+                    Für den zu entwickelnden Softcore wird eine \textit{modifizierte Harvard-Architektur} verwendet die,
+                    die Vorteile der beiden oben genanten Architekturen vereint. Um die Speicherfragmentierung zu eliminieren, 
+                    wird wie bei der \textit{Von-Neumann-Architektur} nur ein Speicher verwendet.
+                    Jedoch werden wie bei der \textit{Harvard-Architektur} zwei Bussysteme (Instruktionsbus und Datenbus)
+                    implementiert. 
 
         \subsection{Befehlsverarbeitung}
 
@@ -181,35 +223,65 @@
                         Taktzeit > Signallaufzeit_{Teilaufgabe}
                     \end{split}
                 \end{equation}
-                Die Taktzeit kann somit kürzer sein als die Signallaufzeit und ist nur noch abhängig von
-                der Signallaufzeit der Teilaufgabe die am längsten dauert.
-                Zwar benötigt ein Befehl nun mehrere Taktzyklen bevor das Ergebnis anliegt,
-                doch der Gesamtdurchsatz erhöht sich dadurch, dass mehrere Befehle Parallel abgearbeitet werden.
+                Die Taktzeit ist somit nur noch abhängig von der Signallaufzeit der Teilaufgabe die am längsten dauert.
                 Die Teilaufgaben eines Befehls werden auch \textit{Pipeline-Stages} genant.
                 Abbildung \ref{fig:pipelining} zeigt eine vierstufige Befehlspipeline und der daraus resultierende erhöhte Gesamtdurchsatz.
+                Ein wesentlicher Nachteil von Pipelining sind jedoch die Konflikte \textit{(Pipeline-Hazards)}
+                die dabei auftretten können. Dabei können folgende drei Konfliktarten auftretten.
+    
+                \begin{description}
+                    \item[Ressourcenkonflikte] wenn eine Stufe der Pipeline Zugriff auf eine Ressource benötigt, die bereits von einer anderen Stufe belegt ist 
+                    \item[Datenkonflikte] wenn ein Befehl, der sich in der Pipeline befindet abhängig von einem Befehl ist der weiter vorne ist.
+                    \item[Kontrollflusskonflikte] wenn die Pipeline abwarten muss, ob ein bedingter Sprung ausgeführt wird oder nicht
+                \end{description}
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[scale=0.375]{img/pipelining.png}
+                    \caption[Befehlsverarbeitung mit und ohne Pipelining]{Befehlsverarbeitung mit und ohne Pipelining \cite{pipelining} }
+                    \label{fig:pipelining}
+                \end{figure}
+                \begin{description}
+                    \item[A: Befehlscode laden (IF, Instruction Fetch)] 
+                    \item[B: Instruktion dekodieren und Laden der Daten (ID, Instruction Decoding)] 
+                    \item[C: Befehl ausführen (EX, Execution)] 
+                    \item[D: Ergebnisse zurückgeben (WB, Write Back)] 
+                \end{description}
+                Der gewählte Ansatz für den Softcore ist es einen Ein-Zyklus-Prozessor zu implementieren da so weniger Logik
+                benötigt wird. Von Vorteil durch die Pipelining-Architektur ist abzusehen da
 
-            \begin{figure}[H]
-                \centering
-                \includegraphics[scale=0.375]{img/pipelining.png}
-                \caption[Befehlsverarbeitung mit und ohne Pipelining]{Befehlsverarbeitung mit und ohne Pipelining \cite{pipelining} }
-                \label{fig:pipelining}
-            \end{figure}
 
-            \begin{description}
-                \item[A: Befehlscode laden (IF, Instruction Fetch)] 
-                \item[B: Instruktion dekodieren und Laden der Daten (ID, Instruction Decoding)] 
-                \item[C: Befehl ausführen (EX, Execution)] 
-                \item[D: Ergebnisse zurückgeben (WB, Write Back)] 
-            \end{description}
-            Ein wesentlicher Nachteil von Pipelining sind jedoch die Konflikte \textit{(Pipeline-Hazards)}
-            die dabei auftretten können. Dabei können folgende drei Konfliktarten auftretten.
+        \subsection{Speicher}
+                
+            \subsubsection{Memory Wall}
+                Als \textit{Memory Wall} bezeichnet man das wachsende Ungleichgewicht zwischen der Prozessor- und der Speichergeschwindigkeit.
+                Bei frühen Computern war der Prozessor die langsamste Einheit des Rechners \cite{memory-wall}.
+                Die Datenbereitstellungszeit stellte somit nur ein geringen Anteil an der Verarbeitungszeit dar.
+                Seit den 1980 Jahren begann jedoch der Prozessor exponentiell schneller zu werden als der Speicher \cite{memory-cpu-gap}.
+                Es kann davon ausgegangen werden dass jede fünfte Instruktion den Speicher beansprucht \cite{memory-wall}.
+                Somit würde der Prozessor $20\%$ der Zeit auf Daten warten. Ein idealer Speicher würde so schnell wie der Prozessor sein
+                und die Daten in einem Taktzyklus liefern.
+                Wie Abbildung \ref{fig:memory-hierarchy} zeigt, wäre solch ein Speicher sehr teuer.
+                Eine Maßnahme um der \textit{Memory Wall} entgegen zu wirken ist der einsatz von Cachespeicher direkt im Prozessor.
+                Moderne Prozessoren 
 
-            \begin{description}
-                \item[Ressourcenkonflikte] wenn eine Stufe der Pipeline Zugriff auf eine Ressource benötigt, die bereits von einer anderen Stufe belegt ist 
-                \item[Datenkonflikte] wenn ein Befehl, der sich in der Pipeline befindet abhängig von einem Befehl ist der weiter vorne ist.
-                \item[Kontrollflusskonflikte] wenn die Pipeline abwarten muss, ob ein bedingter Sprung ausgeführt wird oder nicht
-            \end{description}
-            Aus zeitlichen Gründen wurde für den Softcore der Ein-Zyklusansatz gewählt.
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[scale=0.2]{img/speicherpyramide.png}
+                    \caption[Speicherpyramide]{Speicherpyramide \cite{memory-hierarchy}}
+                    \label{fig:memory-hierarchy}
+                \end{figure}
+
+
+
+
+
+
+                
+            
+                
+            
+           
+            
             
 
             
