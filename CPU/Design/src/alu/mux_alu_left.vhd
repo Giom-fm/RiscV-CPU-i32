@@ -25,7 +25,7 @@ architecture a_mux_alu_left of mux_alu_left is
 begin
   process (i_mode, i_rs1, i_pc) begin
     case i_mode is
-        -- RS1 and RS2 are required -> RS2 is tunneled through
+        -- RS1 and RS2 are required -> rs1 is tunneled through
       when MUX_ALU_RS1_RS2 => o_data <= i_rs1;
         -- RS1 and immediate are required -> rs1 is tunneled through
       when MUX_ALU_RS1_IMM => o_data <= i_rs1;

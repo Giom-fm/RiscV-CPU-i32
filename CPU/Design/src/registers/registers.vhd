@@ -41,7 +41,8 @@ begin
   o_read_register_2_data <= register_table(to_integer(unsigned(i_read_register_2_address)));
 
   -- The registers can be reset via an asynchronous reset.
-  -- New data is transferred for "i_write_register_data" to the register at "i_write_register_address" on rising edge.
+  -- New data is transferred for "i_write_register_data" to the register at
+  -- "i_write_register_address" on rising edge.
   -- The register at address zero is locked for write accesses. 
   process (i_clock, i_reset) begin
     if i_reset = '0' then

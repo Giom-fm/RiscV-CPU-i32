@@ -38,7 +38,7 @@ parskip=half,
 \newcommand{\authorname}{Guillaume Fournier-Mayer}
 \newcommand{\matnum}{Tinf-101922}
 \newcommand{\fachsemester}{Fachsemester 7}
-\newcommand{\verwaltungssemester}{Verwaltungssemester 11}
+\newcommand{\verwaltungssemester}{Verwaltungssemester 12}
 
 
 %% Packages für Grafiken & Abbildungen %%%%%%%%%%%%%%%%%%%%%%
@@ -84,19 +84,50 @@ parskip=half,
 \usepackage{subfigure}
 
 %% Listigs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+\definecolor{keyword}{RGB}{0, 127, 173}
+\definecolor{functions}{RGB}{230, 128, 115}
+\definecolor{comment}{RGB}{0, 150, 30}
+
+
 \usepackage{listings}
-\lstset{
-	language=C,
-  basicstyle=\ttfamily,
-  commentstyle=\ttfamily,
-  backgroundcolor=\color[gray]{0.9},
-  numbers=left,
-  stepnumber=1,
-  showstringspaces=false,
-  breaklines=true,
-  columns=fullflexible,
-  frame=single,
+\lstdefinelanguage{VHDL}{
+   keywords=[1]{
+     library,use,all,entity,is,port,in,out,end,architecture,of,
+     begin,and,others,if,elsif,process,then,downto,to,case,when
+   },
+   morekeywords=[2]{
+     to_integer,signed,unsigned,std_logic_vector,std_logic,rising_edge,falling_edge
+   },
+   morecomment=[l]--
 }
+\lstdefinestyle{vhdl}{
+   language     = VHDL,
+   basicstyle   = \ttfamily,
+   keywordstyle = [1]\color{keyword}\bfseries,
+   keywordstyle = [2]\color{functions}\bfseries,
+   commentstyle = \color{comment},
+   backgroundcolor=\color[gray]{0.9},
+   numbers=left,
+   stepnumber=1,
+   showstringspaces=false,
+   breaklines=true,
+   columns=fullflexible,
+   frame=single,
+}
+ 
+%\lstset{
+%	language=VHDL,
+%  basicstyle=\ttfamily,
+%  commentstyle=\ttfamily,
+%  backgroundcolor=\color[gray]{0.9},
+%  numbers=left,
+%  stepnumber=1,
+%  showstringspaces=false,
+%  breaklines=true,
+%  columns=fullflexible,
+%  frame=single,
+%}
 %% TABLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{longtable}
 

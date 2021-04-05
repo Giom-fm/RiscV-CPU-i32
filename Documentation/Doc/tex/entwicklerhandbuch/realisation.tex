@@ -1,0 +1,121 @@
+\chapter{Realisation}
+
+    Folgendes Kapitel gibt eine Übersicht über die implementierten Einheiten (Entitys) in VHDL.
+
+    \section{Steuerwerk}
+        Die Dekodiereinheit wid im verbund mit dem \textit{Programm Counter (PC)} (Siehe \ref{lab:pc}) auch Steuerwerk genant.
+
+        \subsection{Dekodiereinheit}
+            
+            Die Dekodiereinheit ist dafür zuständig die Instruktionen aus dem Speicher zu interpretieren und die notwendigen
+            Steuerleitungen zu setzen.
+            Hierfür ist die Einheit direkt über den 32 Bit Instruktionbus mit dem Speicher verbunden.
+
+        \subsection{Programm Counter (PC)}\label{lab:pc}
+            Der Befehlszähler steuert den Programmablauf und speichert in einem 32 Bit Register
+            die aktuelle Adresse der Instruktion im Programspeicher.
+            In jedem Taktzyklus wird die Adresse um ein Word (32 Bit) erhöht und zeigt somit
+            auf den nächsten Befehl. Dieser kann wieder von der Dekodiereinheit dekodiert werden
+            und die Steuerleitungen gesetzt werden. Der Befehlszähler kann jedoch nicht nur
+            inkrementiert sondern auch überschrieben werden.
+
+            \lstinputlisting[style=vhdl,linerange={37-47},title={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
+
+        \subsection{Branch}
+            Wenn eine Anweisung zu Ablaufsteuerung auf Programmebene
+            ausgeführt werden soll, muss zunächst die Bedingung geprüft werden
+            und dann ggfs. eine Instruktion ausgeführt werden,
+            die nicht sequentiell hinter der aktuellen im Speicher liegt.
+            Dies nennt man einen Zweig (englisch: Branch) und erfordert zusätzliche Logik in Steuerwerk 
+            und wird durch eine Vergleichseinheit realisiert.
+            Diese Einheit vergleicht zwei 32 Bit Daten (Links und Rechts) und liefert ein boolesches Ergebnis (ein Bit).
+            Tabelle \ref{tab:comp-states} zeigt welche Vergleichsoperatoren zu Verfügung stehen.
+
+            \begin{center}
+                \begin{longtable}{| l | l | }
+                    \hline
+                        Zustand & Operation \\
+                    \hline
+                        COMP\_EQUAL & signed(links) == signed(rechts) \\
+                    \hline
+                        COMP\_NOT\_EQUAL & signed(links) != signed(rechts) \\
+                    \hline
+                        COMP\_LESS\_THEN & signed(links) < signed(rechts) \\
+                    \hline
+                        COMP\_GREATER\_EQUAL & signed(links) >= signed(rechts) \\
+                    \hline
+                        COMP\_LESS\_THEN\_U & unsigned(links) < unsigned(rechts) \\
+                    \hline
+                        COMP\_GREATER\_EQUAL\_U & unsigned(links) >= unsigned(rechts) \\
+                    \hline
+                    \caption[Zustandstabelle Comparator]{Zustandstabelle Comparator}
+                    \label{tab:comp-states}
+                \end{longtable}
+            \end{center}
+                
+
+
+    \section{Register}
+
+        \subsection{Registereinheit} 
+            Die Registereinheit bildet 32 Register mit einer Breite von 32 Bit ab \cite{riscv-isa-specs}[2.1].
+            Dabei kann in einem Taktzyklus auf zwei Register (rs1 und rs2) lesend und auf ein Register (rd) schreibend zugegriffen werden.
+            Die \textit{ISA} besagt zudem, dass Register x0 immer Nullen liefern soll und nicht überschrieben werden darf \cite{riscv-isa-specs}[2.1].
+            Dies wird durch eine Abfrage der Adresse im Prozess gesteuert. Falls das Zielregister, das Nullregister sein sollte werden die Ergebnisse
+            nicht übernommen.
+            \lstinputlisting[style=vhdl,linerange={47-55},title={Prozess der Registereinheit}]{../../CPU/Design/src/registers/registers.vhd}
+
+        \subsection{Register Multiplexer}
+            Die Eingangsdaten werden instruktionsabhängig Augewählt und in das Zielregister (rd) geschrieben.
+            Dies geschieht in einem vorgeschaltetem Multiplexer. Die Dekodiereinheit setzt dabei die notwendigen Steuerleitungen.
+            Als Auswahlmöglichkeiten der Daten stehen die \textit{ALU}, der Speicher, der nächste Befehlszähler (PC + 4).
+            Als gesonderte Absicherung dient der \textit{MUX\_REG\_ZERO} Zustand.
+            Dieser wird Standartmäßig beim initialisieren gesetzt und soll ein Überschreiben von Daten verhindern wenn z.B.
+            eine unbekannte Instruktion ausgeführt werden soll.
+            \lstinputlisting[style=vhdl,linerange={28-39},title={Prozess des register Multiplexers}]{../../CPU/Design/src/registers/mux_register.vhd}
+
+    \section{Arithmetic logic unit (ALU)}
+        \subsection{Rechenwerk}
+            Die \textit{Arithmetic logic unit (ALU)} ist das Rechenwerk und berechnet arith­me­tisch sowie logische Operationen.
+            Dabei werden nicht nur Register-Register Berechnungen sondern auch Immediate- sowie Sprungberechnungen
+            basierend auf dem aktuellen Befehlszähler durchgeführt.
+            Da der Befehlssatz nur Integer Operationen erlaubt können auch nur diese in Hardware umgesetzt werden \cite{riscv-isa-specs}[2.4].
+            Ebenfalls fehlen der \textit{ISA} Multiplikation sowie Division.
+            Letzteres kann über Softwarebibliotheken mit Addition und Subtraktion durchgeführt werden,
+            benötigt jedoch mehr Instruktionen und verbraucht mehr Programmspeicher und schlägt sich somit Negativ auf die Performanz aus.
+
+        \subsection{Rechenwerk Multiplexer}
+            Die beiden rechenwerk Multiplexer (Links und Rechts) steuern die Eingangsdaten des Rechenwerks und bestimmen somit welche Daten
+            verrechnet werden. Die Steuerleitungen werden dabei Instruktionsabhängig in der Dekodiereinheit gesetzt.
+            Beide Multiplexer teilen die selben Zustände, reagieren jedoch anders.
+            Tabelle \ref{tab:alu-mux} zeigt die verschiedenen Zustände und deren damit verbundenen Eingangsdaten für die \textit{ALU}.
+
+
+            \begin{center}
+                \begin{longtable}{| l | c | c | l |}
+                    \hline
+                        Zustand & Linker Operand & Rechter Operand & Berechnung \\
+                    \hline
+                        MUX\_ALU\_RS1\_RS2 & rs1 & rs2 & Register-Register \\
+                    \hline
+                        MUX\_ALU\_RS1\_IMM & rs1 & immediate &  Register-Immediate\\
+                    \hline
+                        MUX\_ALU\_PC\_IMM & pc & immediate & Sprung \\
+                    \hline
+                        MUX\_ALU\_PC\_RS2 & pc & rs2 & Sprung \\
+                    \hline
+                    \caption[Zustandstabelle ALU Multiplexer]{Zustandstabelle ALU Multiplexer}
+                    \label{tab:alu-mux}
+                \end{longtable}
+            \end{center}
+
+            \lstinputlisting[style=vhdl,linerange={26-37},title={Prozess des linken rechtenwerk Multuiplexers}]{../../CPU/Design/src/alu/mux_alu_left.vhd}
+            \lstinputlisting[style=vhdl,linerange={27-38},title={Prozess des rechten rechtenwerk Multuiplexers}]{../../CPU/Design/src/alu/mux_alu_right.vhd}
+
+    \section{Memory}
+        \subsection{Byte-Adressierung}
+        \subsection{Sign-Extender}
+
+    \section{IO}
+        \subsection{LED}
+        \subsection{UART}
