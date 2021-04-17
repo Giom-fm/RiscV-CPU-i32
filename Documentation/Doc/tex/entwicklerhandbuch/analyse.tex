@@ -109,6 +109,12 @@
             \item[J-Type] sind absolute Sprungbefehle
         \end{description}
 
+    \section{Execution environment interface (EEI)}\label{lab:eei}
+        Die \textit{Execution environment interface (EEI)} stellt eine Schnittstelle zur Laufzeitumgebung
+        dar und definiert Initialzustände aber auch Attribute die z.B. den Speicher betreffen \cite{riscv-isa-specs}[1.2].
+        Der Befehlssatz lässt viel Spielraum zu, sodass viele Werte frei gewählt werden können.
+        Da der Softcore von Grund auf entwickelt wird, können viele Parameter so gewählt werden, dass sie zur Architektur passen.
+
 
     \section{Softcore Design}
 
@@ -147,7 +153,7 @@
                         \label{fig:vonneumann}
                     \end{figure}
 
-                \subsubsection{Harvard-Architektur}
+                \subsubsection{Harvard-Architektur}\label{lab:havard}
                     Eine weitere verbreitete Architektur ist die \textit{Harvard-Architektur}.
                     Grundlegen unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
                     nur in ihrem Speicher und dem Bus. Die \textit{Harvard-Architektur} verfolgt den Ansatz,
@@ -272,7 +278,6 @@
                 Diese können in der Breite frei variiert werden und ermöglichen den Zugriff auf die Daten in einem Taktzyklus.
                 Wesentlicher Nachteil dieser Lösung ist, dass nur \textit{67584B} Speicher für Daten und Instruktionen zu Verfügung stehen.
                 
-
                 \begin{figure}[H]
                     \centering
                     \includegraphics[scale=0.2]{img/speicherpyramide.png}
@@ -280,6 +285,20 @@
                     \label{fig:memory-hierarchy}
                 \end{figure}
 
+
+            \subsubsection{Speicherausrichtung}\label{lab:mem-order}
+                Da eine \textit{modifizierte Harvard-Architektur} gewählt wurde (Siehe \ref{lab:havard}) liegen im Speicher
+                sowohl Daten als auch Instruktionen. Die Instruktionen sind hierbei in vier Byte Grenzen zu halten
+                (natürliche Ausrichtung) \cite{riscv-isa-specs}[2.2].
+                Der Befehlssatz lässt es jedoch der EEI (Siehe \ref{lab:eei}) überlassen, ob die Daten auch natürlich ausgerichtet liegen sollen
+                \cite{riscv-isa-specs}[2.6].
+                Der Vorteil von natürlich ausgerichteten Daten liegt darin, das keine zusätzliche Logik benötigt wird um Daten im Speicher
+                auszulesen bzw. zu schreiben. Wesentlicher Nachteil ist die Speicherfragmentierung. Da im Worst-case 32 Bit für einen 8 Bit 
+                Wert verbraucht werden. Die ungenutzten 24 Bit $(32 Bit - 8 Bit = 24 Bit)$ werden mit Nullen aufgefüllt.
+                Der Compiler könnte durch die Byte-Adressierung diesen Platz noch nutzen.
+                Der Einfachheit halber wird jedoch der Ansatz des natürlich ausgerichteten Speicher gewählt.
+
+                
 
 
 

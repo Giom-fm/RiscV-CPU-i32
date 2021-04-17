@@ -37,24 +37,22 @@ architecture a_peripherie of peripherie is
 begin
 
   address <= to_integer(unsigned(i_data_address));
-
-  -- LED-IO memory
-  o_leds <= io_register;
-
-  -- UART memory
-  uart_tx_data   <= i_data(7 downto 0);
-  uart_tx_enable <= '1' when address = C_UART_TX and i_data_read_write = MEM_DIR_WRITE else '0';
-
-  process (address, io_register, uart_rx_data, uart_status) begin
+  read: process (address, io_register, uart_rx_data, uart_status) begin
     case(address) is
-      when C_LEDS        => o_data        <= extend(io_register, 32);
-      when C_UART_RX     => o_data     <= extend(uart_rx_data, 32);
-      when C_UART_STATUS => o_data <= extend(uart_status, 32);
-      when others => o_data        <= (others => '0');
+      when C_LEDS             => o_data <= extend(io_register, 32);
+      when C_UART_RX          => o_data <= extend(uart_rx_data, 32);
+      when C_UART_STATUS      => o_data <= extend(uart_status, 32);
+      when others => o_data   <= (others => '0');
     end case;
   end process;
 
-  process (i_clock, i_data_store_mode, i_data, i_reset) begin
+
+   -- LED-IO memory
+   o_leds <= io_register;
+   -- UART memory
+   uart_tx_data   <= i_data(7 downto 0);
+   uart_tx_enable <= '1' when address = C_UART_TX and i_data_read_write = MEM_DIR_WRITE else '0';
+  write: process (i_clock, i_data_store_mode, i_data, i_reset) begin
     if i_reset = '0' then
       io_register <= (others => '0');
     elsif rising_edge(i_clock) then
