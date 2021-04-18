@@ -1,4 +1,4 @@
-\chapter{Realisation}
+\chapter{Realisation in VHDL}
 
     Folgendes Kapitel gibt eine Übersicht über die implementierten Einheiten (Entitys) in VHDL.
 
@@ -140,7 +140,36 @@
             Für Instruktionen und Daten stehen insgesamt 65535 Bytes zu Verfügung.
 
         \subsection{Initialisierung}
+            Die Initialisierung erfolgt über ein \textit{Memory initialization files (MIF)} \cite{intel-mif}.
+            Die einfache \textit{Key-Value-}Syntax (Tabelle \ref{tab:mif-syntax}) erlaubt eine Abbildung der Speicheradressen sowie deren korrespondierenden Daten.
+            Die eigentliche Initialisierung erfolgt entweder zur Synthesezeit oder zur Laufzeit über den Quartus Assembler <<REFERENZ AUF BENUTZERHANDBUCH>>
+            Listing \ref{lst:mif-example} zeigt ein Beispiel MIF.
+            \begin{center}
+                \begin{longtable}{| l | l |}
+                    \hline
+                        Schlüsselwort & Wert\\
+                    \hline
+                        DEPTH & Speichergröße in Words\\
+                    \hline
+                        WIDTH & Wordgröße\\
+                    \hline
+                        ADDRESS\_RADIX & Repräsentation der Adressen\\
+                    \hline
+                        DATA\_RADIX & Repräsentation der Daten\\
+                    \hline
+                        CONTENT & Adress-Daten Paare\\
+                    \hline
+                    \caption[MIF Syntax]{MIF Syntax}
+                    \label{tab:mif-syntax}
+                \end{longtable}
+            \end{center}
+
+            \lstinputlisting[style=mif,caption={Beispiel MIF},label=lst:mif-example]{src/ram.mif.ex}
+
+
         \subsection{Sign-Extender}
+
+
 
         
 
@@ -156,7 +185,7 @@
 
 
         \lstinputlisting[style=VHDL,caption={Leseprozess für die Peripherie},linerange={39-47},label=lst:peripherie-read]{../../CPU/Design/src/io/peripherie.vhd}
-        \lstinputlisting[style=VHDL,caption={Schreiprozess für die Peripherie},linerange={50-63},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
+        \lstinputlisting[style=VHDL,caption={Schreibeprozess für die Peripherie},linerange={50-63},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
 
         \subsection{LED}
             Es stehen acht LED's auf dem \textit{FPGA}-Board zu Verfügung die über den erweiterten Speicherbereich
@@ -169,6 +198,6 @@
             Dabei wurde das Modul im Rahmen dieser Arbeit nicht Entwickelt und ist somit ein Fremdmodul \cite{vhdl-uart}.
             Es Funktioniert jedoch nach dem gleichen Prinzip des \textit{Memory-Mappings}.
             Wie Listing \ref{lst:peripherie-read} und \ref{lst:peripherie-write} zeigen,
-            besteht es dabei aus dre Adressbereichen (Status, RX und TX ) aus denen gelesen bzw. in die geschrieben werden kann.
+            besteht es dabei aus drei Adressbereichen (Status, RX und TX) aus denen gelesen bzw. in die geschrieben werden kann.
             
 

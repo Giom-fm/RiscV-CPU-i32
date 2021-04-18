@@ -91,5 +91,46 @@
 
 
     \section{Kompilieren des Programmcodes}
-    \section{Flashen des Mikrocontrollers}
+        Um Programmcode zu Compilieren muss zunächst die Toolchain gebaut werden
+        dessen Quellcode sich im \textit{Firmware} Verzeichnis befindet.
+        Nach wechseln in das Verzeichnis kann über den Befehl \texttt{go build *.go}
+        die Toolchain gebaut werden. War das bauen Erfolgreich erscheint
+        eine ausführbare Datei namens \textit{build} im Verzeichnis.
+        Druch \texttt{./build --help} wird die Parameterübersicht des Programmes
+        ausgegeben (Abbildung \ref{fig:build-help}).
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/build_help.png}
+            \caption{Parameterübersicht von Build}
+            \label{fig:build-help}
+        \end{figure}
+        Die Standardbelegung der Parameter ist auf die hardware Eigenschaften des
+        Softcores ausgelegt, sodass nur \texttt{./build --source=PFAD} benötigt wird
+        um das jeweilige Programm zu Compilieren.
+        \\
+        Zum testen des Bauprozesses befindet sich Beispielquellcode im
+        \textit{src} Verzeichnis.
+        Beispielsweise kann über \texttt{./build --source=src/counter.c}
+        ein einfaches Programm Compiliert werden. Da der \textit{Print}-Parameter
+        standardmäßig auf \textit{true} gesetzt ist, werden nach Erfolgreichem
+        compilieren die Partitionstabellen sowie der assemblierte Programmcode
+        ausgegeben (Abbildung \ref{fig:build-example}).
+
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/build_example.png}
+            \caption{Beispielquellcode compiliert durch build}
+            \label{fig:build-example}
+        \end{figure}
+
+        \subsection{Plattform.h}
+            Der Zugriff auf die Peripherie wird über \textit{Memory-Mapping} realisiert.
+            Die Adressen sind hierfür in der \textit{Plattform.h} im \textit{src}-Verzeichnis
+            hinterlegt (Listing \ref{lst:plattformh}).
+            \lstinputlisting[style=cstyle,caption={Plattform.h},label=lst:plattformh]{../../Firmware/src/plattform.h}
+
+
+    \section{Flashen des Softcores}
 

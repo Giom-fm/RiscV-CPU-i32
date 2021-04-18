@@ -101,6 +101,15 @@ parskip=half,
    },
    morecomment=[l]--
 }
+
+\lstdefinelanguage{MIF}{
+   keywords=[1]{
+    DEPTH, WIDTH, ADDRESS_RADIX, DATA_RADIX, CONTENT,    
+    BEGIN, END
+   },
+}
+
+
 \lstdefinestyle{vhdl}{
    language     = VHDL,
    basicstyle   = \ttfamily,
@@ -116,8 +125,22 @@ parskip=half,
    frame=single,
 }
 
-\lstset{
+\lstdefinestyle{cstyle}{
 	language=C,
+  basicstyle=\ttfamily,
+  commentstyle = \color{comment},
+  keywordstyle=[1]\color{keyword}\bfseries,
+  backgroundcolor=\color[gray]{0.9},
+  numbers=left,
+  stepnumber=1,
+  showstringspaces=false,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+}
+
+\lstdefinestyle{mif}{
+  language=MIF,
   basicstyle=\ttfamily,
   commentstyle = \color{comment},
   keywordstyle=[1]\color{keyword}\bfseries,
@@ -163,7 +186,7 @@ parskip=half,
 \input{tex/entwicklerhandbuch/entwicklerhandbuch.tex}
 \newpage
 \listoffigures
-%\lstlistoflistings
+\lstlistoflistings
 \printbibliography
 
 \end{document}

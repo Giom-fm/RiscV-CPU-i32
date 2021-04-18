@@ -1,65 +1,73 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
+	"debug/elf"
+	"flag"
+	"log"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
 )
 
-func Build(srcPath string, bootPath string, linkerPath string) string {
+func main() {
 
-	createOutputDir()
+	srcPath := flag.String("source", "", "Path to source code")
+	bootPath := flag.String("bootloader", "crt0.s", "Path to Bootloader code")
+	linkerPath := flag.String("linker", "linker.lds", "Path to linker Script File")
+	wordSize := *flag.Int("wordsize", 32, "Size of word in bit")
+	byteSize := *flag.Int("bytesize", 8, "Size of byte in bit")
+	memorySize := *flag.Int("memorySize", 16384, "Memory Size in Words")
+	print := *flag.Bool("print", true, "Print ELF infos")
+	bytesInWord := wordSize / byteSize
 
-	srcDest := getDestination(srcPath, "elf")
-	bootDest := getDestination(bootPath, "o")
+	flag.Parse()
+	handleFlags(srcPath, bootPath, linkerPath)
+	elfPath := Build(*srcPath, *bootPath, *linkerPath)
 
-	argBootLoader := []string{"-march=rv32i", "-mabi=ilp32", bootPath, "-o", bootDest}
-	argCompiler := []string{"-ffunction-sections", "-nostdlib", "-march=rv32i", "-mabi=ilp32", "-I", "/usr/include/", "-T", linkerPath, bootDest, srcPath, "-o", srcDest}
+	_elf, err := elf.Open(elfPath)
+	HandleError(err)
 
-	// Assemble Bootloader
-	execute("riscv64-unknown-elf-as", argBootLoader)
-	// Compile and Link
-	execute("riscv64-unknown-elf-gcc", argCompiler)
-	return srcDest
-}
+	memory := CreateMemory(_elf.Sections)
+	memoryPartitions := make([][]byte, bytesInWord)
+	CreatePartitions(memory, memoryPartitions[:], bytesInWord)
+	WritePartitions(memoryPartitions, wordSize, byteSize, memorySize)
 
-func PrintElfInfos(path string) {
-	argReadElf := []string{"-x", ".text", "-x", ".rodata", "-x", ".data", path}
-	argObjDump := []string{"-M", "no-aliases", "-d", path}
-	out := execute("riscv64-unknown-elf-readelf", argReadElf)
-	fmt.Print(out)
-	out = execute("riscv64-unknown-elf-objdump", argObjDump)
-	fmt.Print(out)
-}
-
-func execute(command string, args []string) string {
-	cmd := exec.Command(command, args...)
-	var stderr bytes.Buffer
-	var stdout bytes.Buffer
-	cmd.Stderr = &stderr
-	cmd.Stdout = &stdout
-	err := cmd.Run()
-	HandleError(err, stderr.String())
-	return stdout.String()
-}
-
-func getDestination(path string, extention string) string {
-	srcFile := filepath.Base(path)
-	srcName := strings.Split(srcFile, ".")
-	return filepath.Join("out", srcName[0]+"."+extention)
-}
-
-func createOutputDir() {
-
-	_, err := os.Stat("out")
-	if os.IsNotExist(err) {
-		err = os.Mkdir("out", 0755)
-		HandleError(err)
-	} else {
-		HandleError(err)
+	if print {
+		PrintPartitions(memoryPartitions[:])
+		PrintElfInfos(elfPath)
 	}
 
+}
+
+func handleFlags(srcPath *string, bootPath *string, linkerPath *string) {
+	var err error
+
+	if *srcPath == "" || *bootPath == "" || *linkerPath == "" {
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
+	_, err = os.Stat(*srcPath)
+	if os.IsNotExist(err) {
+		log.Fatal("Source does not exist.")
+		os.Exit(1)
+	}
+
+	_, err = os.Stat(*bootPath)
+	if os.IsNotExist(err) {
+		log.Fatal("Bootloader does not exist.")
+		os.Exit(1)
+	}
+
+	_, err = os.Stat(*linkerPath)
+	if os.IsNotExist(err) {
+		log.Fatal("Linker Script does not exist.")
+		os.Exit(1)
+	}
+
+}
+
+func HandleError(err error, msg ...string) {
+	if err != nil {
+		log.Fatal(msg)
+		panic(err.Error())
+	}
 }
