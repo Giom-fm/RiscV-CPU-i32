@@ -1,12 +1,23 @@
+#include "stdbool.h"
+#include "plattform.h"
+
 int main() {
   int counter = 1;
+  bool direction_up = true;
   while (1) {
+    LED = counter;    
     for (int i = 0; i < 1000000; i++)
       ;
-    if (counter == (1 << 7)) {
-      counter = 1;
-    } else {
+    if (direction_up) {
       counter <<= 1;
+      if (counter == (1 << 7)) {
+        direction_up = false;
+      }
+    } else {
+      counter >>= 1;
+      if (counter == 1) {
+        direction_up = true;
+      }
     }
   }
   return 0;

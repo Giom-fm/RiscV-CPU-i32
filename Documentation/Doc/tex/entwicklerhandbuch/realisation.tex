@@ -1,9 +1,26 @@
 \chapter{Realisation in VHDL}
 
     Folgendes Kapitel gibt eine Übersicht über die implementierten Einheiten (Entitys) in VHDL.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=1]{img/OverviewCPU.pdf}
+        \caption{Gesamtübersicht des Softcores}
+        \label{fig:cpu_overview}
+    \end{figure}
+
 
     \section{Steuerwerk}
+
+
+
         Die Dekodiereinheit wid im verbund mit dem \textit{Programm Counter (PC)} (Siehe \ref{lab:pc}) auch Steuerwerk genant.
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/block_decode.pdf}
+            \caption{Dekodiereinheit}
+            \label{fig:decode}
+        \end{figure}
 
         \subsection{Dekodiereinheit}
             
@@ -12,6 +29,14 @@
             Hierfür ist die Einheit direkt über den 32 Bit Instruktionbus mit dem Speicher verbunden.
 
         \subsection{Programm Counter (PC)}\label{lab:pc}
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=1]{img/block_pc.pdf}
+                \caption{Befehlszählers}
+                \label{fig:pc}
+            \end{figure}
+
             Der Befehlszähler steuert den Programmablauf und speichert in einem 32 Bit Register
             die aktuelle Adresse der Instruktion im Programspeicher.
             In jedem Taktzyklus wird die Adresse um ein Word (32 Bit) erhöht und zeigt somit
@@ -22,6 +47,15 @@
             \lstinputlisting[style=vhdl,linerange={37-47},caption={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
 
         \subsection{Branch}
+
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=1]{img/block_comparator.pdf}
+                \caption{Vergleichswerk}
+                \label{fig:alu}
+            \end{figure}
+
             Wenn eine Anweisung zu Ablaufsteuerung auf Programmebene
             ausgeführt werden soll, muss zunächst die Bedingung geprüft werden
             und dann ggfs. eine Instruktion ausgeführt werden,
@@ -48,7 +82,7 @@
                     \hline
                         COMP\_GREATER\_EQUAL\_U & unsigned(links) >= unsigned(rechts) \\
                     \hline
-                    \caption[Zustandstabelle Comparator]{Zustandstabelle Comparator}
+                    \caption[Zustandstabelle Vergleichswerk]{Zustandstabelle Vergleichswerk}
                     \label{tab:comp-states}
                 \end{longtable}
             \end{center}
@@ -56,6 +90,14 @@
 
 
     \section{Register}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/block_register.pdf}
+            \caption{Registereinheit}
+            \label{fig:register}
+        \end{figure}
+
 
         \subsection{Registereinheit} 
             Die Registereinheit bildet 32 Register mit einer Breite von 32 Bit ab \cite{riscv-isa-specs}[2.1].
@@ -66,6 +108,15 @@
             \lstinputlisting[style=vhdl,linerange={47-55},caption={Prozess der Registereinheit}]{../../CPU/Design/src/registers/registers.vhd}
 
         \subsection{Register Multiplexer}
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=1]{img/block_mux_register.pdf}
+                \caption{Register Multiplexer}
+                \label{fig:register_mux}
+            \end{figure}
+
+
             Die Eingangsdaten werden instruktionsabhängig Augewählt und in das Zielregister (rd) geschrieben.
             Dies geschieht in einem vorgeschaltetem Multiplexer. Die Dekodiereinheit setzt dabei die notwendigen Steuerleitungen.
             Als Auswahlmöglichkeiten der Daten stehen die \textit{ALU}, der Speicher, der nächste Befehlszähler (PC + 4).
@@ -75,6 +126,14 @@
             \lstinputlisting[style=vhdl,linerange={28-39},caption={Prozess des register Multiplexers}]{../../CPU/Design/src/registers/mux_register.vhd}
 
     \section{Arithmetic logic unit (ALU)}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/block_alu.pdf}
+            \caption{ALU}
+            \label{fig:alu}
+        \end{figure}
+
         \subsection{Rechenwerk}
             Die \textit{Arithmetic logic unit (ALU)} ist das Rechenwerk und berechnet arith­me­tisch sowie logische Operationen.
             Dabei werden nicht nur Register-Register Berechnungen sondern auch Immediate- sowie Sprungberechnungen
@@ -85,6 +144,21 @@
             benötigt jedoch mehr Instruktionen und verbraucht mehr Programmspeicher und schlägt sich somit Negativ auf die Performanz aus.
 
         \subsection{Rechenwerk Multiplexer}
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=1]{img/block_mux_alu_left.pdf}
+                \caption{Linker ALU Multiplexer}
+                \label{fig:alu_mux_left}
+            \end{figure}
+
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=1]{img/block_mux_alu_right.pdf}
+                \caption{Rechter ALU Multiplexer}
+                \label{fig:alu}
+            \end{figure}
+
             Die beiden rechenwerk Multiplexer (Links und Rechts) steuern die Eingangsdaten des Rechenwerks und bestimmen somit welche Daten
             verrechnet werden. Die Steuerleitungen werden dabei Instruktionsabhängig in der Dekodiereinheit gesetzt.
             Beide Multiplexer teilen die selben Zustände, reagieren jedoch anders.
@@ -124,7 +198,6 @@
         \begin{equation}
             \frac{1}{12Mhz} > 2\cdot\frac{1}{238Mhz}
         \end{equation}
-     
         
         \subsection{Byte-Adressierung}
             Auch wenn die Speicherausrichtung natürlich ist (Siehe \ref{lab:mem-order}), fordert der Befehlssatz eine Byte-Adressierung,
@@ -139,7 +212,7 @@
             richtige Speicherpartition zu adressieren.
             Für Instruktionen und Daten stehen insgesamt 65535 Bytes zu Verfügung.
 
-        \subsection{Initialisierung}
+        \subsection{Initialisierung}\label{lab:mif}
             Die Initialisierung erfolgt über ein \textit{Memory initialization files (MIF)} \cite{intel-mif}.
             Die einfache \textit{Key-Value-}Syntax (Tabelle \ref{tab:mif-syntax}) erlaubt eine Abbildung der Speicheradressen sowie deren korrespondierenden Daten.
             Die eigentliche Initialisierung erfolgt entweder zur Synthesezeit oder zur Laufzeit über den Quartus Assembler <<REFERENZ AUF BENUTZERHANDBUCH>>
@@ -169,10 +242,19 @@
 
         \subsection{Sign-Extender}
 
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=1]{img/block_sext.pdf}
+                \caption{Vorzeichenerweiterung}
+                \label{fig:sext}
+            \end{figure}
 
-
-        
-
+            Die Vorzeichenerweiterung wird Verwendet um ausgelsense Werte aus dem Speicher auf Wordgröße
+            zu erweitern. Grund dafür ist, dass Werte kleinerer Breite ausgelesen werden können wie z.B. ein
+            Byte oder Halfword. Da die Register jedoch alle mit einer fixen Wordbreite von 32 Bit arbeiten muss ggfs.
+            Aufgefüllt werden. Ob mit Nullen oder Einsen aufgefüllt wird, ist Abhängig von der Operation und wird über den
+            \textit{sext\_mode} durch den Dekoder eingestellt.
+            
     \section{IO}
 
         Die Anbindung von Peripherie erfolgt über \textit{Memory-Mapping}.
@@ -182,8 +264,6 @@
         in der \textit{memory.vhd} (Listing \ref{lst:memory}).
 
         \lstinputlisting[style=VHDL,caption={Adressaufteilung im Speicher},linerange={56-70},label=lst:memory]{../../CPU/Design/src/memory/memory.vhd}
-
-
         \lstinputlisting[style=VHDL,caption={Leseprozess für die Peripherie},linerange={39-47},label=lst:peripherie-read]{../../CPU/Design/src/io/peripherie.vhd}
         \lstinputlisting[style=VHDL,caption={Schreibeprozess für die Peripherie},linerange={50-63},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
 

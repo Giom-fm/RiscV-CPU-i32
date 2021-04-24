@@ -6,20 +6,7 @@
     bewiesen werden.
     Die Aufgabenstellung kann in Soft- und Hardware unterteilt werden.
 
-        \subsection{Software}
-            Aus Softwaresicht wird ein \textit{Compiler} benötigt der in der Lage ist Programmcode
-            in \textit{RISC-V} Maschinenbefehle zu übersetzen. Zusätzlich wird ein Dateiformat benötigt
-            welches der Mikrocontroller interpretieren kann.
-            \\\\
-            Um Programmcode in \textit{RISC-V} Maschinenbefehle zu übersetzen wird die 
-            offene und freie \textit{GCC (GNU Compiler Collection)} verwendet.
-            Das \textit{RISC-V} Team hat hierfür schon vorarbeitet geleistet und bietet
-            den kompletten Toolchain Quellcode an.
-            Dies ermöglicht das Bauen des \textit{Cross-Compilers} sowie von hilfreichen Zusatzprogrammen.
-            \\
-            \url{https://github.com/riscv/riscv-gnu-toolchain}
-
-        \subsection{Hardware}\label{lab:hardware}
+        \section{Hardware}\label{lab:hardware}
             Aus Hardwaresicht wird ein \textit{FPGA}-Board benötigt welches eine Möglichkeit bietet
             den in \textit{VHDL} modellierten Softcore auf das \textit{FPGA}-Board sowie Programmcode
             in den Softcore zu laden.

@@ -1,12 +1,43 @@
 \chapter{Software}
-    Das folgende Kapitel beschreibt die Software die benötigt wird um
-    den Softcore zu initialisieren und programmieren.
 
+
+    Das folgenden Kapitel beschreibt das Zusammenspiel verschiedener Softwarschichten
+    um eine \textit{Toolchain} abzubilden die in der Lage ist für den Softcore passenden
+    Compilate zu erstellen, Speicherpartitionen zu initialisieren sowie den Bootloader
+    zu erstellen und zu linken. 
 
     \section{Compiler und Linker}
 
-        \subsection{Executable and Linkable Format (ELF)}
+        Der \textit{Compiler} wird benötigt um Programmcode
+        in \textit{RISC-V} Maschinenbefehle zu übersetzen.
+        Zusätzlich formt dieser die Maschineninstruktionen in ein \textit{ELF}-Dateiformat
+        (Siehe \ref{lab:elf}).\\
+        Dazu wird die offene und freie
+        \textit{GCC (GNU Compiler Collection)} verwendet.
+        Das \textit{RISC-V} Team hat hierfür schon vorarbeitet geleistet und bietet
+        den kompletten Toolchain Quellcode an.
+        Dies ermöglicht das Bauen des \textit{Cross-Compilers} sowie von hilfreichen
+        Zusatzprogrammen \cite{riscv-toolchain}.
+        
+        \subsection{Executable and Linkable Format (ELF)}\label{lab:elf}
 
     \section{Speicher Partitionierung}
 
+
     \section{Bootloader}
+
+        Der Bootloader ist Assembler geschrieben und ist dazu da den
+        Softcore zu initialisieren, sodass dieser bereit ist Programmcode auszuführen.
+        Dabei wird Hauptsächlich die Stackadresse gesetzt und die \textit{Main}
+        Funktion des C-Codes aufgerufen  (Listing \ref{lst:crt0s}).
+        Hierbei ist zu beachten, dass der Stack von hinten nach vorne wächst.
+        Aus diesem Grund wird als Stackadresse das letzte adressierbare Byte (0xFFFF) benutzt.
+        \lstinputlisting[style=cstyle,caption={Bootloader crt0.s},label=lst:crt0s]{../../Firmware/crt0.s}
+
+    \section{Toolchain}
+        
+        Die Toolchain ist ein \textit{GO}-Programm, namens \textit{Build},
+        welches Programmcode compiliert und die \textit{MIFs} (Siehe \ref{lab:mif}).
+        Um zu garantieren, dass der Bootloader als erste Instruktion ausgeführt wird,
+        wird beim Compilieren der Bootloader durch den Linker eingebunden.
+        

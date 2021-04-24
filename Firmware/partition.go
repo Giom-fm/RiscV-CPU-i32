@@ -70,7 +70,6 @@ func CreateMemory(sections []*elf.Section) []byte {
 func CreatePartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int) {
 	for i := 0; i < len(memory); i += bytesInWord {
 		bytes := memory[i : i+bytesInWord]
-		//reverseBytes(bytes)
 		for j := 0; j < bytesInWord; j++ {
 			memoryPartitions[j] = append(memoryPartitions[j], bytes[j])
 		}
