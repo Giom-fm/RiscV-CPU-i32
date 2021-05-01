@@ -1,6 +1,6 @@
 #include "plattform.h"
 
-volatile uint8_t i1[100] = {42};
+volatile uint8_t i1[100000];
 
 int main(void)
 {

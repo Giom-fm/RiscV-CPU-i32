@@ -1,2 +1,34 @@
-* FPGA config speichern
-* SDRam bentutzen für mehr RAM/ROM
+\chapter{Ausblick}
+
+    Diese Arbeit zeigt, dass es mit dem \textit{RISC-V} Befehlssatz möglich
+    ist einen einfachen Mikrocontoller zu entwerfen und Programmcode auf diesem
+    auszuführen. Durch die freizügige Lizenz des Befehlssatzes, die damit
+    verbundene Erweiterbarkeit und die freie Wahl eines \textit{FPGAs}, kann der
+    entwickelte Softcore optimal an die Anforderung angepasst werden. 
+    Nichtdestotrotz ist der Softcore, der in dieser Arbeit entwickelt wurde,
+    aus Komplexitätsgründen und den damit verbunden Zeitaufwand eher simpel
+    gehalten, sodass ein Anwendungsfall schwer zu bestimmen ist.
+    \\
+    Wird der Softcore mit einem Mikrocontroller wie dem \textit{Atmega128}
+    verglichen fällt auf, dass es einen großen Unterschied bei der Peripherie gibt.
+    Hier fehlen gängige Datenbusse wie \textit{SPI} oder \textit{I2C}.
+    Zusätzlich fehlen Analog-Digital-Wandler bzw. Digital-Analog-Wandler, 
+    Hardwaretimer sowie externe Interrupts. 
+    All dies macht das Zusammenspiel des Softcores mit Sensoren oder Aktoren
+    schwierig. Ein nachrüsten dieser Funktionalitäten ist jedoch in \textit{VHDL}
+    vergleichsweise einfach umzusetzen und könnte im Rahmen einer zukünftigen Arbeit
+    geschehen.
+    \\
+    Von der Peripherie abgesehen gibt es auch Potential bei der Implementierung
+    der Befehlssätze für Multiplikation und fließkommazahl Arithmetik.
+    Dies würde den Mehraufwand durch Softwareimplementierungen verringern
+    und somit die Performanz des Softcores steigern.
+    Eine Anbindung von externem Flash für den Programmspeicher und
+    RAM würde für manche Aufgaben nützlich sein, da somit mehr Speicher zu Verfügung
+    stehen würde. Die daraus zu Verfügung stehenden internen Speicherblöcke
+    könnten daraufhin auch als Cache fungieren und die langsamen Speicherzugriffe beschleunigen.
+    Sicherlich wäre damit auch ein Wechsel auf eine Pipelinearchitektur
+    verbunden.
+    
+    
+

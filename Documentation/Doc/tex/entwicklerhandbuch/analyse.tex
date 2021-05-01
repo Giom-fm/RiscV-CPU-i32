@@ -6,6 +6,8 @@
     bewiesen werden.
     Die Aufgabenstellung kann in Soft- und Hardware unterteilt werden.
 
+        \section{Software}
+
         \section{Hardware}\label{lab:hardware}
             Aus Hardwaresicht wird ein \textit{FPGA}-Board benötigt welches eine Möglichkeit bietet
             den in \textit{VHDL} modellierten Softcore auf das \textit{FPGA}-Board sowie Programmcode
@@ -63,8 +65,10 @@
         Dieser Befehlssatz bietet die Basis für alle \textit{RISC-V} Befehlssätze,
         da jede Erweiterung zumindest diesen implementieren muss.
         Für den zu entwickelnden Softcore wurde somit der unprivilegierte \textit{RV32I} Befehlssatz gewählt.
+        Außer acht gelassen wurden dabei die \textit{FENCE} und \textit{EBREAK} Befehle, da diese für
+        den aktuellen gebrauch des Softcores nicht benötigt werden.
         \\
-        Tablle \ref{tab:rv32i-types} zeigt hierbei die verschiedenen Typen des \textit{RV32I} Befehlssatzes.
+        Tablle \ref{tab:rv32i-types} zeigt die verschiedenen Typen des \textit{RV32I} Befehlssatzes.
         
 
         \begin{center}
@@ -120,8 +124,8 @@
                     Das auslesen der Daten erfolgt somit erst im nächsten Taktzyklus. Dadurch werden für
                     die Lade- und Speicheroperationen immer zwei Zyklen verwendet, welches sich
                     negativ auf die Performance auswirkt.
-                    Da es aus sicht der Speichers keinen unterschied zwischen Instruktion und Daten gibt
-                    könnten theoretisch Daten als Instruktionen ausgelesen werden und könnte von Schadcode ausgenutzt werden.
+                    Da es aus sicht der Speichers keinen Unterschied zwischen Instruktion und Daten gibt,
+                    könnten theoretisch Daten als Instruktionen ausgelesen werden und könnte von Schadcode ausgenutzt werden.\\
                     Ein \textit{Von-Neumann-Rechner} kann in folgeden Komponenten unterteilt werden.
 
                     \begin{description}
@@ -130,7 +134,7 @@
                         setzt die entsprechenden Steuerleitungen und regelt die Befehlsabfolge.
                         \item[Bus] Das Bussystem (Steuerbus, Adressbus und Datenbus) ist für die Kommunikation zwischen den einzelnen
                         Komponenten verantwortlich.
-                        \item[Memory] Der Speicher, speichert das eigentliche Programm sowie auch die Daten.
+                        \item[Memory] Der Speicher, speichert das eigentliche Programm sowie die Daten.
                         \item[IO] Das Ein- bzw Ausgabewerk steuert die Ein bzw. Ausgabedaten die zum Anwender sowie zu anderen Systemen führen.
                     \end{description}
                     \begin{figure}[H]
@@ -180,7 +184,7 @@
             \subsubsection{Cycles per Instruction (CPI)}
                 \textit{Cycles per Instruction (CPI)} ist ein Maß zur Beurteilung der Performanz eines Prozessors
                 und sagt aus wie viele Taktzyklen benötigt werden um eine Instruktion abzuarbeiten.
-                Je kleiner der CPI Wert ist desto performanter kann Prozessor eingeschätzt werden.
+                Je kleiner der CPI Wert ist desto performanter kann ein Prozessor eingeschätzt werden.
                 \begin{equation}
                     CPI = \frac{Taktzyklen}{Instruktion}
                 \end{equation}
@@ -282,8 +286,7 @@
                 Der Vorteil von natürlich ausgerichteten Daten liegt darin, das keine zusätzliche Logik benötigt wird um Daten im Speicher
                 auszulesen bzw. zu schreiben. Wesentlicher Nachteil ist die Speicherfragmentierung. Da im Worst-case 32 Bit für einen 8 Bit 
                 Wert verbraucht werden. Die ungenutzten 24 Bit $(32 Bit - 8 Bit = 24 Bit)$ werden mit Nullen aufgefüllt.
-                Der Compiler könnte durch die Byte-Adressierung diesen Platz noch nutzen.
-                Der Einfachheit halber wird jedoch der Ansatz des natürlich ausgerichteten Speicher gewählt.
+                Der Einfachheit halber wird der Ansatz des natürlich ausgerichteten Speicher gewählt.
 
                 
 

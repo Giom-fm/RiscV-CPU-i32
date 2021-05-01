@@ -27,7 +27,7 @@ func Build(srcPath string, bootPath string, linkerPath string) string {
 }
 
 func PrintElfInfos(path string) {
-	argReadElf := []string{"-x", ".text", "-x", ".rodata", "-x", ".data", path}
+	argReadElf := []string{"-x", ".text", "-x", ".rodata", "-x", ".data", "-x", ".bss", path}
 	argObjDump := []string{"-M", "no-aliases", "-d", path}
 	out := execute("riscv64-unknown-elf-readelf", argReadElf)
 	fmt.Print(out)

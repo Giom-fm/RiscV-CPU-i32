@@ -1,1 +1,83 @@
 \chapter{Tests}
+
+    \section{Unit Tests}
+
+    \section{End-to-End Tests}
+        Als End-to-End tests wird C-Code verwendet der über die LEDs das Testergebnis
+        ausgibt. Der Quellcode der Test befindet sich unter \textit{Firmware/src/}.
+
+        \subsection{Kontrollstrukturen (counter.c)}\label{lab:counter-test}
+            Der Zählertest soll zunächst einfache Kontrollstrukturen testen.
+            Dafür wird die LED als Acht-Bit-Zähler verwendet und kontinuierlich hochgezählt.
+            Wenn das maximum ($2^8 = 255$) erreicht ist wird der Zähler wieder auf null zurück gesetzt.
+
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Die LEDs werden Binär hochgezählt bis
+                bis das Maximum erreicht wurde und werden dann zurück gesetzt.
+                \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
+            \end{description}
+            
+        
+        \subsection{Shiftoperationen (lightshift.c)}\label{lab:lightshift-test}
+            Der Shifttest testet die Shiftoperationen der ALU.
+            Dafür wird die LED auf eins gesetzt und nach links geshiftet.
+            Ist der Maximalwert erreicht wird nach rechts zurück geshiftet.
+            Bei erreichen des Minimalwertes wird wieder von vorne begonnen.
+
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Es entsteht ein Lauflicht welches von
+                rechts nach links und zurück läuft .
+                \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
+            \end{description}
+
+        \subsection{Multiplikation und Division (mul\_div.c)}
+            Der Multiplikations- und Divisionstest testet beide Rechenarten, die
+            Aufgrund der fehlenden hardware Unterstützung, durch den Compiler, in
+            Software umgesetzt werden. Hierfür wird eine abwandlung des Shifttests
+            (Siehe \ref{lab:lightshift-test}) verwendet der das shiften
+            durch eine Multiplikation bzw. Division mit zwei ersetzt.
+
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Es entsteht ein Lauflicht welches von
+                rechts nach links und zurück läuft .
+                \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
+            \end{description}
+
+        \subsection{Unterprogrammsprünge (subroutines.c)}
+            Um Unterprogrammsprünge zu testen wird eine Abwandlung des Kontrollstrukturtests
+            (Siehe \ref{lab:counter-test}) verwendet. Hinzu kommt eine Routine die
+            die Sleep funktionalität in ein Unterprogramm kapselt. Um zusätzlich Rückgabewerte zu testen
+            wird das erhöhen des Wertes in einer Funktion abgehandelt.
+
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Die LEDs werden Binär hochgezählt bis
+                bis das Maximum erreicht wurde und werden dann zurück gesetzt.
+                \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
+            \end{description}
+
+        \subsection{Rekursion (recursion.c)}
+            Der Rekursionstest inkrementiert den Wert in einer Routine die
+            zusätzlich prüft, ob der Wert unter dem maximalwert liegt.
+            Ist dies der Fall wird die selbe Routine erneut aufgerufen.
+            Dies geschieht solnage bis der Wert den Maximalwert erreicht.
+            Die Endlosschleife setzt den Wert anschließend wieder auf null und 
+            ruft die Rekursionsroutine erneut auf.
+
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Die LEDs werden Binär hochgezählt bis
+                bis das Maximum erreicht wurde und werden dann zurück gesetzt.
+                \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
+            \end{description}
+
+        \subsection{Linker (tobig.c)}
+            Der Linkertest testet die Speicherpartitionierung in dem ein zu großes
+            Array an Daten angelegt wird.
+
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Das Compilieren ist Erfolgreich.
+                Das Linken zeigt jedoch einen Fehler an, dass nicht genügend Speicher
+                zur Verfügung steht um das Array zu Speichern. 
+                \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
+            \end{description}
+
+

@@ -22,4 +22,10 @@ SECTIONS
         *(.data*);
     } > MEM 
 
+    .bss :
+    {
+        *(.bss*);
+        *(COMMON);
+    } > MEM
+
 }

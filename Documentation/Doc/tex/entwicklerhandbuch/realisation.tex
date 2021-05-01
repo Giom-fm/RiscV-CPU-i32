@@ -11,8 +11,6 @@
 
     \section{Steuerwerk}
 
-
-
         Die Dekodiereinheit wid im verbund mit dem \textit{Programm Counter (PC)} (Siehe \ref{lab:pc}) auch Steuerwerk genant.
 
         \begin{figure}[H]
@@ -47,7 +45,6 @@
             \lstinputlisting[style=vhdl,linerange={37-47},caption={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
 
         \subsection{Branch}
-
 
             \begin{figure}[H]
                 \centering
@@ -186,7 +183,7 @@
             \lstinputlisting[style=vhdl,linerange={26-37},caption={Prozess des linken rechtenwerk Multuiplexers}]{../../CPU/Design/src/alu/mux_alu_left.vhd}
             \lstinputlisting[style=vhdl,linerange={27-38},caption={Prozess des rechten rechtenwerk Multuiplexers}]{../../CPU/Design/src/alu/mux_alu_right.vhd}
 
-    \section{Memory}
+    \section{Memory}\label{lab:memory}
 
         Durch die gewählte \textit{modifizierte Havard-Architektur} und den \textit{Ein-Zyklus-Ansatz}
         muss sicherstegestellt werden, dass in einem Taktzyklus sowohl Instruktion gelesen als auch die damit verbundenen Daten
@@ -198,7 +195,24 @@
         \begin{equation}
             \frac{1}{12Mhz} > 2\cdot\frac{1}{238Mhz}
         \end{equation}
-        
+
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/Timing_Memory.pdf}
+            \caption{Taktflanken am Speicher}
+            \label{fig:timing_memory}
+        \end{figure}
+
+         \begin{enumerate}
+             \item Neue Instruktionsadresse muss bereits anliegen
+             \item Instruktion wird aus Speicher gelesen / Steuerwerk setzt Kontrollsignale
+             \item Instruktion wird ausgeführt / Adresse für Daten wird berechnet.
+             \item Daten werden an berechneter Adresse geschrieben bzw. gelesen
+             \item Gelesen Daten werden durch ALU verrechnet und in Zielregister geschrieben. / Daten werden aus Register in Speicher geschrieben
+         \end{enumerate}
+
+            
         \subsection{Byte-Adressierung}
             Auch wenn die Speicherausrichtung natürlich ist (Siehe \ref{lab:mem-order}), fordert der Befehlssatz eine Byte-Adressierung,
             sodass auf einzelne Bytes in einem Word zugegriffen werden kann. Leider erlauben das die \textit{M9K} Speicherblöcke nicht.
@@ -258,10 +272,17 @@
     \section{IO}
 
         Die Anbindung von Peripherie erfolgt über \textit{Memory-Mapping}.
-        Dabei wird ein zusätzlicher bereich im Speicher nur für Peripherie reserviert.
+        Dabei wird ein zusätzlicher bereich im Speicher nur für Peripherie reserviert (Abbildung \ref{fig:io}).
         Je nach dem welcher bereich adressiert wird, werden Daten geschrieben bzw. gelesen
         oder Die Peripherie manipuliert. Darüber entscheidet der Prozess \textit{ram\_or\_ext}
         in der \textit{memory.vhd} (Listing \ref{lst:memory}).
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/memory.pdf}
+            \caption{Speicher mit IO Bereich}
+            \label{fig:io}
+        \end{figure}
 
         \lstinputlisting[style=VHDL,caption={Adressaufteilung im Speicher},linerange={56-70},label=lst:memory]{../../CPU/Design/src/memory/memory.vhd}
         \lstinputlisting[style=VHDL,caption={Leseprozess für die Peripherie},linerange={39-47},label=lst:peripherie-read]{../../CPU/Design/src/io/peripherie.vhd}

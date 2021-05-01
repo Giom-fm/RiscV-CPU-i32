@@ -1,12 +1,14 @@
-\chapter{Software}
-
+\chapter{Toolchain}
 
     Das folgenden Kapitel beschreibt das Zusammenspiel verschiedener Softwarschichten
     um eine \textit{Toolchain} abzubilden die in der Lage ist für den Softcore passenden
-    Compilate zu erstellen, Speicherpartitionen zu initialisieren sowie den Bootloader
-    zu erstellen und zu linken. 
+    Compilate zu erstellen, Speicherpartitionen zu generieren sowie den Bootloader
+    zu erstellen und zu linken.
+    Dafür wurde im Rahmen dieses Projektes ein, in \textit{GO} geschriebenes, Programm
+    entworfen welches folgende Punkte in einem Programm vereint.
+    Die Benutzung des Programmes wird in Kapitel \ref{lab:compile-code} beschrieben.
 
-    \section{Compiler und Linker}
+    \section{Compiler}
 
         Der \textit{Compiler} wird benötigt um Programmcode
         in \textit{RISC-V} Maschinenbefehle zu übersetzen.
@@ -19,12 +21,41 @@
         Dies ermöglicht das Bauen des \textit{Cross-Compilers} sowie von hilfreichen
         Zusatzprogrammen \cite{riscv-toolchain}.
         
-        \subsection{Executable and Linkable Format (ELF)}\label{lab:elf}
+    \subsection{Executable and Linkable Format (ELF)}\label{lab:elf}
+        Das \textit{Executable and Linkable Format (ELF)} definiert ein
+        standard Binärformat für ausführbare Programme, Bibliotheken so wie von
+        Speicherauszügen. Jede \textit{ELF} besteht aus Kopfinformationen (Header)
+        gefolgt von Daten. Die Kopfinformationen beinhalten Informationen 
+        über die eigentlichen Daten. Dazu zählen bspw. Wordbreite, Byte-Reihenfolge,
+        Elf-Typ oder Maschinentyp.\\
+        Zu den Daten gehören unter anderem \textit{Sections Headers}.
+        Diese beinhalten dabei Informationen über mehrere Code-Sektionen
+        und deren Zugriffsrechte. Die eigentlichen Daten liegen dabei unter \textit{Data}.
+        Die vier wichtigsten Sektionen für ausführbare Programme sind dabei folgende.
+        
+        \begin{description}
+            \item[.text] ausführbarer Programmcode (Instruktionen)
+            \item[.data] Initialisierte Daten mit Schreib- sowie Lesezugriff
+            \item[.rodata] Initialisierte Daten mit Lesezugriff (Konstanten)
+            \item[.bss] Uninitialisierte Daten (mit nullen initialisiert)
+        \end{description}
+    
+    \subsection{Linker}
+        Der Linker ist, im Kontext dieser Arbeit, vorallem zuständig dafür
+        die Speicheranordnung zu definieren. Dafür werden die \textit{Sections} (Siehe \ref{lab:elf})
+        aus der in eine Reihenfolge gebracht die für die Hardware passt.
+        Listing \ref{lst:lds} zeigt das Linkerskript welches die Speicheranordnung definiert.
+        \texttt{ENTRY(\_start)} definiert hierbei den Einstiegspunkt (Siehe \ref{lab:bootloader}).
+        \texttt{MEMORY} beschreibt die Speichergröße, sodass der Compiler weiß wie
+        viel Speicher ihm zu Verfügung steht. Aufgrund der gewählten \textit{modifizierten Havard-Architekur} (Siehe \ref{lab:havard})
+        gibt es nur einen Speicherpool, sodass Instruktionen sowie Daten zusammen liegen.
+        In \texttt{SECTIONS} wird die Reihenfolge der Instruktionen und der Daten innerhalb des Speicher
+        definiert. Im ersten Bereich stehen die Instruktionen (\texttt{.text}) gefolgt von den Konstanten (\texttt{.rodata}).
+        Als nächstes folgen die Variablen (\texttt{.data}) sowie die Null-initialisierten Variablen (\texttt{.bss}).
+        
+        \lstinputlisting[style=cstyle,caption={Linker Skript},label=lst:lds]{../../Firmware/linker.lds}
 
-    \section{Speicher Partitionierung}
-
-
-    \section{Bootloader}
+    \section{Bootloader}\label{lab:bootloader}
 
         Der Bootloader ist Assembler geschrieben und ist dazu da den
         Softcore zu initialisieren, sodass dieser bereit ist Programmcode auszuführen.
@@ -34,10 +65,20 @@
         Aus diesem Grund wird als Stackadresse das letzte adressierbare Byte (0xFFFF) benutzt.
         \lstinputlisting[style=cstyle,caption={Bootloader crt0.s},label=lst:crt0s]{../../Firmware/crt0.s}
 
-    \section{Toolchain}
+    \section{MIF Generierung}
+
+        Die zu Grunde liegende Speicherarchitektur (Siehe \ref{lab:memory})
+        und deren Initialisierung (Siehe \ref{lab:elf}) benötigt vier \textit{MIF's}
+        die durch die Toolchain generiert werden. Hierfür wird jedes Byte eines Words
+        in einer unterschiedliche MIF geschrieben vergleichbar mit dem Round-Robin-Verfahren.
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=1]{img/memorypartition.pdf}
+            \caption{Speicherpartitionen}
+            \label{fig:memorypartition}
+        \end{figure}
         
-        Die Toolchain ist ein \textit{GO}-Programm, namens \textit{Build},
-        welches Programmcode compiliert und die \textit{MIFs} (Siehe \ref{lab:mif}).
-        Um zu garantieren, dass der Bootloader als erste Instruktion ausgeführt wird,
-        wird beim Compilieren der Bootloader durch den Linker eingebunden.
         
+        
+       
