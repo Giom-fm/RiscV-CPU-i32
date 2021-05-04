@@ -1,3 +1,6 @@
+-- Top level entity - RISC-V CPU
+-- Author : Guillaume Fournier - Mayer (tinf101922)
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.numeric_std.all;
@@ -7,7 +10,7 @@ use work.utils.all;
 entity cpu is
   port (
     i_clock : in std_logic;
-    --i_reset : in std_logic;
+    i_reset : in std_logic;
 
     leds    : out std_logic_vector(7 downto 0);
     uart_rx : in std_logic;
@@ -16,7 +19,6 @@ entity cpu is
 end cpu;
 
 architecture a_cpu of cpu is
-  signal i_reset : std_logic := '1';
   -- DECODE
   signal decode_alu_mode           : T_ALU_MODE;
   signal decode_mux_alu_mode       : T_MUX_ALU;

@@ -1,7 +1,6 @@
-/*
-  Module for performing arithmetic, logical and shift operations
-  Author : Guillaume Fournier - Mayer (tinf101922)
-*/
+-- Module for performing arithmetic, logical and shift operations
+-- Author : Guillaume Fournier - Mayer (tinf101922)
+
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;

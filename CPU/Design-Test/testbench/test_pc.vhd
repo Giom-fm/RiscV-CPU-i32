@@ -1,3 +1,6 @@
+-- Tests for programmcounter
+-- Author : Guillaume Fournier-Mayer (tinf101922)
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -68,10 +71,6 @@ begin
 
         compare_assert(t_current, to_stdlogicvector(x"FFFFFFF0"), "ALU_current PC_SRC_ALU", C_DELAY);
         compare_assert(t_next,  to_stdlogicvector(x"FFFFFFF4"), "ALU_next PC_SRC_ALU", C_DELAY);
-
-        ---- Test: reset
-        --reset <= '1';
-        --compare_assert(t_current, "00000000000000000000000000000000", "reset_current", C_DELAY);
 
         wait;
     end process;

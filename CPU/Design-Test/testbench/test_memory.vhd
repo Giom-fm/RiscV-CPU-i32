@@ -1,3 +1,6 @@
+-- Tests for memory
+-- Author : Guillaume Fournier-Mayer (tinf101922)
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -10,9 +13,8 @@ end entity;
 
 architecture a_test_memory of test_memory is
     constant C_DELAY  : time := 10 ps;
-    
-
     signal clock        : std_logic;
+    signal reset        : std_logic;
     signal store_mode   : T_STORE_MODE;
     signal inst_address : std_logic_vector(31 downto 0) := (others => '0');
     signal read_write   : T_MEM_DIR;       
@@ -29,16 +31,14 @@ begin
     test : process
     begin
         clock <= '0';
+        reset <= '1';
         store_mode <= STORE_W;
-        read_write <= '0';
+        read_write <= MEM_DIR_READ;
         inst_address <= "00000000000000000000000000000000";
         data_address <= "00000000000000000000000000000000";
         write_data <= "00000000000000000000000000000001";
         rx <= '1';
 
-        
-
-        
         wait for C_DELAY; clock <= '0'; wait for C_DELAY; clock <= '1';
         wait for C_DELAY; clock <= '0'; wait for C_DELAY; clock <= '1';
         data_address <= "00000000000000000000000000000100";
@@ -56,25 +56,22 @@ begin
         data_address <= "00000000000000000000000000000011";
         wait for C_DELAY; clock <= '0'; wait for C_DELAY; clock <= '1';
         wait for C_DELAY; clock <= '0'; wait for C_DELAY; clock <= '1';
-        
-
-        
-
         wait;
     end process;
 
     memory_test : entity work.memory(a_memory) port map (
-        i_clock           => clock,
-		i_store_mode	  => store_mode,
-        i_inst_address    => inst_address,
-        i_read_write      => read_write,
-        i_data_address    => data_address,
-        i_write_data      => write_data,
-        o_inst_data       => inst_data,
-		o_read_data       => read_data,
-		o_leds			  => leds,
-		i_rx              => rx,
-        o_tx              => tx
+        i_clock             => clock,
+        i_reset             => reset,
+	    i_data_store_mode   => store_mode,
+        i_inst_address      => inst_address,
+        i_data_read_write   => read_write,
+        i_data_address      => data_address,
+        i_data              => write_data,
+        o_inst              => inst_data,
+	    o_data              => read_data,
+	    o_leds			    => leds,
+	    i_rx                => rx,
+        o_tx                => tx
         );
 
 

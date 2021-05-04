@@ -1,3 +1,6 @@
+-- Module for IO operations like LEDs and UART
+-- Author : Guillaume Fournier - Mayer (tinf101922)
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.numeric_std.all;

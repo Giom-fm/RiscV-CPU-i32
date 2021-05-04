@@ -26,7 +26,7 @@ architecture a_test_cpu of test_cpu is
 begin
     cpu : entity work.cpu(a_cpu) port map (
         i_clock => clock,
-        --i_reset => reset,
+        i_reset => reset,
         leds    => leds,
         uart_rx => uart_rx,
         uart_tx => uart_tx
@@ -34,10 +34,10 @@ begin
 
     test : process
     begin
-        reset <= '1';
+        reset <= '0';
         clock <= '0';
         wait for C_DELAY;
-        reset <= '0';
+        reset <= '1';
         
 
         for i in 0 to 200 loop

@@ -1,3 +1,6 @@
+-- Tests for comparator
+-- Author : Guillaume Fournier-Mayer (tinf101922)
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;

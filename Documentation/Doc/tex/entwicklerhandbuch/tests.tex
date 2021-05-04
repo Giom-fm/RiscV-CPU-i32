@@ -1,6 +1,70 @@
 \chapter{Tests}
 
     \section{Unit Tests}
+        Als Unittests werden \textit{Modelsim} Simulationen verwendet.
+        Die \textit{Testbench} befindet sich unter
+        \textit{RiscV-i32/CPU/Design-Test/testbench}.
+        Dabei wird jede einzelne Einheit separat von einander getestet.
+        Das Ergebnis ist vordefiniert und wird mit dem Testergebnis verglichen.
+        Als hilfe dienen Prozeduren aus dem \textit{test\_util.vhd} Modul im
+        selben Verzeichnis. Zu diesen Hilfprozeduren zählt
+        \textit{compare\_assert} welches das Testergebnis und das zu erwartende Ergebnis
+        vergleicht und eine Rückmeldung über den Test ausgibt. Dabei wird
+        \texttt{PASSED} ausgegeben wenn der Test Erfolgreich war und
+        \texttt{ASSERT <NACHRICHT> -> expect: [<ERWARTET>], actual: [<ERHALTEN>]}
+        falls ein Fehler auftrat. Listing \ref{lab:test-alu} zeigt die Anwendung
+        von \textit{compare\_assert}.
+        \lstinputlisting[style=vhdl,linerange={39-43},caption={ALU Testbench},label={lab:test-alu}]{../../CPU/Design-Test/testbench/test_alu.vhd}
+
+
+        \subsection{Rechenwerk (test\_alu.vhd)}
+            Die Rechenwerktests, testen die arithmetischen sowie die logischen 
+            Operationen.
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Die ALU verrechnet alle Operanden korrekt miteinander.
+                \item[Tatsäzliches Ergebnis:] Die Testfälle verhalten sich wie erwartet.
+            \end{description}
+
+        \subsection{Vergleichseinheit (test\_comparator.vhd)}
+            Die Vergleichstests, testen die vergleiche von zwei Zahlenwerte wie
+            wie sie in Kontrollstrukturen verwendet werden.
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Der Comparator vergleicht die Werte
+                korrekt miteinander. 
+                \item[Tatsäzliches Ergebnis:] Die Testfälle verhalten sich wie erwartet.
+            \end{description}
+
+
+        \subsection{Multiplexer (test\_mux\_*.vhd)}
+            Die Multiplexertests, testen das korrekte durchreichen der Werte an die
+            entsprechenden Einheiten.
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Die Multiplexer reichen, abhängig von den Steuerleitung, die korrekten
+                Werte weiter.
+                \item[Tatsäzliches Ergebnis:] Die Testfälle verhalten sich wie erwartet.
+            \end{description}
+
+
+        \subsection{Vergleichseinheit (test\_pc.vhd)}
+            Die Befehlszählertests, testen das hochzählen bzw. das setzen
+            des Befehlszählers abhängig von den Steuerleitungen.
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Der Befehlszähler zählt bzw. setzt
+                den Befehlszähler korrekt. 
+                \item[Tatsäzliches Ergebnis:] Die Testfälle verhalten sich wie erwartet.
+            \end{description}
+
+        \subsection{Vergleichseinheit (test\_sign\_extender\_mem.vhd)}
+            Die Signextendertests, testen das erweitern der ausgelesenen Daten aus dem Speicher
+            \begin{description}
+                \item[Erwartetes Ergebnis:] Der Signextender erweitert je nach Steuersignal die
+                ausgelesenen Daten auf Wordgröße. 
+                \item[Tatsäzliches Ergebnis:] Die Testfälle verhalten sich wie erwartet.
+            \end{description}
+
+      
+
+
 
     \section{End-to-End Tests}
         Als End-to-End tests wird C-Code verwendet der über die LEDs das Testergebnis
@@ -16,8 +80,8 @@
                 bis das Maximum erreicht wurde und werden dann zurück gesetzt.
                 \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
             \end{description}
-            
-        
+
+
         \subsection{Shiftoperationen (lightshift.c)}\label{lab:lightshift-test}
             Der Shifttest testet die Shiftoperationen der ALU.
             Dafür wird die LED auf eins gesetzt und nach links geshiftet.
@@ -26,7 +90,7 @@
 
             \begin{description}
                 \item[Erwartetes Ergebnis:] Es entsteht ein Lauflicht welches von
-                rechts nach links und zurück läuft .
+                rechts nach links und zurück läuft.
                 \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
             \end{description}
 
@@ -39,7 +103,7 @@
 
             \begin{description}
                 \item[Erwartetes Ergebnis:] Es entsteht ein Lauflicht welches von
-                rechts nach links und zurück läuft .
+                rechts nach links und zurück läuft.
                 \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.
             \end{description}
 

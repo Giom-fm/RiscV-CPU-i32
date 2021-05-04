@@ -1,3 +1,6 @@
+-- Module for sign extending memory loads
+-- Author : Guillaume Fournier - Mayer (tinf101922)
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;

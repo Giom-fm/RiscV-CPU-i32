@@ -1,7 +1,6 @@
-/*
-  A module to compare two values. Used for the Branch Opcodes
-  Author: Guillaume Fournier-Mayer
-*/
+-- A module to compare two values. Used for the Branch Opcodes
+-- Author: Guillaume Fournier-Mayer
+
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
