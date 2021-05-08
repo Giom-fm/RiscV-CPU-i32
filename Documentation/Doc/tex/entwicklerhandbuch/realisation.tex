@@ -11,7 +11,7 @@
 
     \section{Steuerwerk}
 
-        Die Dekodiereinheit wid im verbund mit dem \textit{Programm Counter (PC)} (Siehe \ref{lab:pc}) auch Steuerwerk genant.
+        Die Dekodiereinheit wid im Verbund mit dem \textit{Programm Counter (PC)} (Siehe \ref{lab:pc}) auch Steuerwerk genant.
 
         \begin{figure}[H]
             \centering
@@ -37,9 +37,9 @@
 
             Der Befehlszähler steuert den Programmablauf und speichert in einem 32 Bit Register
             die aktuelle Adresse der Instruktion im Programspeicher.
-            In jedem Taktzyklus wird die Adresse um ein Word (32 Bit) erhöht und zeigt somit
+            In jedem Taktzyklus wird die Adresse um ein Wort (32 Bit) erhöht und zeigt somit
             auf den nächsten Befehl. Dieser kann wieder von der Dekodiereinheit dekodiert werden
-            und die Steuerleitungen gesetzt werden. Der Befehlszähler kann jedoch nicht nur
+            und es können die Steuerleitungen gesetzt werden. Der Befehlszähler kann jedoch nicht nur
             inkrementiert sondern auch überschrieben werden.
 
             \lstinputlisting[style=vhdl,linerange={37-47},caption={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
@@ -53,11 +53,11 @@
                 \label{fig:alu}
             \end{figure}
 
-            Wenn eine Anweisung zu Ablaufsteuerung auf Programmebene
+            Wenn eine Anweisung zur Ablaufsteuerung auf Programmebene
             ausgeführt werden soll, muss zunächst die Bedingung geprüft werden
             und dann ggfs. eine Instruktion ausgeführt werden,
             die nicht sequentiell hinter der aktuellen im Speicher liegt.
-            Dies nennt man einen Zweig (englisch: Branch) und erfordert zusätzliche Logik in Steuerwerk 
+            Dies nennt man einen Zweig (englisch: Branch). Ein Zweig erfordert zusätzliche Logik in Steuerwerk 
             und wird durch eine Vergleichseinheit realisiert.
             Diese Einheit vergleicht zwei 32 Bit Daten (Links und Rechts) und liefert ein boolesches Ergebnis (ein Bit).
             Tabelle \ref{tab:comp-states} zeigt welche Vergleichsoperatoren zu Verfügung stehen.
@@ -98,10 +98,10 @@
 
         \subsection{Registereinheit} 
             Die Registereinheit bildet 32 Register mit einer Breite von 32 Bit ab \cite{riscv-isa-specs}[2.1].
-            Dabei kann in einem Taktzyklus auf zwei Register (rs1 und rs2) lesend und auf ein Register (rd) schreibend zugegriffen werden.
+            Dabei kann in einem Taktzyklus auf zwei Register (rs1 und rs2) lesend und auf einem Register (rd) schreibend zugegriffen werden.
             Die \textit{ISA} besagt zudem, dass Register x0 immer Nullen liefern soll und nicht überschrieben werden darf \cite{riscv-isa-specs}[2.1].
-            Dies wird durch eine Abfrage der Adresse im Prozess gesteuert. Falls das Zielregister, das Nullregister sein sollte werden die Ergebnisse
-            nicht übernommen.
+            Dies wird durch eine Abfrage der Adresse im Prozess gesteuert. Falls das Zielregister, das Nullregister sein sollte werden die Werte
+            nicht in das Zielregister übernommen.
             \lstinputlisting[style=vhdl,linerange={47-55},caption={Prozess der Registereinheit}]{../../CPU/Design/src/registers/registers.vhd}
 
         \subsection{Register Multiplexer}
@@ -114,11 +114,11 @@
             \end{figure}
 
 
-            Die Eingangsdaten werden instruktionsabhängig Augewählt und in das Zielregister (rd) geschrieben.
+            Die Eingangsdaten werden instruktionsabhängig augewählt und in das Zielregister (rd) geschrieben.
             Dies geschieht in einem vorgeschaltetem Multiplexer. Die Dekodiereinheit setzt dabei die notwendigen Steuerleitungen.
             Als Auswahlmöglichkeiten der Daten stehen die \textit{ALU}, der Speicher, der nächste Befehlszähler (PC + 4).
             Als gesonderte Absicherung dient der \textit{MUX\_REG\_ZERO} Zustand.
-            Dieser wird Standartmäßig beim initialisieren gesetzt und soll ein Überschreiben von Daten verhindern wenn z.B.
+            Dieser wird standardmäßig beim initialisieren gesetzt und soll ein Überschreiben von Daten verhindern wenn z.B.
             eine unbekannte Instruktion ausgeführt werden soll.
             \lstinputlisting[style=vhdl,linerange={28-39},caption={Prozess des register Multiplexers}]{../../CPU/Design/src/registers/mux_register.vhd}
 
@@ -137,8 +137,8 @@
             basierend auf dem aktuellen Befehlszähler durchgeführt.
             Da der Befehlssatz nur Integer Operationen erlaubt können auch nur diese in Hardware umgesetzt werden \cite{riscv-isa-specs}[2.4].
             Ebenfalls fehlen der \textit{ISA} Multiplikation sowie Division.
-            Letzteres kann über Softwarebibliotheken mit Addition und Subtraktion durchgeführt werden,
-            benötigt jedoch mehr Instruktionen und verbraucht mehr Programmspeicher und schlägt sich somit Negativ auf die Performanz aus.
+            Diese können über Softwarebibliotheken mit Addition und Subtraktion durchgeführt werden,
+            benötigen jedoch mehr Instruktionen, verbrauchen dadurch mehr Programmspeicher und schlagen sich somit negativ auf die Performanz aus.
 
         \subsection{Rechenwerk Multiplexer}
 
@@ -156,10 +156,10 @@
                 \label{fig:alu}
             \end{figure}
 
-            Die beiden rechenwerk Multiplexer (Links und Rechts) steuern die Eingangsdaten des Rechenwerks und bestimmen somit welche Daten
-            verrechnet werden. Die Steuerleitungen werden dabei Instruktionsabhängig in der Dekodiereinheit gesetzt.
+            Die beiden Rechenwerk Multiplexer (Links und Rechts) steuern die Eingangsdaten des Rechenwerks und bestimmen somit welche Daten
+            berechnet werden. Die Steuerleitungen werden dabei instruktionsabhängig in der Dekodiereinheit gesetzt.
             Beide Multiplexer teilen die selben Zustände, reagieren jedoch anders.
-            Tabelle \ref{tab:alu-mux} zeigt die verschiedenen Zustände und deren damit verbundenen Eingangsdaten für die \textit{ALU}.
+            Tabelle \ref{tab:alu-mux} zeigt die verschiedenen Zustände und die damit verbundenen Eingangsdaten für die \textit{ALU}.
 
 
             \begin{center}
@@ -180,14 +180,14 @@
                 \end{longtable}
             \end{center}
 
-            \lstinputlisting[style=vhdl,linerange={26-37},caption={Prozess des linken rechtenwerk Multuiplexers}]{../../CPU/Design/src/alu/mux_alu_left.vhd}
-            \lstinputlisting[style=vhdl,linerange={27-38},caption={Prozess des rechten rechtenwerk Multuiplexers}]{../../CPU/Design/src/alu/mux_alu_right.vhd}
+            \lstinputlisting[style=vhdl,linerange={26-37},caption={Prozess des linken Rechenwerk Multiplexers}]{../../CPU/Design/src/alu/mux_alu_left.vhd}
+            \lstinputlisting[style=vhdl,linerange={27-38},caption={Prozess des rechten Rechenwerk Multiplexers}]{../../CPU/Design/src/alu/mux_alu_right.vhd}
 
     \section{Memory}\label{lab:memory}
 
         Durch die gewählte \textit{modifizierte Havard-Architektur} und den \textit{Ein-Zyklus-Ansatz}
         muss sicherstegestellt werden, dass in einem Taktzyklus sowohl Instruktion gelesen als auch die damit verbundenen Daten
-        gelesen bzw. geschrieben werden können. Dies wird dadurch ermöglichst, dass die Instruktionen zur steigenden Taktflanke
+        gelesen bzw. geschrieben werden können. Dies wird dadurch ermöglicht, dass die Instruktionen zur steigenden Taktflanke
         gelesen und die Daten zur fallenden Taktflanke gelesen bzw. geschrieben werden.
         Dies ist nur möglich, da die Taktzeit mehr als doppelt so lang ist, wie die Zeit die benötigt wird um eine Speicheroperation
         durchzuführen \cite{intel-cyc10lp-device-datasheet}[Tabelle 23].
@@ -215,11 +215,11 @@
             
         \subsection{Byte-Adressierung}
             Auch wenn die Speicherausrichtung natürlich ist (Siehe \ref{lab:mem-order}), fordert der Befehlssatz eine Byte-Adressierung,
-            sodass auf einzelne Bytes in einem Word zugegriffen werden kann. Leider erlauben das die \textit{M9K} Speicherblöcke nicht.
+            sodass auf einzelne Bytes in einem Wort zugegriffen werden kann. Leider erlauben das die \textit{M9K} Speicherblöcke nicht.
             Aus diesem Grund wurden vier Speicherpartitionen erstellt die jeweils ein Viertel des gesamten Speichers ausmachen.
             Soll nur ein einzelnes Byte gelesen bzw. geschrieben werden, wird nur eine Speicherpartition adressiert.
-            Bei einem half-Word werden hingegen zwei Partition ausgelesen. Dabei wird sichergestellt,
-            das nicht über die natürliche Ausrichtung hinweg adressiert werden kann.
+            Bei einem \textit{half-Word} werden hingegen zwei Partitionen ausgelesen. Dabei wird sichergestellt,
+            dass nicht über die natürliche Ausrichtung hinweg adressiert werden kann.
             Eine Speicherpartition wird durch \textit{memory\_byte.vhd} repräsentiert und wird durch die \textit{Megafunction} erstellt.
             Somit wird gewährleistet, dass die \textit{M9K}-Blöcke des \textit{FPGA's} benutzt werden.
             In \textit{memory\_word.vhd} wird die Logik definiert, die zuständig ist um bei jeweiliger Adresse die 
@@ -263,18 +263,18 @@
                 \label{fig:sext}
             \end{figure}
 
-            Die Vorzeichenerweiterung wird Verwendet um ausgelsense Werte aus dem Speicher auf Wordgröße
+            Die Vorzeichenerweiterung wird verwendet um ausgelesene Werte aus dem Speicher auf Wordgröße
             zu erweitern. Grund dafür ist, dass Werte kleinerer Breite ausgelesen werden können wie z.B. ein
             Byte oder Halfword. Da die Register jedoch alle mit einer fixen Wordbreite von 32 Bit arbeiten muss ggfs.
-            Aufgefüllt werden. Ob mit Nullen oder Einsen aufgefüllt wird, ist Abhängig von der Operation und wird über den
+            aufgefüllt werden. Ob mit Nullen oder Einsen aufgefüllt wird, ist abhängig von der Operation und wird über den
             \textit{sext\_mode} durch den Dekoder eingestellt.
             
     \section{IO}
 
         Die Anbindung von Peripherie erfolgt über \textit{Memory-Mapping}.
-        Dabei wird ein zusätzlicher bereich im Speicher nur für Peripherie reserviert (Abbildung \ref{fig:io}).
-        Je nach dem welcher bereich adressiert wird, werden Daten geschrieben bzw. gelesen
-        oder Die Peripherie manipuliert. Darüber entscheidet der Prozess \textit{ram\_or\_ext}
+        Dabei wird ein zusätzlicher Bereich im Speicher nur für Peripherie reserviert (Abbildung \ref{fig:io}).
+        Je nachdem welcher Bereich adressiert wird, werden Daten geschrieben bzw. gelesen
+        oder die Peripherie angesteuert. Darüber entscheidet der Prozess \textit{ram\_or\_ext}
         in der \textit{memory.vhd} (Listing \ref{lst:memory}).
 
         \begin{figure}[H]
@@ -289,16 +289,16 @@
         \lstinputlisting[style=VHDL,caption={Schreibeprozess für die Peripherie},linerange={50-63},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
 
         \subsection{LED}
-            Es stehen acht LED's auf dem \textit{FPGA}-Board zu Verfügung die über den erweiterten Speicherbereich
-            manipuliert werden können. Der Status der LED's kann hierbei gesetzt sowie abgefragt werden.
+            Es stehen acht LED's auf dem \textit{FPGA}-Board zur Verfügung die über den erweiterten Speicherbereich
+            angesteuert werden können. Der Status der LED's kann hierbei gesetzt sowie abgefragt werden.
             Dazu dienen die beiden Prozesse in \textit{peripherie.vhd} (Siehe Listing \ref{lst:peripherie-read} und \ref{lst:peripherie-write}).
 
         \subsection{UART}
             Zusätzlich steht eine \textit{UART}-Schnittstelle zu Verfügung die es erlaubt Byteweise Daten
             zu senden oder empfangen.
-            Dabei wurde das Modul im Rahmen dieser Arbeit nicht Entwickelt und ist somit ein Fremdmodul \cite{vhdl-uart}.
-            Es Funktioniert jedoch nach dem gleichen Prinzip des \textit{Memory-Mappings}.
+            Dabei wurde das Modul im Rahmen dieser Arbeit nicht entwickelt und ist somit ein Fremdmodul \cite{vhdl-uart}.
+            Es funktioniert jedoch nach dem gleichen Prinzip des \textit{Memory-Mappings}.
             Wie Listing \ref{lst:peripherie-read} und \ref{lst:peripherie-write} zeigen,
-            besteht es dabei aus drei Adressbereichen (Status, RX und TX) aus denen gelesen bzw. in die geschrieben werden kann.
+            besteht es aus drei Adressbereichen (Status, RX und TX) aus denen gelesen bzw. in die geschrieben werden kann.
             
 

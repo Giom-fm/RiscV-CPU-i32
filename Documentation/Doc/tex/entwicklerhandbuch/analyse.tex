@@ -1,12 +1,16 @@
 \chapter{Probelmanalyse}
 
     In dem Laborprojekt soll ein Softcore entwickelt werden der den \textit{RV32I} Befehlssatz implementiert.
-    Dieser soll auf ein FPGA board hochgeladen werden und Programmcode ausführen können.
+    Dieser soll auf einem \textit{FPGA}-Board hochgeladen werden und Programmcode ausführen können.
     Zusätzlich soll durch Simulationstests sowie durch Tests durch Programmcode die Korrektheit
     bewiesen werden.
     Die Aufgabenstellung kann in Soft- und Hardware unterteilt werden.
 
         \section{Software}
+            Aus Softwaresicht wird eine Toolchain benötigt die Programmcode compiliert
+            und in ein Dateiformat bringt, welches vom Softcore interpretiert werden kann.
+            \\
+            Dies wird im folgendem Kapitel \ref{lab:toolchain} behandelt.
 
         \section{Hardware}\label{lab:hardware}
             Aus Hardwaresicht wird ein \textit{FPGA}-Board benötigt welches eine Möglichkeit bietet
@@ -62,11 +66,11 @@
         Der Prozessor arbeitet nur auf den 32 Registern die zuvor mit Daten aus dem Speicher geladen werden müssen.
         Dabei bietet \textit{RV32I}, 32 Bit weite Register und kann nur Integerarithmetik in Hardware ausführen.
         \\
-        Dieser Befehlssatz bietet die Basis für alle \textit{RISC-V} Befehlssätze,
-        da jede Erweiterung zumindest diesen implementieren muss.
+        \textit{RV32I} bietet die Basis für alle \textit{RISC-V} Befehlssätze,
+        da jede Erweiterung zumindest diesen Befehlssatz implementieren muss.
         Für den zu entwickelnden Softcore wurde somit der unprivilegierte \textit{RV32I} Befehlssatz gewählt.
-        Außer acht gelassen wurden dabei die \textit{FENCE} und \textit{EBREAK} Befehle, da diese für
-        den aktuellen gebrauch des Softcores nicht benötigt werden.
+        Außer Acht gelassen werden jedoch die \textit{FENCE} und \textit{EBREAK} Befehle, da diese für
+        den aktuellen Gebrauch des Softcores nicht relevant sind.
         \\
         Tablle \ref{tab:rv32i-types} zeigt die verschiedenen Typen des \textit{RV32I} Befehlssatzes.
         
@@ -116,17 +120,17 @@
                     Dabei ist charakteristisch, dass die Daten sowie das Programm im selben Speicher abgelegt sind und
                     der Zugriff auf diese nur über den selben Bus stattfindet (Abbildung \ref{fig:vonneumann}).
                     Dies hat den Vorteil, dass \textit{Race Conditions} sowie Daten-Inkohärenzen ausgeschlossen werden können.
-                    Ein wesentlicher nachteil dieses Ansatzes ist der sogenante \textit{Von-Neumann-Flaschenhals}.
+                    Ein wesentlicher Nachteil dieses Ansatzes ist der sogenante \textit{Von-Neumann-Flaschenhals}.
                     Dieser entsteht dadurch, dass die Instruktionen nicht zur gleichen Zeit gelesen,
-                    wie Daten geschrieben bzw. gelesen werden können. Wenn bspw. ein Ladebefehl aus dem Programmspeicher
+                    wie Daten geschrieben bzw. gelesen werden können. Wenn beispielsweise ein Ladebefehl aus dem Programmspeicher
                     geladen wird, beinhaltet dieser die Adresse aus der die eigentlichen Daten ausgelesen werden sollen.
-                    Nun kann der Adressbus aber nicht zur gleichen Zeit die Instruktion sowie die Daten ansprechen.
-                    Das auslesen der Daten erfolgt somit erst im nächsten Taktzyklus. Dadurch werden für
+                    Nun kann der Adressbus nicht zur gleichen Zeit die Instruktion sowie die Daten ansprechen.
+                    Das Auslesen der Daten erfolgt somit erst im nächsten Taktzyklus. Dadurch werden für
                     die Lade- und Speicheroperationen immer zwei Zyklen verwendet, welches sich
                     negativ auf die Performance auswirkt.
-                    Da es aus sicht der Speichers keinen Unterschied zwischen Instruktion und Daten gibt,
-                    könnten theoretisch Daten als Instruktionen ausgelesen werden und könnte von Schadcode ausgenutzt werden.\\
-                    Ein \textit{Von-Neumann-Rechner} kann in folgeden Komponenten unterteilt werden.
+                    Da es aus Sicht der Speichers keinen Unterschied zwischen Instruktion und Daten gibt,
+                    könnten theoretisch Daten als Instruktionen ausgelesen werden und somit von Schadcode ausgenutzt werden.\\
+                    Ein \textit{Von-Neumann-Rechner} kann in folgenden Komponenten unterteilt werden.
 
                     \begin{description}
                         \item[ALU (Arithmetic Logic Unit)] Das Rechenwerk führt arithmetische Operationen sowie logische Verknüpfungen durch. 
@@ -146,16 +150,16 @@
 
                 \subsubsection{Harvard-Architektur}\label{lab:havard}
                     Eine weitere verbreitete Architektur ist die \textit{Harvard-Architektur}.
-                    Grundlegen unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
+                    Grundlegend unterscheidet sich diese zur \textit{Von-Neumann-Architektur}
                     nur in ihrem Speicher und dem Bus. Die \textit{Harvard-Architektur} verfolgt den Ansatz,
                     Instruktionen und Daten physikalisch strikt voneinander zu trennen.
                     Dabei werden zwei separate Speicher mit eigenem Adress- sowie Datenbus verwendet.
                     Dies hat, im gegensatz zur \textit{Von-Neumann-Architektur}, den Vorteil, dass Instruktionen
                     und Daten in einem Taktzyklus gelesen bzw. geschrieben werden können. Hauptnachteil ist jedoch,
                     dass es zu Speicherfragmentierung kommt, da weder nicht genutzter Programmspeicher als Datenspeicher
-                    sowie umgekehrt, genutzt werden kann.
+                    noch umgekehrt, genutzt werden kann.
                     \\\\
-                    Für den zu entwickelnden Softcore wird eine \textit{modifizierte Harvard-Architektur} verwendet die,
+                    Für den zu entwickelnden Softcore wird eine \textit{modifizierte Harvard-Architektur} verwendet, die
                     die Vorteile der beiden oben genanten Architekturen vereint. Um die Speicherfragmentierung zu eliminieren, 
                     wird wie bei der \textit{Von-Neumann-Architektur} nur ein Speicher verwendet.
                     Jedoch werden wie bei der \textit{Harvard-Architektur} zwei Bussysteme (Instruktionsbus und Datenbus)
@@ -168,8 +172,8 @@
                 bezeichnet und bestehen aus folgenden fünf Teilschritten.
                 Jede Phase benötigt unterschiedlich viel Zeit um sie zu durchlaufen.
                 Dabei ist zu beachten, dass nicht jede Instruktion alle Phasen durchlaufen muss.
-                Eine absoluter Sprung z.B. ist schneller abgearbeitet als eine arithmetische
-                Operation die zunächst die Operanden aus den Registern laden,
+                Zum Beispiel ist ein absoluter Sprung schneller abgearbeitet als eine arithmetische
+                Operation, die zunächst die Operanden aus den Registern laden,
                 verarbeiten und anschließend zurück in die Register schreiben muss.
             
                 \begin{description}
@@ -194,7 +198,7 @@
    
 
             \subsubsection{Ein-Zyklus-Prozessor}
-                Als Ein-Zyklus-Prozessor wird ein Prozessor verstanden der alle Phasen des \textit{Von-Neumann-Zyklus}
+                Als Ein-Zyklus-Prozessor wird ein Prozessor verstanden, der alle Phasen des \textit{Von-Neumann-Zyklus}
                 in einem Taktzyklus abarbeitet.
                 Somit ergibt sich ein CPI-Wert von eins ($CPI = 1$) und der Prozessor kann als \textit{Skalar} bezeichnet werden.
                 Die maximal Taktfrequenz bzw. die minimale Taktzeit ist dabei direkt abhängig von der Signallaufzeit
@@ -202,14 +206,14 @@
                 \begin{equation}
                     Taktzeit > Signallaufzeit_{Gesamtbefehl}
                 \end{equation}
-                Ein wesentlicher Vorteil dieser Architektur ist die einfache implementierung, da
+                Wesentlicher Vorteil dieser Architektur ist die einfache implementierung, da
                 keine zusätzliche Logik benötigt wird.
 
             \subsubsection{Pipelining-Prozessor}
                 Im gegensatz zum Ein-Zyklus-Prozessor steht der Pipelining-Prozessor.
                 Statt eines gesamten Befehls wird während eines Taktzyklus nur jeweils eine Teilaufgabe abgearbeitet.
                 Dabei können Teilaufgaben mehrerer Befehle gleichzeitig abgearbeitet werden.
-                Eine Teilaufgabe kann dabei z.B. eine \textit{Von-Neumann-Phase} sein oder noch feiner Granuliert werden.
+                Eine Teilaufgabe kann dabei z.B. eine \textit{Von-Neumann-Phase} sein oder noch feiner granuliert werden.
                 Da eine Teilaufgaben eine kürzere Signallaufzeit aufweist als der Gesamtbefehl,
                 kann die Taktzeit kürzer sein als die Signallaufzeit des Gesamtbefehls.
                 \begin{equation}
@@ -221,12 +225,12 @@
                 Die Taktzeit ist somit nur noch abhängig von der Signallaufzeit der Teilaufgabe die am längsten dauert.
                 Die Teilaufgaben eines Befehls werden auch \textit{Pipeline-Stages} genant.
                 Abbildung \ref{fig:pipelining} zeigt eine vierstufige Befehlspipeline und der daraus resultierende erhöhte Gesamtdurchsatz.
-                Ein wesentlicher Nachteil von Pipelining sind jedoch die Konflikte \textit{(Pipeline-Hazards)}
-                die dabei auftretten können. Dabei können folgende drei Konfliktarten auftretten.
+                Wesentlicher Nachteil von Pipelining sind jedoch die Konflikte \textit{(Pipeline-Hazards)}
+                die dabei auftreten können. Dabei können folgende drei Konfliktarten auftreten.
     
                 \begin{description}
-                    \item[Ressourcenkonflikte] wenn eine Stufe der Pipeline Zugriff auf eine Ressource benötigt, die bereits von einer anderen Stufe belegt ist 
-                    \item[Datenkonflikte] wenn ein Befehl, der sich in der Pipeline befindet abhängig von einem Befehl ist der weiter vorne ist.
+                    \item[Ressourcenkonflikte] wenn eine Stufe der Pipeline, Zugriff auf eine Ressource benötigt, die bereits von einer anderen Stufe belegt ist 
+                    \item[Datenkonflikte] wenn ein Befehl, der sich in der Pipeline befindet, abhängig von einem Befehl ist, der in sich in einer der nächsten Pipelinestufen befindet
                     \item[Kontrollflusskonflikte] wenn die Pipeline abwarten muss, ob ein bedingter Sprung ausgeführt wird oder nicht
                 \end{description}
                 \begin{figure}[H]
@@ -237,13 +241,13 @@
                 \end{figure}
                 \begin{description}
                     \item[A: Befehlscode laden (IF, Instruction Fetch)] 
-                    \item[B: Instruktion dekodieren und Laden der Daten (ID, Instruction Decoding)] 
+                    \item[B: Instruktion dekodieren und laden der Daten (ID, Instruction Decoding)] 
                     \item[C: Befehl ausführen (EX, Execution)] 
                     \item[D: Ergebnisse zurückgeben (WB, Write Back)] 
                 \end{description}
-                Es ist jedoch zu beachtet, dass Pipelining nur von Vorteil ist, wenn die Taktfrequenz, aufgrund der höheren Signallaufzeiten
+                Es ist jedoch zu beachten, dass Pipelining nur von Vorteil ist, wenn die Taktfrequenz, aufgrund der höheren Signallaufzeiten
                 in einem Ein-Zyklus-Prozessor, nicht weiter erhöht werden kann.
-                Da das gewählte \textit{FPGA}-Board nur mit $12 Mhz$ Taktet ist eine Pipelining-Architektur
+                Da das gewählte \textit{FPGA}-Board nur mit $12 Mhz$ taktet, ist eine Pipelining-Architektur
                 nicht von Vorteil für den Softcore, sodass eine Ein-Zyklus-Architektur gewählt werden kann um die Softcore zu implementieren.
                 Dies hat zusätzlich den Vorteil, dass weniger Logikblöcke des \textit{FPGA's} benutzt werden.
 
@@ -264,8 +268,8 @@
                 \\\\
                 Auf dem \textit{FPGA}-Board stehen die \textit{M9K}-Blöcke sowie \textit{SDRAM} als Speicher zu Verfügung (Siehe \ref{lab:hardware}).
                 Dabei wir der \textit{SDRAM} über eine 16 Bit Interface angesprochen. Der \textit{RV32I} Befehlssatz ist jedoch 32 Bit breit.
-                Dadurch werden zwei Taktzyklen benötigt um eine Instruktion aus dem Speicher zu laden und würde den Softcore ausbremsen.
-                Um das Problem der \textit{Memory Wall} zu lösen werden die \textit{M9K}-Blocke des FPGA's als Speicher benutzt.
+                Dadurch werden zwei Taktzyklen benötigt um eine Instruktion aus dem Speicher zu laden und würde dadurch den Softcore ausbremsen.
+                Um das Problem der \textit{Memory Wall} zu lösen werden die \textit{M9K}-Blocke des \textit{FPGA's} als Speicher benutzt.
                 Diese können in der Breite frei variiert werden und ermöglichen den Zugriff auf die Daten in einem Taktzyklus.
                 Wesentlicher Nachteil dieser Lösung ist, dass nur \textit{67584B} Speicher für Daten und Instruktionen zu Verfügung stehen.
                 
@@ -278,15 +282,15 @@
 
 
             \subsubsection{Speicherausrichtung}\label{lab:mem-order}
-                Da eine \textit{modifizierte Harvard-Architektur} gewählt wurde (Siehe \ref{lab:havard}) liegen im Speicher
+                Da eine \textit{modifizierte Harvard-Architektur} gewählt wurde (Siehe \ref{lab:havard}), liegen im Speicher
                 sowohl Daten als auch Instruktionen. Die Instruktionen sind hierbei in vier Byte Grenzen zu halten
                 (natürliche Ausrichtung) \cite{riscv-isa-specs}[2.2].
                 Der Befehlssatz lässt es jedoch der EEI (Siehe \ref{lab:eei}) überlassen, ob die Daten auch natürlich ausgerichtet liegen sollen
                 \cite{riscv-isa-specs}[2.6].
                 Der Vorteil von natürlich ausgerichteten Daten liegt darin, das keine zusätzliche Logik benötigt wird um Daten im Speicher
-                auszulesen bzw. zu schreiben. Wesentlicher Nachteil ist die Speicherfragmentierung. Da im Worst-case 32 Bit für einen 8 Bit 
+                auszulesen bzw. zu schreiben. Wesentlicher Nachteil ist die Speicherfragmentierung, da im Worst-case 32 Bit für einen 8 Bit 
                 Wert verbraucht werden. Die ungenutzten 24 Bit $(32 Bit - 8 Bit = 24 Bit)$ werden mit Nullen aufgefüllt.
-                Der Einfachheit halber wird der Ansatz des natürlich ausgerichteten Speicher gewählt.
+                Der Einfachheit halber wird der Ansatz des natürlich ausgerichteten Speichers gewählt.
 
                 
 

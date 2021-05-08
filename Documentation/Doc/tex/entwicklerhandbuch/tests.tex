@@ -6,7 +6,7 @@
         \textit{RiscV-i32/CPU/Design-Test/testbench}.
         Dabei wird jede einzelne Einheit separat von einander getestet.
         Das Ergebnis ist vordefiniert und wird mit dem Testergebnis verglichen.
-        Als hilfe dienen Prozeduren aus dem \textit{test\_util.vhd} Modul im
+        Als Filfe dienen Prozeduren aus dem \textit{test\_util.vhd} Modul im
         selben Verzeichnis. Zu diesen Hilfprozeduren zählt
         \textit{compare\_assert} welches das Testergebnis und das zu erwartende Ergebnis
         vergleicht und eine Rückmeldung über den Test ausgibt. Dabei wird
@@ -18,7 +18,7 @@
 
 
         \subsection{Rechenwerk (test\_alu.vhd)}
-            Die Rechenwerktests, testen die arithmetischen sowie die logischen 
+            Die Rechenwerktests testen die arithmetischen sowie die logischen 
             Operationen.
             \begin{description}
                 \item[Erwartetes Ergebnis:] Die ALU verrechnet alle Operanden korrekt miteinander.
@@ -26,7 +26,7 @@
             \end{description}
 
         \subsection{Vergleichseinheit (test\_comparator.vhd)}
-            Die Vergleichstests, testen die vergleiche von zwei Zahlenwerte wie
+            Die Vergleichstests testen die vergleiche von zwei Zahlenwerte wie
             wie sie in Kontrollstrukturen verwendet werden.
             \begin{description}
                 \item[Erwartetes Ergebnis:] Der Comparator vergleicht die Werte
@@ -36,7 +36,7 @@
 
 
         \subsection{Multiplexer (test\_mux\_*.vhd)}
-            Die Multiplexertests, testen das korrekte durchreichen der Werte an die
+            Die Multiplexertests testen das korrekte Furchreichen der Werte an die
             entsprechenden Einheiten.
             \begin{description}
                 \item[Erwartetes Ergebnis:] Die Multiplexer reichen, abhängig von den Steuerleitung, die korrekten
@@ -46,7 +46,7 @@
 
 
         \subsection{Vergleichseinheit (test\_pc.vhd)}
-            Die Befehlszählertests, testen das hochzählen bzw. das setzen
+            Die Befehlszählertests testen das Hochzählen bzw. das Setzen
             des Befehlszählers abhängig von den Steuerleitungen.
             \begin{description}
                 \item[Erwartetes Ergebnis:] Der Befehlszähler zählt bzw. setzt
@@ -55,7 +55,7 @@
             \end{description}
 
         \subsection{Vergleichseinheit (test\_sign\_extender\_mem.vhd)}
-            Die Signextendertests, testen das erweitern der ausgelesenen Daten aus dem Speicher
+            Die Signextendertests testen das Erweitern der ausgelesenen Daten aus dem Speicher
             \begin{description}
                 \item[Erwartetes Ergebnis:] Der Signextender erweitert je nach Steuersignal die
                 ausgelesenen Daten auf Wordgröße. 
@@ -67,8 +67,8 @@
 
 
     \section{End-to-End Tests}
-        Als End-to-End tests wird C-Code verwendet der über die LEDs das Testergebnis
-        ausgibt. Der Quellcode der Test befindet sich unter \textit{Firmware/src/}.
+        Als End-to-End Tests wird C-Code verwendet der über die LEDs das Testergebnis
+        ausgibt. Der Quellcode der Tests befindet sich unter \textit{Firmware/src/}.
 
         \subsection{Kontrollstrukturen (counter.c)}\label{lab:counter-test}
             Der Zählertest soll zunächst einfache Kontrollstrukturen testen.
@@ -85,7 +85,7 @@
         \subsection{Shiftoperationen (lightshift.c)}\label{lab:lightshift-test}
             Der Shifttest testet die Shiftoperationen der ALU.
             Dafür wird die LED auf eins gesetzt und nach links geshiftet.
-            Ist der Maximalwert erreicht wird nach rechts zurück geshiftet.
+            Ist der Maximalwert erreicht, wird nach rechts zurück geshiftet.
             Bei erreichen des Minimalwertes wird wieder von vorne begonnen.
 
             \begin{description}
@@ -96,9 +96,9 @@
 
         \subsection{Multiplikation und Division (mul\_div.c)}
             Der Multiplikations- und Divisionstest testet beide Rechenarten, die
-            Aufgrund der fehlenden hardware Unterstützung, durch den Compiler, in
-            Software umgesetzt werden. Hierfür wird eine abwandlung des Shifttests
-            (Siehe \ref{lab:lightshift-test}) verwendet der das shiften
+            Aufgrund der fehlenden Hardware Unterstützung, durch den Compiler, in
+            Software umgesetzt werden. Hierfür wird eine Abwandlung des Shifttests
+            (Siehe \ref{lab:lightshift-test}) verwendet der das Shiften
             durch eine Multiplikation bzw. Division mit zwei ersetzt.
 
             \begin{description}
@@ -110,8 +110,8 @@
         \subsection{Unterprogrammsprünge (subroutines.c)}
             Um Unterprogrammsprünge zu testen wird eine Abwandlung des Kontrollstrukturtests
             (Siehe \ref{lab:counter-test}) verwendet. Hinzu kommt eine Routine die
-            die Sleep funktionalität in ein Unterprogramm kapselt. Um zusätzlich Rückgabewerte zu testen
-            wird das erhöhen des Wertes in einer Funktion abgehandelt.
+            die Sleep Funktionalität in ein Unterprogramm kapselt. Um zusätzlich Rückgabewerte zu testen
+            wird das Erhöhen des Wertes in einer Funktion abgehandelt.
 
             \begin{description}
                 \item[Erwartetes Ergebnis:] Die LEDs werden Binär hochgezählt bis
@@ -122,8 +122,8 @@
         \subsection{Rekursion (recursion.c)}
             Der Rekursionstest inkrementiert den Wert in einer Routine die
             zusätzlich prüft, ob der Wert unter dem maximalwert liegt.
-            Ist dies der Fall wird die selbe Routine erneut aufgerufen.
-            Dies geschieht solnage bis der Wert den Maximalwert erreicht.
+            Ist dies der Fall, wird die selbe Routine erneut aufgerufen.
+            Dies geschieht solange bis der Wert den Maximalwert erreicht.
             Die Endlosschleife setzt den Wert anschließend wieder auf null und 
             ruft die Rekursionsroutine erneut auf.
 
@@ -138,7 +138,7 @@
             Array an Daten angelegt wird.
 
             \begin{description}
-                \item[Erwartetes Ergebnis:] Das Compilieren ist Erfolgreich.
+                \item[Erwartetes Ergebnis:] Das Compilieren ist erfolgreich.
                 Das Linken zeigt jedoch einen Fehler an, dass nicht genügend Speicher
                 zur Verfügung steht um das Array zu Speichern. 
                 \item[Tatsäzliches Ergebnis:] Der Testfall verhält sich wie erwartet.

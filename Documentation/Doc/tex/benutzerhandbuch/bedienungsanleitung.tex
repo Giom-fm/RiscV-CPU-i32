@@ -1,6 +1,6 @@
 \chapter{Bedienungsanleitung}
 
-    \section{Öffnen des Projektes}
+    \section{Öffnen des Quartus Prime Projektes}
         Zunächst wird \textit{Quartus Prime Lite} gestartet.
         Sobald das Hauptfenster geöffnet wurde kann über den Menüpunkt \textit{File}
         der Untermenüpunkt \textit{Open Project} (Abbildung \ref{fig:quartus_open_project})
@@ -27,7 +27,7 @@
         Sobald sich das Projekt erfolgreich geöffnet hat, kann das Bauen über ein Klick
         auf das \textit{Play}-Symbol (Abbildung \ref{fig:quartus_play}) gestartet werden. Das eigentliche Bauen kann, je nach
         Leistung des Rechners mehrere Minuten dauern. Dabei wird der Status im unteren
-        Fensterdrittel angezeigt. War das Bauen erfolgreich wird die Meldung
+        Fensterdrittel angezeigt. War das Bauen erfolgreich, wird die Meldung
         \textit{Quartus Prime Full Compilation was successful} (Abbildung \ref{fig:quartus_build_sucessful})
         angezeigt.
 
@@ -91,10 +91,10 @@
 
 
     \section{Kompilieren des Programmcodes}\label{lab:compile-code}
-        Um Programmcode zu Compilieren muss zunächst die Toolchain gebaut werden
-        dessen Quellcode sich im \textit{Firmware} Verzeichnis befindet.
+        Um Programmcode zu Compilieren muss zunächst die Toolchain,
+        dessen Quellcode sich im \textit{Firmware} Verzeichnis befindet, gebaut werden.
         Nach wechseln in das Verzeichnis kann über den Befehl \texttt{go build *.go}
-        die Toolchain gebaut werden. War das bauen Erfolgreich erscheint
+        die Toolchain gebaut werden. War das bauen erfolgreich, erscheint
         eine ausführbare Datei namens \textit{build} im Verzeichnis.
         Durch \texttt{./build --help} wird die Parameterübersicht des Programmes
         ausgegeben (Abbildung \ref{fig:build-help}).
@@ -105,7 +105,7 @@
             \caption{Parameterübersicht von Build}
             \label{fig:build-help}
         \end{figure}
-        Die Standardbelegung der Parameter ist auf die hardware Eigenschaften des
+        Die Standardbelegung der Parameter ist auf die Hardware Eigenschaften des
         Softcores ausgelegt, sodass nur \texttt{./build --source=PFAD} benötigt wird
         um das jeweilige Programm zu Compilieren.
         \\
@@ -137,7 +137,7 @@
 
         Zunächst müssen die generierten \textit{MIFs} aus dem \textit{out} Verzeichnis in
         \textit{RISC-V/CPU/Design/src/memory} kopiert werden.
-        Als nächstes wird über den den Menüpunkt \textit{Processing},
+        Als nächstes wird über den Menüpunkt \textit{Processing},
         \textit{Update Memory Initialization File} angeklickt (Abbildung \ref{fig:update-mif}).
         Daraufhin muss im selben Menüpunkt das Untermenü \textit{Start} geöffnet werden um
         \textit{Start Assembler} anzuklicken (Abbildung \ref{fig:start-asm}).

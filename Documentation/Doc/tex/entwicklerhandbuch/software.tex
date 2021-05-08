@@ -1,7 +1,7 @@
-\chapter{Toolchain}
+\chapter{Toolchain}\label{lab:toolchain}
 
     Das folgenden Kapitel beschreibt das Zusammenspiel verschiedener Softwarschichten
-    um eine \textit{Toolchain} abzubilden die in der Lage ist für den Softcore passenden
+    um eine \textit{Toolchain} abzubilden die in der Lage ist, für den Softcore passenden
     Compilate zu erstellen, Speicherpartitionen zu generieren sowie den Bootloader
     zu erstellen und zu linken.
     Dafür wurde im Rahmen dieses Projektes ein, in \textit{GO} geschriebenes, Programm
@@ -23,7 +23,7 @@
         
     \subsection{Executable and Linkable Format (ELF)}\label{lab:elf}
         Das \textit{Executable and Linkable Format (ELF)} definiert ein
-        standard Binärformat für ausführbare Programme, Bibliotheken so wie von
+        standard Binärformat für ausführbare Programme, Bibliotheken sowie von
         Speicherauszügen. Jede \textit{ELF} besteht aus Kopfinformationen (Header)
         gefolgt von Daten. Die Kopfinformationen beinhalten Informationen 
         über die eigentlichen Daten. Dazu zählen bspw. Wordbreite, Byte-Reihenfolge,
@@ -41,9 +41,9 @@
         \end{description}
     
     \subsection{Linker}
-        Der Linker ist, im Kontext dieser Arbeit, vorallem zuständig dafür
+        Der Linker ist, im Kontext dieser Arbeit, vorallem dafür zuständig
         die Speicheranordnung zu definieren. Dafür werden die \textit{Sections} (Siehe \ref{lab:elf})
-        aus der in eine Reihenfolge gebracht die für die Hardware passt.
+        in eine Reihenfolge gebracht die für die Hardware passt.
         Listing \ref{lst:lds} zeigt das Linkerskript welches die Speicheranordnung definiert.
         \texttt{ENTRY(\_start)} definiert hierbei den Einstiegspunkt (Siehe \ref{lab:bootloader}).
         \texttt{MEMORY} beschreibt die Speichergröße, sodass der Compiler weiß wie
@@ -53,13 +53,13 @@
         definiert. Im ersten Bereich stehen die Instruktionen (\texttt{.text}) gefolgt von den Konstanten (\texttt{.rodata}).
         Als nächstes folgen die Variablen (\texttt{.data}) sowie die Null-initialisierten Variablen (\texttt{.bss}).
         
-        \lstinputlisting[style=cstyle,caption={Linker Skript},label=lst:lds]{../../Firmware/linker.lds}
+        \lstinputlisting[style=cstyle,caption={Linkerskript},label=lst:lds]{../../Firmware/linker.lds}
 
     \section{Bootloader}\label{lab:bootloader}
 
-        Der Bootloader ist Assembler geschrieben und ist dazu da den
-        Softcore zu initialisieren, sodass dieser bereit ist Programmcode auszuführen.
-        Dabei wird Hauptsächlich die Stackadresse gesetzt und die \textit{Main}
+        Der Bootloader ist in Assembler geschrieben und ist dazu da den
+        Softcore zu initialisieren, sodass dieser bereit ist, Programmcode auszuführen.
+        Dabei wird hauptsächlich die Stackadresse gesetzt und die \textit{Main}
         Funktion des C-Codes aufgerufen  (Listing \ref{lst:crt0s}).
         Hierbei ist zu beachten, dass der Stack von hinten nach vorne wächst.
         Aus diesem Grund wird als Stackadresse das letzte adressierbare Byte (0xFFFF) benutzt.
@@ -67,10 +67,11 @@
 
     \section{MIF Generierung}
 
-        Die zu Grunde liegende Speicherarchitektur (Siehe \ref{lab:memory})
+        Die zugrunde liegende Speicherarchitektur (Siehe \ref{lab:memory})
         und deren Initialisierung (Siehe \ref{lab:elf}) benötigt vier \textit{MIF's}
-        die durch die Toolchain generiert werden. Hierfür wird jedes Byte eines Words
-        in einer unterschiedliche MIF geschrieben vergleichbar mit dem Round-Robin-Verfahren.
+        die durch die Toolchain generiert werden. Hierfür wird,
+        vergleichbar mit dem Round-Robin-Verfahren, jedes Byte eines Words
+        in einer unterschiedliche MIF geschrieben.
 
         \begin{figure}[H]
             \centering
