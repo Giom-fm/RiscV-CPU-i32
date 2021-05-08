@@ -41,7 +41,7 @@
             auf den nächsten Befehl. Dieser kann wieder von der Dekodiereinheit dekodiert werden
             und es können die Steuerleitungen gesetzt werden. Der Befehlszähler kann jedoch nicht nur
             inkrementiert sondern auch überschrieben werden.
-
+            \newpage
             \lstinputlisting[style=vhdl,linerange={37-47},caption={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
 
         \subsection{Branch}
@@ -153,7 +153,7 @@
                 \centering
                 \includegraphics[scale=1]{img/block_mux_alu_right.pdf}
                 \caption{Rechter ALU Multiplexer}
-                \label{fig:alu}
+                \label{fig:alu_mux_right}
             \end{figure}
 
             Die beiden Rechenwerk Multiplexer (Links und Rechts) steuern die Eingangsdaten des Rechenwerks und bestimmen somit welche Daten
@@ -229,7 +229,7 @@
         \subsection{Initialisierung}\label{lab:mif}
             Die Initialisierung erfolgt über ein \textit{Memory initialization files (MIF)} \cite{intel-mif}.
             Die einfache \textit{Key-Value-}Syntax (Tabelle \ref{tab:mif-syntax}) erlaubt eine Abbildung der Speicheradressen sowie deren korrespondierenden Daten.
-            Die eigentliche Initialisierung erfolgt entweder zur Synthesezeit oder zur Laufzeit über den Quartus Assembler <<REFERENZ AUF BENUTZERHANDBUCH>>
+            Die eigentliche Initialisierung erfolgt entweder zur Synthesezeit oder zur Laufzeit über den Quartus Assembler (Siehe \ref{lab:flash-softcore}).
             Listing \ref{lst:mif-example} zeigt ein Beispiel MIF.
             \begin{center}
                 \begin{longtable}{| l | l |}
@@ -285,6 +285,7 @@
         \end{figure}
 
         \lstinputlisting[style=VHDL,caption={Adressaufteilung im Speicher},linerange={56-70},label=lst:memory]{../../CPU/Design/src/memory/memory.vhd}
+        \newpage
         \lstinputlisting[style=VHDL,caption={Leseprozess für die Peripherie},linerange={39-47},label=lst:peripherie-read]{../../CPU/Design/src/io/peripherie.vhd}
         \lstinputlisting[style=VHDL,caption={Schreibeprozess für die Peripherie},linerange={50-63},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
 
