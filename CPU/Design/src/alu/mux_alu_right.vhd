@@ -1,5 +1,6 @@
 -- A module which is responsible for selecting the right operand for the ALU.
 -- Author: Guillaume Fournier-Mayer (tinf101922)
+-- Date: 09.05.2021
 
 
 library IEEE;

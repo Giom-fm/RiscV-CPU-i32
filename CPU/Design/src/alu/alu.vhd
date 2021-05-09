@@ -1,5 +1,6 @@
 -- Module for performing arithmetic, logical and shift operations
 -- Author : Guillaume Fournier - Mayer (tinf101922)
+-- Date: 09.05.2021
 
 
 library IEEE;

@@ -1,5 +1,6 @@
 -- Defines types for the modules
 -- Author: Guillaume Fournier-Mayer
+-- Date: 09.05.2021
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;

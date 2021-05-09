@@ -1,5 +1,6 @@
 -- A module to compare two values. Used for the Branch Opcodes
 -- Author: Guillaume Fournier-Mayer
+-- Date: 09.05.2021
 
 
 library IEEE;

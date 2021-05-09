@@ -1,6 +1,7 @@
 -- A module representing an 8 bit memory block.
 -- The module serves as wrapper around the megafunction generated memory block.
 -- Author: Guillaume Fournier-Mayer
+-- Date: 09.05.2021
 
 library ieee;
 use ieee.std_logic_1164.all;

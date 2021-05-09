@@ -1,6 +1,7 @@
 -- A module representing a multiplexer connected in front of the registers
 -- and determining the input data of the destination register (rd).
 -- Author: Guillaume Fournier-Mayer
+-- Date: 09.05.2021
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;

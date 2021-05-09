@@ -1,5 +1,6 @@
 -- Module for programm counter
 -- Author : Guillaume Fournier - Mayer (tinf101922)
+-- Date: 09.05.2021
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

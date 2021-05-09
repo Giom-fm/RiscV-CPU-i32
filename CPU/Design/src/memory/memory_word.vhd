@@ -1,5 +1,6 @@
 -- A module which combines four 8bit wide memory blocks to a 32bit wide memory.
 -- Author: Guillaume Fournier-Mayer
+-- Date: 09.05.2021
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
