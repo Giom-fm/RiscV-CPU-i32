@@ -1,3 +1,10 @@
+/*
+ * A module that creates MIFs
+ *
+ * Author: Guillaume Fournier-Mayer (tinf101922)
+ * Date: 09.05.2021
+ */
+
 package main
 
 import (
@@ -9,6 +16,15 @@ import (
 	"strings"
 )
 
+/*
+ * Writes the passing paritions into files that correspond to the
+ * intel MIF format.
+ *
+ * @param partitions An array of partitions
+ * @param wordSize The word size to use
+ * @param byteSize The byte size to use
+ * @param memorySize The memory size to use
+ */
 func WritePartitions(partitions [][]byte, wordSize int, byteSize int, memorySize int) {
 
 	for i, partition := range partitions {
@@ -32,6 +48,11 @@ func WritePartitions(partitions [][]byte, wordSize int, byteSize int, memorySize
 	}
 }
 
+/*
+ * Prints the passing partition
+ *
+ * @param partitions An array of partitions
+ */
 func PrintPartitions(partitions [][]byte) {
 	for i, partition := range partitions {
 		fmt.Printf("Partition: %d: ", i+1)
@@ -42,6 +63,12 @@ func PrintPartitions(partitions [][]byte) {
 	}
 }
 
+/*
+ * Takes all necessary sections from the ELF and builds a memory area.
+ *
+ * @param sections An array of ELF sections
+ * @returns The memory
+ */
 func CreateMemory(sections []*elf.Section) []byte {
 	var memory []byte
 	text_section, rodata_section, data_section := getSections(sections)
@@ -67,6 +94,13 @@ func CreateMemory(sections []*elf.Section) []byte {
 	return memory
 }
 
+/*
+ * Partitions the memory
+ *
+ * @param memory The memory
+ * @param memoryPartitions The partitions
+ * @param bytesInWord The amount of bytes in a word
+ */
 func CreatePartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int) {
 	for i := 0; i < len(memory); i += bytesInWord {
 		bytes := memory[i : i+bytesInWord]
@@ -76,6 +110,12 @@ func CreatePartitions(memory []byte, memoryPartitions [][]byte, bytesInWord int)
 	}
 }
 
+/*
+ * Gets all necessary sections from the ELF.
+ *
+ * @param sections All sections
+ * @returns needed sections
+ */
 func getSections(sections []*elf.Section) (*elf.Section, *elf.Section, *elf.Section) {
 
 	var text *elf.Section

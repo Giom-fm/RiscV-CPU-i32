@@ -1,3 +1,10 @@
+/*
+ * A tool that takes an ELF and creates MIFs from it for the softcore.
+ *
+ * Author: Guillaume Fournier-Mayer (tinf101922)
+ * Date: 09.05.2021
+ */
+
 package main
 
 import (
@@ -7,8 +14,12 @@ import (
 	"os"
 )
 
+/*
+ * Main routine. Sets the flags to be loaded and checks them.
+ */
 func main() {
 
+	// Flags
 	srcPath := flag.String("source", "", "Path to source code")
 	bootPath := flag.String("bootloader", "crt0.s", "Path to Bootloader code")
 	linkerPath := flag.String("linker", "linker.lds", "Path to linker Script File")
@@ -21,15 +32,16 @@ func main() {
 	flag.Parse()
 	handleFlags(srcPath, bootPath, linkerPath)
 	elfPath := Build(*srcPath, *bootPath, *linkerPath)
-
 	_elf, err := elf.Open(elfPath)
 	HandleError(err)
 
+	// Creates the partitions
 	memory := CreateMemory(_elf.Sections)
 	memoryPartitions := make([][]byte, bytesInWord)
 	CreatePartitions(memory, memoryPartitions[:], bytesInWord)
 	WritePartitions(memoryPartitions, wordSize, byteSize, memorySize)
 
+	// If the flag "print" is set, the partitions will be printed.
 	if print {
 		PrintPartitions(memoryPartitions[:])
 		PrintElfInfos(elfPath)
@@ -37,6 +49,13 @@ func main() {
 
 }
 
+/*
+ * Checks the flags and verifies if the necessary ones are set
+ *
+ * @param srcPath The path to the source file
+ * @param bootPath The path to the bootloader
+ * @param linkerPath The path to the linkersrcipt
+ */
 func handleFlags(srcPath *string, bootPath *string, linkerPath *string) {
 	var err error
 
@@ -65,6 +84,10 @@ func handleFlags(srcPath *string, bootPath *string, linkerPath *string) {
 
 }
 
+/*
+ * Checks whether the error object contains an error and stops the program if
+ * this is the case
+ */
 func HandleError(err error, msg ...string) {
 	if err != nil {
 		log.Fatal(msg)
