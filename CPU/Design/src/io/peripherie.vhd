@@ -10,17 +10,27 @@ use work.utils.all;
 
 entity peripherie is
   port (
+    -- Clock
     i_clock : in std_logic;
+    -- Reset
     i_reset : in std_logic;
 
+    -- Data adress
     i_data_address    : in std_logic_vector(1 downto 0);
+    -- Data input
     i_data            : in std_logic_vector(31 downto 0);
+    -- Data store mode
     i_data_store_mode : in T_STORE_MODE;
+    -- Data direction (read/write)
     i_data_read_write : in T_MEM_DIR;
+    -- Data output
     o_data            : out std_logic_vector(31 downto 0);
 
+    -- Led output
     o_leds : out std_logic_vector(7 downto 0);
+    -- UART RX
     i_rx   : in std_logic;
+    -- UART TX
     o_tx   : out std_logic
   );
 end peripherie;
@@ -69,7 +79,6 @@ begin
   uart : entity work.UART(logic)
     generic map(
       clk_freq => 12_000_000,
-      --baud_rate   => 9600,
       baud_rate => 19_200,
       os_rate   => 16,
       d_width   => 8,

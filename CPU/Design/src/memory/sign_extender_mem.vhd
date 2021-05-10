@@ -10,9 +10,12 @@ use work.utils.all;
 
 
 entity sign_extender_mem is
-    port(                   
+    port(       
+        -- Signextender mode            
         i_mode : in T_SEXT_MEM_MODE;
+        -- data input
         i_data : in std_logic_vector(31 downto 0);
+        -- data output
         o_data : out std_logic_vector(31 downto 0)
     );
 end sign_extender_mem;

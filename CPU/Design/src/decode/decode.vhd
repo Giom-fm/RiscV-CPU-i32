@@ -10,18 +10,31 @@ use work.utils.all;
 
 entity decode is 
 		port(
+			-- The instruction from memory
 			i_instruction			: in std_logic_vector(31 downto 0);
+			-- Comparator mode
 			o_comp_mode				: out T_COMP_MODE;
+			-- Alu mode
 			o_alu_mode				: out T_ALU_MODE;
+			-- Alu multiplexer mode
 			o_mux_alu				: out T_MUX_ALU;
+			-- Immediate coded into instruction
 			o_immediate				: out std_logic_vector(31 downto 0);
+			-- rs1 address
 			o_rs1_addr				: out std_logic_vector(4 downto 0);
+			-- rs2 address
 			o_rs2_addr				: out std_logic_vector(4 downto 0);
+			-- rd address
 			o_rd_addr				: out std_logic_vector(4 downto 0);
+			-- Register multiplexer mode
 			o_mux_reg				: out T_MUX_REG;
+			-- Sign extender 
 			o_sext_mem_mode 		: out T_SEXT_MEM_MODE;
+			-- Memory direction (Read/Write)
 			o_mem_dir				: out T_MEM_DIR;
+			-- Memory store mode
 			o_store_mode			: out T_STORE_MODE;
+			-- Programm counter mode
 			o_pc_mode				: out T_PC_MODE
 		);
 		

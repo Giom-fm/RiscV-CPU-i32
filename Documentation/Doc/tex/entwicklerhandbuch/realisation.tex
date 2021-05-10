@@ -42,7 +42,7 @@
             und es können die Steuerleitungen gesetzt werden. Der Befehlszähler kann jedoch nicht nur
             inkrementiert sondern auch überschrieben werden.
             \newpage
-            \lstinputlisting[style=vhdl,linerange={37-47},caption={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
+            \lstinputlisting[style=vhdl,linerange={47-57},caption={Prozess des Befehlszählers}]{../../CPU/Design/src/pc/pc.vhd}
 
         \subsection{Branch}
 
@@ -102,7 +102,7 @@
             Die \textit{ISA} besagt zudem, dass Register x0 immer Nullen liefern soll und nicht überschrieben werden darf \cite{riscv-isa-specs}[2.1].
             Dies wird durch eine Abfrage der Adresse im Prozess gesteuert. Falls das Zielregister, das Nullregister sein sollte werden die Werte
             nicht in das Zielregister übernommen.
-            \lstinputlisting[style=vhdl,linerange={47-55},caption={Prozess der Registereinheit}]{../../CPU/Design/src/registers/registers.vhd}
+            \lstinputlisting[style=vhdl,linerange={48-56},caption={Prozess der Registereinheit}]{../../CPU/Design/src/registers/registers.vhd}
 
         \subsection{Register Multiplexer}
 
@@ -120,7 +120,7 @@
             Als gesonderte Absicherung dient der \textit{MUX\_REG\_ZERO} Zustand.
             Dieser wird standardmäßig beim initialisieren gesetzt und soll ein Überschreiben von Daten verhindern wenn z.B.
             eine unbekannte Instruktion ausgeführt werden soll.
-            \lstinputlisting[style=vhdl,linerange={28-39},caption={Prozess des register Multiplexers}]{../../CPU/Design/src/registers/mux_register.vhd}
+            \lstinputlisting[style=vhdl,linerange={29-40},caption={Prozess des register Multiplexers}]{../../CPU/Design/src/registers/mux_register.vhd}
 
     \section{Arithmetic logic unit (ALU)}
 
@@ -286,8 +286,8 @@
 
         \lstinputlisting[style=VHDL,caption={Adressaufteilung im Speicher},linerange={56-70},label=lst:memory]{../../CPU/Design/src/memory/memory.vhd}
         \newpage
-        \lstinputlisting[style=VHDL,caption={Leseprozess für die Peripherie},linerange={39-47},label=lst:peripherie-read]{../../CPU/Design/src/io/peripherie.vhd}
-        \lstinputlisting[style=VHDL,caption={Schreibeprozess für die Peripherie},linerange={50-63},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
+        \lstinputlisting[style=VHDL,caption={Leseprozess für die Peripherie},linerange={54-61},label=lst:peripherie-read]{../../CPU/Design/src/io/peripherie.vhd}
+        \lstinputlisting[style=VHDL,caption={Schreibeprozess für die Peripherie},linerange={69-77},label=lst:peripherie-write]{../../CPU/Design/src/io/peripherie.vhd}
 
         \subsection{LED}
             Es stehen acht LED's auf dem \textit{FPGA}-Board zur Verfügung die über den erweiterten Speicherbereich

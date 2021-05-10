@@ -40,37 +40,46 @@ begin
     begin
         
         -- Init Test
-        reset <= '1';
+        reset <= '0';
         mode <= PC_SRC_ADD;
         comp <= '0';
         clock       <= '0';
-        src_alu     <= to_stdlogicvector(x"FFFFFFF0");
-        src_next    <= to_stdlogicvector(x"00000004");
+        src_alu     <= to_stdlogicvector(x"FFFFFFFC");
+        src_next    <= to_stdlogicvector(x"00000000");
 
         wait for C_DELAY;
-        reset <= '0';
+        reset <= '1';
+        wait for C_DELAY;
         
         -- Test: PC_SRC_ADD
-        compare_assert(t_current, to_stdlogicvector(x"00000000"), "Init_current PC_SRC_ADD", C_DELAY);
-        compare_assert(t_next, to_stdlogicvector(x"00000004"), "Init_next PC_SRC_ADD", C_DELAY);
+        compare_assert(t_current, to_stdlogicvector(x"FFFFFFFC"), "Init_current PC_SRC_ADD", C_DELAY);
+        compare_assert(t_next, to_stdlogicvector(x"00000000"), "Init_next PC_SRC_ADD", C_DELAY);
 
         clock <= '1';
         wait for C_DELAY;
         clock <= '0';
 
-        compare_assert(t_current, to_stdlogicvector(x"00000004"), "ADD_current PC_SRC_ADD", C_DELAY);
-        compare_assert(t_next, to_stdlogicvector(x"00000008"), "ALU_next PC_SRC_ADD", C_DELAY);
+        compare_assert(t_current, to_stdlogicvector(x"00000000"), "ADD_current PC_SRC_ADD", C_DELAY);
+        compare_assert(t_next, to_stdlogicvector(x"00000004"), "ALU_next PC_SRC_ADD", C_DELAY);
 
         -- Test: PC_SRC_ALU
         mode <= PC_SRC_ALU;
-        compare_assert(t_current, to_stdlogicvector(x"00000004"), "ADD_current PC_SRC_ALU", C_DELAY);
+        
+        clock <= '1';
+        wait for C_DELAY;
+        clock <= '0';
+
+        compare_assert(t_current, to_stdlogicvector(x"FFFFFFFC"), "ADD_current PC_SRC_ALU", C_DELAY);
+        compare_assert(t_next,  to_stdlogicvector(x"00000000"), "ALU_next PC_SRC_ALU", C_DELAY);
+        mode <= PC_SRC_ADD;
 
         clock <= '1';
         wait for C_DELAY;
         clock <= '0';
 
-        compare_assert(t_current, to_stdlogicvector(x"FFFFFFF0"), "ALU_current PC_SRC_ALU", C_DELAY);
-        compare_assert(t_next,  to_stdlogicvector(x"FFFFFFF4"), "ALU_next PC_SRC_ALU", C_DELAY);
+        compare_assert(t_current, to_stdlogicvector(x"00000000"), "ADD_current PC_SRC_ADD", C_DELAY);
+        compare_assert(t_next, to_stdlogicvector(x"00000004"), "ALU_next PC_SRC_ADD", C_DELAY);
+        
 
         wait;
     end process;

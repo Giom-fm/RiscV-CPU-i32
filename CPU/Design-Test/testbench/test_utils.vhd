@@ -20,11 +20,11 @@ package test_utils is
         report_msg  : string;
         delay: time);
     
-    procedure compare_assert(
+    procedure compare_assert_bool(
         actual_data : std_logic;
         expect_data : std_logic;
-        report_msg  : string;
-        delay: time);
+        report_msg  : string
+        );
 
 end package test_utils;
    
@@ -67,14 +67,12 @@ package body test_utils is
         wait for delay;
     end procedure;
 
-    procedure compare_assert(
+    procedure compare_assert_bool(
         actual_data : std_logic;
         expect_data : std_logic;
-        report_msg  : string;
-        delay: time)
+        report_msg  : string)
         is
     begin
-        wait for delay;
         if expect_data = actual_data then
             report "PASSED " & report_msg severity note;
         else
@@ -83,7 +81,6 @@ package body test_utils is
                 & "actual: [" & to_string(actual_data) & "]"
             severity error;
         end if;
-        wait for delay;
     end procedure;
 
  end package body test_utils;
